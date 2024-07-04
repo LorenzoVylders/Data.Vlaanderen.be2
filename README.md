@@ -7,6 +7,7 @@ Deze repository bevat alle bronbestanden die compileerd worden tot de specificat
 
 Issues in deze repository dienen betrekking te hebben op technische of editoriale problemen met de website data.vlaanderen.be. Voor inhoudelijke discussies met betrekking tot de data standaarden verwijzen we naar de [OSLO-Discussion repository](https://github.com/Informatievlaanderen/OSLO-Discussion).
 
+
 Voor afspraken geldend in deze repository, betreffende bestandsnamen en dergelijke, zie deze [bijhorende afspraken](./CONVENTIONS.md).
 
 ## Informatie voor beheerders
