@@ -1,20 +1,22 @@
 {
   "primeLanguage": "nl",
-  "otherLanguages": ["en", "de"],
+  "otherLanguages": [
+    "en", "de"
+  ],
   "hostname": "https://data.dev-vlaanderen.be",
   "domain": "data.vlaanderen.be",
-  "publicationpoints": ["dev4.0"],
-  "generatedrepository": {
-    "organisation": "informatievlaanderen",
-    "repository": "data.vlaanderen.be-generated",
-    "private": false,
-    "gitEmail": "toolchain@data.vlaanderen.be",
-    "gitUser": "toolchain"
+  "publicationpoints" : ["dev"],
+  "generatedrepository" : {
+	  "organisation": "informatievlaanderen",
+	  "repository" : "data.vlaanderen.be-generated",
+	  "private" : false,
+	  "gitEmail" : "toolchain@data.vlaanderen.be",
+	  "gitUser" : "toolchain"
   },
-  "toolchainversion": "4.0.0",
-  "toolchain": {
-    "strickness": "strict",
-    "version": 4,
-    "triggerall": true
+  "toolchainversion" : "3.1.0",
+  "toolchain" : {
+	  "strickness" : "strict",
+	  "version": 3,
+	  "triggerall" : true
   }
 }
