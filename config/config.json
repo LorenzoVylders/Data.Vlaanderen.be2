@@ -3,7 +3,7 @@
   "otherLanguages": ["en", "de"],
   "hostname": "https://data.dev-vlaanderen.be",
   "domain": "data.vlaanderen.be",
-  "publicationpoints": ["dev"],
+  "publicationpoints": ["dev4.0"],
   "generatedrepository": {
     "organisation": "informatievlaanderen",
     "repository": "data.vlaanderen.be2-generated",
