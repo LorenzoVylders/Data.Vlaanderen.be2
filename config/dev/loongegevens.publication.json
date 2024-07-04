@@ -5,26 +5,13 @@
     "branchtag": "master-node-toolchain",
     "name": "loongegevens-ap",
     "filename": "config/loongegevens-ap.json",
-    "dummy": "003"
-  },
-  {
-    "urlref": "/doc/vocabularium/loongegevens/kandidaatstandaard/2022-03-17",
-    "repository": "https://github.com/Informatievlaanderen/OSLOthema-loongegevens",
-    "branchtag": "master-node-toolchain",
-    "name": "loongegevens-voc",
-    "filename": "config/loongegevens-voc.json",
+    "navigation": {},
     "dummy": "003"
   },
   {
     "urlref": "/doc/applicatieprofiel/loongegevens",
     "seealso": "/doc/applicatieprofiel/loongegevens/kandidaatstandaard/2022-03-17",
     "type": "ap",
-    "dummy": "003"
-  },
-  {
-    "urlref": "/ns/loongegevens",
-    "seealso": "/doc/vocabularium/loongegevens/kandidaatstandaard/2022-03-17",
-    "type": "voc",
     "dummy": "003"
   }
 ]
