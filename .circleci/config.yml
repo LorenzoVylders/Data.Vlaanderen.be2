@@ -654,6 +654,6 @@ workflows:
             - render-context-details
             - render-voc-rdf
       - create-artifact:
-          generatedRepoFingerprint: "f9:d4:ad:ce:f1:36:04:36:bc:eb:73:0b:29:53:3d:aa"
+          generatedRepoFingerprint: "5a:2a:cd:77:20:ea:62:ca:a3:83:f7:6c:fd:f4:e3:f0"
           requires:
             - expand-links
