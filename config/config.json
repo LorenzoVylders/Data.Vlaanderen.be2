@@ -3,7 +3,7 @@
   "otherLanguages": ["en", "de"],
   "hostname": "https://data.dev-vlaanderen.be",
   "domain": "data.vlaanderen.be",
-  "publicationpoints": ["dev4.0"],
+  "publicationpoints": ["dev"],
   "generatedrepository": {
     "organisation": "informatievlaanderen",
     "repository": "data.vlaanderen.be2-generated",
@@ -11,10 +11,10 @@
     "gitEmail": "toolchain@data.vlaanderen.be",
     "gitUser": "toolchain"
   },
-  "toolchainversion": "4",
+  "toolchainversion": "3",
   "toolchain": {
     "strickness": "strict",
-    "version": 4,
+    "version": 3,
     "triggerall": true
   }
 }
