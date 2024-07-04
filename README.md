@@ -1,4 +1,6 @@
-# Data.Vlaanderen.be
+# Data.Vlaanderen.be2
+
+Deze repository is een fork van [data.vlaanderen.be](https://github.com/Informatievlaanderen/data.vlaanderen.be) en bevat de configuratie voor de publicatie van de data.vlaanderen.be website. De opzet hier is om de toolchain 4.0 volledig te laten sturen door deze repository en de oude data.vlaanderen.be repository uit te faseren eens de nieuwe toolchain volledig is uitgerold.
   
 Deze repository is een onderdeel van het initiatief **Open Standaarden voor Linkende Organisaties __(OSLO)__**.
 Meer informatie is terug te vinden op de [OSLO productpagina](https://overheid.vlaanderen.be/producten-diensten/OSLO2).
