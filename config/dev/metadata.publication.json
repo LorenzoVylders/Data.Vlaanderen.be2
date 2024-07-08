@@ -25,5 +25,21 @@
     "seealso": "/doc/applicatieprofiel/metadata-dcat/erkendestandaard/2022-04-21",
     "type": "ap",
     "dummy": 1
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/DCAT-AP-VL/erkendestandaard/2022-04-21",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-DCATAPVlaanderen",
+    "branchtag": "master-node-toolchain",
+    "name": "DCAT-AP-VL-20",
+    "filename": "config/DCAT-AP-VL-20.json",
+    "navigation": {
+      "prev": "/doc/applicatieprofiel/DCAT-AP-VL/kandidaatstandaard/2022-02-03"
+    }
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/DCAT-AP-VL/",
+    "seealso": "/doc/applicatieprofiel/DCAT-AP-VL/erkendestandaard/2022-04-21",
+    "type": "ap",
+    "dummy": 1
   }
 ]
