@@ -1,0 +1,19 @@
+[
+  {
+    "urlref": "/doc/applicatieprofiel/ldes/erkendestandaard/2022-12-01",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-ldes",
+    "branchtag": "master-node-toolchain",
+    "name": "OSLO-LDES-ap",
+    "filename": "config/OSLO-LDES-ap.json",
+    "navigation": {
+      "prev": "/doc/applicatieprofiel/ldes/kandidaatstandaard/2022-06-13"
+    },
+    "dummy": "001"
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/ldes",
+    "seealso": "/doc/applicatieprofiel/ldes/erkendestandaard/2022-12-01",
+    "type": "ap",
+    "dummy": "023"
+  }
+]
