@@ -1,0 +1,54 @@
+[
+  {
+    "urlref": "/doc/applicatieprofiel/financiele-rapportering/erkendestandaard/2024-04-17",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-FinancieleData",
+    "branchtag": "master-node-toolchain",
+    "name": "financieledata-ap",
+    "filename": "config/financieledata-ap.json",
+    "navigation": {
+      "prev": "/doc/applicatieprofiel/financiele-data/kandidaatstandaard/2022-06-23"
+    },
+    "disabled": false,
+    "dummy": "002"
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/financiele-rapportering",
+    "seealso": "/doc/applicatieprofiel/financiele-rapportering/erkendestandaard/2024-04-17",
+    "type": "ap",
+    "dummy": "002"
+  },
+  {
+    "urlref": "/doc/vocabularium/financiele-rapportering/erkendestandaard/2024-04-17",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-FinancieleData",
+    "branchtag": "master-node-toolchain",
+    "name": "financieledata-voc",
+    "filename": "config/financieledata-voc.json",
+    "navigation": {
+      "prev": "/doc/vocabularium/financiele-data/kandidaatstandaard/2022-06-23"
+    },
+    "disabled": false,
+    "dummy": "002"
+  },
+  {
+    "urlref": "/ns/financiele-rapportering",
+    "seealso": "/doc/vocabularium/financiele-rapportering/erkendestandaard/2024-04-17",
+    "type": "voc",
+    "dummy": "002"
+  },
+  {
+    "urlref": "/doc/vocabularium/financiele-rapportering/taxonomie-dcjm/erkendestandaard/2024-04-17",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-FinancieleData",
+    "branchtag": "master-node-toolchain",
+    "name": "financieledata-dcjm-voc",
+    "filename": "config/financieledata-dcjm-voc.json",
+    "navigation": {},
+    "disabled": false,
+    "dummy": "002"
+  },
+  {
+    "urlref": "/ns/financiele-rapportering/taxonomie-dcjm",
+    "seealso": "/doc/vocabularium/financiele-rapportering/taxonomie-dcjm/erkendestandaard/2024-04-17",
+    "type": "voc",
+    "dummy": "002"
+  }
+]
