@@ -20,7 +20,7 @@
     "urlref": "/doc/vocabularium/FeitelijkeVerenigingen/kandidaatstandaard/2021-06-22",
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-feitelijkeVerenigingen",
     "branchtag": "master-node-toolchain",
-    "name": "FeitelijkeVerenigingen",
+    "name": "feitelijke-verenigingen",
     "filename": "config/Feitelijke-Verenigingen-voc.json",
     "dummy": "001",
     "navigation": {
