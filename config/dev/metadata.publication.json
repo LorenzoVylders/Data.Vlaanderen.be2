@@ -37,6 +37,12 @@
     }
   },
   {
+    "urlref": "/doc/applicatieprofiel/DCAT-AP-VL/standaard/2019-06-13",
+    "seealso": "/doc/applicatieprofiel/DCAT-AP-VL/erkendestandaard/2019-06-13",
+    "type": "ap",
+    "dummy": 1
+  },
+  {
     "urlref": "/doc/applicatieprofiel/DCAT-AP-VL/",
     "seealso": "/doc/applicatieprofiel/DCAT-AP-VL/erkendestandaard/2022-04-21",
     "type": "ap",
