@@ -19,7 +19,7 @@
   {
     "urlref": "/doc/vocabularium/ruimtelijke-bereiken/ontwerpstandaard/2024-04-15",
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
-    "branchtag": "master",
+    "branchtag": "master-node-toolchain",
     "name": "ruimtelijke-bereiken",
     "filename": "config/OSLO-BodemEnOndergrond-VOC-RuimtelijkeBereiken.json",
     "dummy": "04",
@@ -35,14 +35,14 @@
   },
 
   {
-    "urlref": "/doc/applicatieprofiel/observaties-en-metingen/ontwerpstandaard/2021-08-01",
+    "urlref": "/doc/applicatieprofiel/observaties-en-metingen/kandidaatstandaard/2022-04-28",
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
-    "branchtag": "ontwerp-2021-08-01",
+    "branchtag": "master-node-toolchain",
     "name": "ap-observaties-en-metingen",
     "filename": "config/OSLO-BodemEnOndergrond-AP-ObservatiesEnMetingen.json",
-    "dummy": "001",
+    "dummy": "027",
     "navigation": {
-      "next": "/doc/applicatieprofiel/observaties-en-metingen/kandidaatstandaard/2022-04-28"
+      "prev": "/doc/applicatieprofiel/observaties-en-metingen/ontwerpstandaard/2021-08-01"
     }
   },
   {
@@ -54,7 +54,7 @@
   {
     "urlref": "/doc/vocabularium/observaties-en-metingen/kandidaatstandaard/2022-04-28",
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
-    "branchtag": "master",
+    "branchtag": "master-node-toolchain",
     "name": "observaties-en-metingen",
     "filename": "config/OSLO-BodemEnOndergrond-VOC-ObservatiesEnMetingen.json",
     "dummy": "027",
@@ -67,5 +67,40 @@
     "seealso": "/doc/vocabularium/observaties-en-metingen/kandidaatstandaard/2022-04-28",
     "type": "voc",
     "dummy": "027"
+  },
+
+  {
+    "urlref": "/doc/applicatieprofiel/sensoren-en-bemonstering/kandidaatstandaard/2022-04-28",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
+    "branchtag": "master-node-toolchain",
+    "name": "ap-sensoren-en-bemonstering",
+    "filename": "config/OSLO-BodemEnOndergrond-AP-SensorenEnBemonstering.json",
+    "dummy": "028",
+    "navigation": {
+      "prev": "/doc/applicatieprofiel/sensoren-en-bemonstering/ontwerpstandaard/2021-08-01"
+    }
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/sensoren-en-bemonstering/",
+    "seealso": "/doc/applicatieprofiel/sensoren-en-bemonstering/kandidaatstandaard/2022-04-28",
+    "type": "ap",
+    "dummy": "028"
+  },
+  {
+    "urlref": "/doc/vocabularium/sensoren-en-bemonstering/kandidaatstandaard/2022-04-28",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
+    "branchtag": "master-node-toolchain",
+    "name": "sensoren-en-bemonstering",
+    "filename": "config/OSLO-BodemEnOndergrond-VOC-SensorenEnBemonstering.json",
+    "dummy": "028",
+    "navigation": {
+      "prev": "/doc/vocabularium/sensoren-en-bemonstering/ontwerpstandaard/2021-08-01"
+    }
+  },
+  {
+    "urlref": "/ns/sensoren-en-bemonstering/",
+    "seealso": "/doc/vocabularium/sensoren-en-bemonstering/kandidaatstandaard/2022-04-28",
+    "type": "voc",
+    "dummy": "028"
   }
 ]
