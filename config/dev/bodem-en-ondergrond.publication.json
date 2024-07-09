@@ -259,5 +259,23 @@
     "filename": "config/OSLO-BodemEnOndergrond-VOC-Bodem.json",
     "dummy": "001",
     "navigation": {}
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/bodem-en-ondergrond/grondwatermeetnet/ontwerpstandaard/2021-08-01",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
+    "branchtag": "master-node-toolchain",
+    "name": "ap-grondwatermeetnet",
+    "filename": "config/OSLO-BodemEnOndergrond-AP-Grondwatermeetnet.json",
+    "dummy": "001",
+    "navigation": {}
+  },
+  {
+    "urlref": "/doc/vocabularium/bodem-en-ondergrond/grondwatermeetnet/ontwerpstandaard/2021-08-01",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
+    "branchtag": "master-node-toolchain",
+    "name": "grondwatermeetnet",
+    "filename": "config/OSLO-BodemEnOndergrond-VOC-Grondwatermeetnet.json",
+    "dummy": "001",
+    "navigation": {}
   }
 ]
