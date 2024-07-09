@@ -27,6 +27,19 @@
     "dummy": 1
   },
   {
+    "urlref": "/doc/applicatieprofiel/DCAT-AP-VL/erkendestandaard/2019-10-03",
+    "repository": "https://github.com/Informatievlaanderen/OSLO-Generated",
+    "branchtag": "production",
+    "name": "DCAT-AP-VL",
+    "filename": "config/DCAT-AP-VL.json",
+    "navigation": {
+      "prev": "/doc/applicatieprofiel/DCAT-AP-VL/kandidaatstandaard/2019-01-20",
+      "next": "/doc/applicatieprofiel/DCAT-AP-VL/erkendestandaard/2021-12-02"
+    },
+    "type": "raw",
+    "directory": "/doc/applicatieprofiel/DCAT-AP-VL/erkendestandaard/2019-10-03"
+  },
+  {
     "urlref": "/doc/applicatieprofiel/DCAT-AP-VL/erkendestandaard/2022-04-21",
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-DCATAPVlaanderen",
     "branchtag": "master-node-toolchain",
