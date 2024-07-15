@@ -471,7 +471,7 @@ render_shacl_languageaware() {
         mkdir -p ${RLINE}/shacl
 
 	oslo-shacl-template-generator ${PARAMETERS} \
-	        --input ${MERGEDJSONLD} \
+	        --input ${JSONI} \
 	       	--language ${GOALLANGUAGE} \
 		--output ${OUTFILE} \
 		--shapeBaseURI ${DOMAIN} \
