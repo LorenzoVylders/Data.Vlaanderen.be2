@@ -428,8 +428,6 @@ render_context() { # SLINE TLINE JSON
 	if [ ${PRIMELANGUAGE} == true ] ; then
 		cp ${TLINE}/context/${OUTFILELANGUAGE} ${TLINE}/context/${OUTFILE}
 	fi
-
-	fi 
     fi
 }
 
