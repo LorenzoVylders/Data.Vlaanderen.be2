@@ -23,6 +23,29 @@ execution_strickness() {
 	fi
 }
 
+generator_parameters() {
+    
+    local GENERATOR=$1
+    local JSONI=$2
+
+    #
+    # The toolchain can add specific parameters for the SHACL generation tool
+    # Priority rules are as follows:
+    #   1. publication point specific
+    #   2. generic configuration
+    #   3. otherwise empty string
+    #
+    COMMAND=$(echo '.'${GENERATOR}'.parameters' )
+    PARAMETERS=$(jq -r ${COMMAND} ${JSONI})
+    if [ "${PARAMETERS}" == "null"  ]  ; then 
+        PARAMETERS=$(jq -r  ${COMMAND} ${CONFIGDIR}/config.json)
+    fi 
+    if [ "${PARAMETERS}" == "null"  ] || [ -z "${PARAMETERS}" ]  ; then 
+        PARAMETERS=""
+    fi 
+}
+
+
 render_merged_files() {
     echo "Rendering the merged version of $1 with the json in $2 from $3 and to $4"
     local JSONI=$1
@@ -401,39 +424,6 @@ render_context() { # SLINE TLINE JSON
     fi
 }
 
-render_shacl() {
-    echo "render_shacl: $1 $2 $3 $4"
-    local SLINE=$1
-    local TLINE=$2
-    local JSONI=$3
-    local RLINE=$4
-
-    FILENAME=$(jq -r ".name" ${JSONI})
-    OUTFILE=${TLINE}/shacl/${FILENAME}-SHACL.jsonld
-    OUTREPORT=${RLINE}/shacl/${FILENAME}-SHACL.report
-
-    BASENAME=$(basename ${JSONI} .jsonld)
-    #    OUTFILE=${TLINE}/shacl/${BASENAME}-SHACL.jsonld
-    #    OUTREPORT=${RLINE}/shacl/${BASENAME}-SHACL.report
-
-    COMMAND=$(echo '.[]|select(.name | contains("'${BASENAME}'"))|.type')
-    TYPE=$(jq -r "${COMMAND}" ${SLINE}/.names.json)
-
-    if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
-        echo "RENDER-DETAILS(shacl): node /app/shacl-generator.js -i ${JSONI} -o ${OUTFILE}"
-        DOMAIN="${HOSTNAME}/shacl/${FILENAME}"
-        pushd /app
-        mkdir -p ${TLINE}/shacl
-        mkdir -p ${RLINE}/shacl
-        if ! node /app/shacl-generator.js -i ${JSONI} -d ${DOMAIN} -o ${OUTFILE} 2>&1 | tee ${OUTREPORT}; then
-            echo "RENDER-DETAILS: See ${OUTREPORT} for the details"
-            execution_strickness
-        fi
-        prettyprint_jsonld ${OUTFILE}
-        popd
-    fi
-}
-
 render_shacl_languageaware() {
     echo "render_shacl: $1 $2 $3 $4 $5"
     local SLINE=$1
@@ -456,23 +446,36 @@ render_shacl_languageaware() {
     OUTFILE=${TLINE}/shacl/${FILENAME}-SHACL_${GOALLANGUAGE}.jsonld
     OUTREPORT=${RLINE}/shacl/${FILENAME}-SHACL_${GOALLANGUAGE}.report
 
+    REPORTFILE=${LINE}/generator-shacl.report
+
     BASENAME=$(basename ${JSONI} .jsonld)
 
     COMMAND=$(echo '.[]|select(.name | contains("'${BASENAME}'"))|.type')
     TYPE=$(jq -r "${COMMAND}" ${SLINE}/.names.json)
 
+    generator_parameters shaclgenerator4 ${JSONI}
+
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
         DOMAIN="${HOSTNAME}/${LINE}"
-        echo "RENDER-DETAILS(shacl-languageaware): node /app/shacl-generator.js -i ${MERGEDJSONLD} -m individual -c 'uniqueLanguages' -c 'nodekind' -d ${DOMAIN} -p ${DOMAIN} -o ${OUTFILE} -l ${GOALLANGUAGE}"
-        pushd /app
+#        echo "RENDER-DETAILS(shacl-languageaware): node /app/shacl-generator.js -i ${MERGEDJSONLD} ${PARAMETERS} -d ${DOMAIN} -p ${DOMAIN} -o ${OUTFILE} -l ${GOALLANGUAGE}"
+        pushd /ap
         mkdir -p ${TLINE}/shacl
         mkdir -p ${RLINE}/shacl
-        if ! node /app/shacl-generator2.js -i ${MERGEDJSONLD} -m individual -c 'uniqueLanguages' -c 'nodekind' -d ${DOMAIN} -p ${DOMAIN} -o ${OUTFILE} -l ${GOALLANGUAGE} 2>&1 | tee ${OUTREPORT}; then
-            echo "RENDER-DETAILS(shacl-languageaware): See ${OUTREPORT} for the details"
-            execution_strickness
-        else
-            echo "RENDER-DETAILS(shacl-languageaware): saved to ${OUTFILE}"
-        fi
+
+	oslo-shacl-template-generator ${PARAMETERS} \
+	        --input ${MERGEDJSONLD} \
+	       	--language ${GOALLANGUAGE} \
+		--output ${OUTFILE} \
+		--shapeBaseURI ${DOMAIN} \
+		--applicationProfileURL ${DOMAIN} \
+                 &> ${REPORTFILE}
+
+#        if ! node /app/shacl-generator2.js -i ${MERGEDJSONLD} ${PARAMETERS} -d ${DOMAIN} -p ${DOMAIN} -o ${OUTFILE} -l ${GOALLANGUAGE} 2>&1 | tee ${OUTREPORT}; then
+#            echo "RENDER-DETAILS(shacl-languageaware): See ${OUTREPORT} for the details"
+#            execution_strickness
+#        else
+#            echo "RENDER-DETAILS(shacl-languageaware): saved to ${OUTFILE}"
+#        fi
         prettyprint_jsonld ${OUTFILE}
 	if [ ${PRIMELANGUAGE} == true ] ; then
 		cp ${OUTFILE} ${TLINE}/shacl/${FILENAME}-SHACL.jsonld
@@ -587,11 +590,13 @@ cat ${CHECKOUTFILE} | while read line; do
                 render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
 	        done
                 ;;
-            shacl) # render_shacl $SLINE $TLINE $i $RLINE
-                render_shacl_languageaware $SLINE $TLINE $i $RLINE ${line} ${PRIMELANGUAGE} true
+            shacl) # render_shacl_languageaware $SLINE $TLINE $i $RLINE $LINE $LANGUAGE $PRIME
+                RLINE=${TARGETDIR}/reporthtml/${line}
+                mkdir -p ${RLINE}
+                render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
 		for g in ${GOALLANGUAGE} 
 		do 
-                render_shacl_languageaware $SLINE $TLINE $i $RLINE ${line} ${g}
+                render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${g}
 	        done
                 ;;
             context)

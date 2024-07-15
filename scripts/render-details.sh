@@ -342,8 +342,6 @@ render_shacl_languageaware() {
     local GOALLANGUAGE=$6
     local PRIMELANGUAGE=${7-false}
 
-
-${PARAMETERS} 
     FILENAME=$(jq -r ".name" ${JSONI})
     COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .mergefile')
     LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${SLINE}/.names.json)
