@@ -607,7 +607,6 @@ cat ${CHECKOUTFILE} | while read line; do
 	        done
                 ;;
             context)
-                RLINE=${TARGETDIR}/reporthtml/${line}
                 render_context $SLINE $TLINE $i $RLINE ${PRIMELANGUAGE} true
 		for g in ${GOALLANGUAGE} 
 		do 
