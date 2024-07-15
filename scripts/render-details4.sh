@@ -395,8 +395,8 @@ render_context() { # SLINE TLINE JSON
 
     REPORTFILE=${RLINE}/generator-shacl.report
 
-    COMMAND=$(echo '.[]|select(.name | contains("'${BASENAME}'"))|.type')
-    TYPE=$(jq -r "${COMMAND}" ${SLINE}/.names.json)
+    COMMAND=$(echo '.type')
+    TYPE=$(jq -r "${COMMAND}" ${JSONI})
 
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
 #        echo "RENDER-DETAILS(context): node /app/json-ld-generator.js -d -l label -i ${JSONI} -o ${TLINE}/context/${OUTFILELANGUAGE} "
