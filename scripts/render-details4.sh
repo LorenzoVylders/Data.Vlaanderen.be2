@@ -444,7 +444,7 @@ render_shacl_languageaware() {
 
     FILENAME=$(jq -r ".name" ${JSONI})
     COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .mergefile')
-    LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${SLINE}/.names.json)
+    LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${JSONI})
 
     if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
 	    echo "configuration for language ${GOALLANGUAGE} not present. Ignore this language for ${SLINE}"
