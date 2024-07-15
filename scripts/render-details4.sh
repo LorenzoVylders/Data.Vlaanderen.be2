@@ -598,7 +598,6 @@ cat ${CHECKOUTFILE} | while read line; do
 	        done
                 ;;
             shacl) # render_shacl_languageaware $SLINE $TLINE $i $RLINE $LINE $LANGUAGE $PRIME
-                RLINE=${TARGETDIR}/reporthtml/${line}
                 mkdir -p ${RLINE}
                 render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
 		for g in ${GOALLANGUAGE} 
