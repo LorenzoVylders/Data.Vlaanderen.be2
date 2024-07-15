@@ -459,15 +459,15 @@ render_shacl_languageaware() {
 
     BASENAME=$(basename ${JSONI} .jsonld)
 
-    COMMAND=$(echo '.[]|select(.name | contains("'${BASENAME}'"))|.type')
-    TYPE=$(jq -r "${COMMAND}" ${SLINE}/.names.json)
+    
+    COMMAND=$(echo '.type')
+    TYPE=$(jq -r "${COMMAND}" ${JSONI})
 
     generator_parameters shaclgenerator4 ${JSONI}
 
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
         DOMAIN="${HOSTNAME}/${LINE}"
 #        echo "RENDER-DETAILS(shacl-languageaware): node /app/shacl-generator.js -i ${MERGEDJSONLD} ${PARAMETERS} -d ${DOMAIN} -p ${DOMAIN} -o ${OUTFILE} -l ${GOALLANGUAGE}"
-        pushd /ap
         mkdir -p ${TLINE}/shacl
         mkdir -p ${RLINE}/shacl
 
@@ -489,7 +489,6 @@ render_shacl_languageaware() {
 	if [ ${PRIMELANGUAGE} == true ] ; then
 		cp ${OUTFILE} ${TLINE}/shacl/${FILENAME}-SHACL.jsonld
 	fi
-        popd
     fi
     fi
 }
@@ -574,11 +573,11 @@ echo "render-details: starting with $1 $2 $3"
 cat ${CHECKOUTFILE} | while read line; do
     SLINE=${TARGETDIR}/src/${line}
     TLINE=${TARGETDIR}/target/${line}
-    RLINE=${TARGETDIR}/report/${line}
+    RLINE=${TARGETDIR}/report4/${line}
     TRLINE=${TARGETDIR}/translation/${line}
     echo "RENDER-DETAILS: Processing line ${SLINE} => ${TLINE},${RLINE}"
-    if [ -d "${SLINE}" ]; then
-        for i in ${SLINE}/*.jsonld; do
+    if [ -d "${RLINE}" ]; then
+        for i in ${RLINE}/all-*.jsonld; do
             echo "RENDER-DETAILS: convert $i to ${DETAILS} ($PWD)"
             case ${DETAILS} in
             html)

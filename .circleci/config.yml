@@ -302,9 +302,9 @@ jobs:
             touch /tmp/workspace/report4/.ignore05
       - run:
           name: install software
-          command: sudo npm install --global @oslo-flanders/rdf-vocabulary-generator
+          command: sudo npm install --global @oslo-flanders/shacl-template-generator
       - run:
-          name: Render HTML version of merged json file (a)
+          name: Render SHACL version of merged json file (a)
           command: |
             mkdir -p /tmp/workspace/target /tmp/workspace/reporthtml
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
