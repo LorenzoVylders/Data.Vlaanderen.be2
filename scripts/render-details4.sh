@@ -393,7 +393,8 @@ render_context() { # SLINE TLINE JSON
     BASENAME=$(basename ${JSONI} .jsonld)
     #    OUTFILE=${BASENAME}.jsonld
 
-    REPORTFILE=${RLINE}/generator-shacl.report
+    REPORTFILE=${RLINE}/generator-jsonld-context.report
+    mkdir -p ${RLINE}
 
     COMMAND=$(echo '.type')
     TYPE=$(jq -r "${COMMAND}" ${JSONI})
@@ -408,7 +409,7 @@ render_context() { # SLINE TLINE JSON
 #        else 
 	
 	oslo-jsonld-context-generator ${PARAMETERS} \
-	        --input ${MERGEDJSONLD} \
+	        --input ${JSONI} \
 	       	--language ${GOALLANGUAGE} \
 		--output ${OUTFILELANGUAGE} \
                  &> ${REPORTFILE}
@@ -570,7 +571,7 @@ echo "render-details: starting with $1 $2 $3"
 
 cat ${CHECKOUTFILE} | while read line; do
     SLINE=${TARGETDIR}/src/${line}
-    TLINE=${TARGETDIR}/target/${line}
+    TLINE=${TARGETDIR}/report4/${line}
     RLINE=${TARGETDIR}/report4/${line}
     TRLINE=${TARGETDIR}/translation/${line}
     echo "RENDER-DETAILS: Processing line ${SLINE} => ${TLINE},${RLINE}"
