@@ -393,27 +393,36 @@ render_context() { # SLINE TLINE JSON
     BASENAME=$(basename ${JSONI} .jsonld)
     #    OUTFILE=${BASENAME}.jsonld
 
+    REPORTFILE=${RLINE}/generator-shacl.report
+
     COMMAND=$(echo '.[]|select(.name | contains("'${BASENAME}'"))|.type')
     TYPE=$(jq -r "${COMMAND}" ${SLINE}/.names.json)
 
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
-        echo "RENDER-DETAILS(context): node /app/json-ld-generator.js -d -l label -i ${JSONI} -o ${TLINE}/context/${OUTFILELANGUAGE} "
+#        echo "RENDER-DETAILS(context): node /app/json-ld-generator.js -d -l label -i ${JSONI} -o ${TLINE}/context/${OUTFILELANGUAGE} "
         mkdir -p ${TLINE}/context
-        COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .mergefile')
-        LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${SLINE}/.names.json)
-	if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
-	    echo "configuration for language ${GOALLANGUAGE} not present. Ignore this language for ${SLINE}"
-        else 
+#        COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .mergefile')
+#        LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${SLINE}/.names.json)
+#	if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
+#	    echo "configuration for language ${GOALLANGUAGE} not present. Ignore this language for ${SLINE}"
+#        else 
 	
+	oslo-jsonld-context-generator ${PARAMETERS} \
+	        --input ${MERGEDJSONLD} \
+	       	--language ${GOALLANGUAGE} \
+		--output ${OUTFILELANGUAGE} \
+                 &> ${REPORTFILE}
+
+
         MERGEDJSONLD=${RLINE}/translation/${LANGUAGEFILENAMEJSONLD}
 
-        echo "RENDER-DETAILS(context-language-aware): node /app/json-ld-generator2.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/context/${OUTFILELANGUAGE} -m ${GOALLANGUAGE}"
-        if ! node /app/json-ld-generator2.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/context/${OUTFILELANGUAGE} -m ${GOALLANGUAGE}; then
-            echo "RENDER-DETAILS(context-language-aware): See XXX for more details, Rendering failed"
-            execution_strickness
-        else
-            echo "RENDER-DETAILS(context-language-aware): Rendering successfull, File saved to  ${TLINE}/context/${OUTFILELANGUAGE}"
-        fi
+#        echo "RENDER-DETAILS(context-language-aware): node /app/json-ld-generator2.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/context/${OUTFILELANGUAGE} -m ${GOALLANGUAGE}"
+#        if ! node /app/json-ld-generator2.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/context/${OUTFILELANGUAGE} -m ${GOALLANGUAGE}; then
+#            echo "RENDER-DETAILS(context-language-aware): See XXX for more details, Rendering failed"
+#            execution_strickness
+#        else
+#            echo "RENDER-DETAILS(context-language-aware): Rendering successfull, File saved to  ${TLINE}/context/${OUTFILELANGUAGE}"
+#        fi
 
         prettyprint_jsonld ${TLINE}/context/${OUTFILELANGUAGE}
 	if [ ${PRIMELANGUAGE} == true ] ; then
@@ -600,6 +609,7 @@ cat ${CHECKOUTFILE} | while read line; do
 	        done
                 ;;
             context)
+                RLINE=${TARGETDIR}/reporthtml/${line}
                 render_context $SLINE $TLINE $i $RLINE ${PRIMELANGUAGE} true
 		for g in ${GOALLANGUAGE} 
 		do 
