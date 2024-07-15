@@ -310,8 +310,35 @@ jobs:
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
             ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace shacl ${CIRCLEWKD}/config
       - run:
-          name: copy the site-skeleton for the html
-          command: $PWD/scripts/copy_skeleton.sh
+          name: List the files which have been created
+          command: |
+            if [ -d /tmp/workspace/report4 ] ; then ls -al /tmp/workspace/report4/* ; fi || true
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - report4html/
+            - report4/
+  render-context-details-4:
+    docker:
+      - image: cimg/node:20.15.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: touch a file
+          command: |
+            mkdir -p /tmp/workspace/report4
+            touch /tmp/workspace/report4/.ignore05
+      - run:
+          name: install software
+          command: sudo npm install --global @oslo-flanders/jsonld-context-generator
+      - run:
+          name: Render JSONLD context of merged json file (a)
+          command: |
+            mkdir -p /tmp/workspace/target /tmp/workspace/reporthtml
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace context ${CIRCLEWKD}/config
       - run:
           name: List the files which have been created
           command: |
@@ -652,6 +679,9 @@ workflows:
       - render-html-details-4:
           requires:
             - render-rdf-details-4
+      - render-context-details-4:
+          requires:
+            - render-html-details-4
 #      - render-shacl-details-4:
 #          requires:
 #            - render-html-details-4
@@ -684,7 +714,7 @@ workflows:
             - checkout
       - expand-links:
           requires:
-            - render-html-details-4
+            - render-context-details-4
             - render-example-templates
             - convert-json-to-ttl
             - render-html-details
