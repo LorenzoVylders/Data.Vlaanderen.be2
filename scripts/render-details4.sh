@@ -411,7 +411,7 @@ render_context() { # SLINE TLINE JSON
 	oslo-jsonld-context-generator ${PARAMETERS} \
 	        --input ${JSONI} \
 	       	--language ${GOALLANGUAGE} \
-		--output ${OUTFILELANGUAGE} \
+		--output ${TLINE}/context/${OUTFILELANGUAGE} \
                  &> ${REPORTFILE}
 
 
