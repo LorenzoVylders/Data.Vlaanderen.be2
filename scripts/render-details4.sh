@@ -443,14 +443,14 @@ render_shacl_languageaware() {
     local PRIMELANGUAGE=${7-false}
 
     FILENAME=$(jq -r ".name" ${JSONI})
-    COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .mergefile')
-    LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${JSONI})
+#    COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .mergefile')
+#    LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${JSONI})
+#
+#    if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
+#	    echo "configuration for language ${GOALLANGUAGE} not present. Ignore this language for ${SLINE}"
+#    else 
 
-    if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
-	    echo "configuration for language ${GOALLANGUAGE} not present. Ignore this language for ${SLINE}"
-    else 
-
-    MERGEDJSONLD=${RLINE}/translation/${LANGUAGEFILENAMEJSONLD}
+#    MERGEDJSONLD=${RLINE}/translation/${LANGUAGEFILENAMEJSONLD}
     OUTFILE=${TLINE}/shacl/${FILENAME}-SHACL_${GOALLANGUAGE}.jsonld
     OUTREPORT=${RLINE}/shacl/${FILENAME}-SHACL_${GOALLANGUAGE}.report
 
@@ -489,7 +489,7 @@ render_shacl_languageaware() {
 		cp ${OUTFILE} ${TLINE}/shacl/${FILENAME}-SHACL.jsonld
 	fi
     fi
-    fi
+#    fi
 }
 
 render_xsd() { # SLINE TLINE JSON
