@@ -159,9 +159,6 @@ render_rdf() { # SLINE TLINE JSON
     OUTPUTDIR=${TLINE}/voc
     mkdir -p ${OUTPUTDIR}
 
-    COMMANDTEMPLATELANG=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
-    TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${JSONI})
-
     FILENAME=$(jq -r ".name" ${JSONI})
     MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
     MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
@@ -213,7 +210,7 @@ render_rdf() { # SLINE TLINE JSON
                  --contentType ${OUTPUTFORMAT} \
 		 --silent false \
 	         --language ${LANGUAGE} \
-                 &> ${REPORTFILE}
+                 &>> ${REPORTFILE}
 
 
 	if [ ${PRIMELANGUAGE} == true ] ; then
@@ -289,13 +286,15 @@ render_html() { # SLINE TLINE JSON
 	       SPECTYPE="ApplicationProfile"	    
     esac
 
+        echo "oslo-generator-respec for language ${LANGUAGE}" &>> ${REPORTFILE}
+        echo "-------------------------------------" &>> ${REPORTFILE}
         oslo-generator-respec --input ${MERGEDJSONLD} \
 	         --output ${OUTPUT} \
                  --specificationType ${SPECTYPE} \
 		 --specificationName "Dummy Title" \
 		 --silent false \
 	         --language ${LANGUAGE} \
-                 &> ${REPORTFILE}
+                 &>> ${REPORTFILE}
 
 
 #    if ! node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}; then
@@ -421,7 +420,7 @@ render_context() { # SLINE TLINE JSON
 	        --input ${MERGEDFILE} \
 	       	--language ${GOALLANGUAGE} \
 		--output ${TLINE}/context/${OUTFILELANGUAGE} \
-                 &> ${REPORTFILE}
+                 &>> ${REPORTFILE}
 
 
         MERGEDJSONLD=${RLINE}/translation/${LANGUAGEFILENAMEJSONLD}
@@ -485,7 +484,7 @@ render_shacl_languageaware() {
 		--output ${OUTFILE} \
 		--shapeBaseURI ${DOMAIN} \
 		--applicationProfileURL ${DOMAIN} \
-                 &> ${REPORTFILE}
+                 &>> ${REPORTFILE}
 
 #        if ! node /app/shacl-generator2.js -i ${MERGEDJSONLD} ${PARAMETERS} -d ${DOMAIN} -p ${DOMAIN} -o ${OUTFILE} -l ${GOALLANGUAGE} 2>&1 | tee ${OUTREPORT}; then
 #            echo "RENDER-DETAILS(shacl-languageaware): See ${OUTREPORT} for the details"
