@@ -255,6 +255,32 @@ jobs:
           paths:
             - report4html/
             - report4/
+  render-translation-4:
+    docker:
+      - image: informatievlaanderen/oslo-specification-generator:multilingual-dev4.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: upgrade configs to this toolchain
+          command: |
+            mkdir -p /tmp/workspace/translation
+            $PWD/scripts/upgrade_config.sh /tmp/workspace $PWD/config
+      - run:
+          name: Render translation JSON from jsonld
+          command: |
+            mkdir -p /tmp/workspace/translation
+            $PWD/scripts/render-details.sh /tmp/workspace translation $PWD/config
+      - run:
+          name: touch a file
+          command: |
+            touch /tmp/workspace/translation/.ignore04
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - report4html/
+            - report4/
   render-rdf-details-4:
     docker:
       - image: cimg/node:20.15.0

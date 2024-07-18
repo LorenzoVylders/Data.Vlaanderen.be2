@@ -47,80 +47,95 @@ generator_parameters() {
 
 
 render_merged_files() {
-    echo "Rendering the merged version of $1 with the json in $2 from $3 and to $4"
-    local JSONI=$1
-    local LANGUAGE=$2
-    local SLINE=$3
-    local TRLINE=$4
-    local RLINE=$5
+    echo "Merge the translation file for language $2 with the source $3"
+    local PRIMELANGUAGE=$1
+    local GOALLANGUAGE=$2
+    local JSONI=$3
+    local SLINE=$4
+    local TRLINE=$5
+    local RLINE=$6
 
-    COMMANDLANGJSON=$(echo '.[].translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .translationjson')
-    TRANSLATIONFILE=${TRLINE}/translation/$(jq -r "${COMMANDLANGJSON}" ${SLINE}/.names.json)
+    FILENAME=$(jq -r ".name" ${JSONI})
+    GOALFILENAME=${FILENAME}_${GOALLANGUAGE}.json
 
-    COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .mergefile')
-    MERGEDJSONLD=${RLINE}/translation/$(jq -r "${COMMANDJSONLD}" ${SLINE}/.names.json)
-    MERGEDJSONLDDIR=$(dirname ${MERGEDJSONLD})
-    echo "check for error $MERGEDJSONLD"
-    echo "check for error $MERGEDJSONLDDIR"
-    mkdir -p ${MERGEDJSONLDDIR}
+    COMMANDLANGJSON=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .translationjson')
+    TRANSLATIONFILE=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
+    # secure the case that the translation file is not mentioned
+    if [ "${TRANSLATIONFILE}" == ""  ] || [ "${TRANSLATIONFILE}" == "null" ] ; then
+         TRANSLATIONFILE=${GOALFILENAME}
+    fi
 
-    if [ -f "${TRANSLATIONFILE}" ]; then
-        echo "${TRANSLATIONFILE} exists, the files will now be merged."
-        echo "RENDER-DETAILS(mergefile): node /app/jsonld-merger.js -i ${JSONI} -m ${TRANSLATIONFILE} -l ${LANGUAGE} -o ${MERGEDJSONLD}"
-        if ! node /app/jsonld-merger.js -i ${JSONI} -m ${TRANSLATIONFILE} -l ${LANGUAGE} -o ${MERGEDJSONLD}; then
+    # assume that previously the translation files have been copied to the target
+    INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
+
+    if [ -f "${INPUTTRANSLATIONFILE}" ]; then
+        echo "A translation file ${TRANSLATIONFILE} exists."
+    fi
+
+    MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
+    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+
+    if [ -f "${INPUTTRANSLATIONFILE}" ]; then
+        echo "${INPUTTRANSLATIONFILE} exists, the files will be merged."
+        echo "RENDER-DETAILS(mergefile): node /app/translation-json-update.js -i ${JSONI} -f ${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE}"
+        if ! node /app/translation-json-update.js -i ${JSONI} -f ${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE}; then
             echo "RENDER-DETAILS: failed"
 	    execution_strickness
         else
-            echo "RENDER-DETAILS: Files succesfully merged and saved to: ${MERGEDJSONLD}"
-            prettyprint_jsonld ${MERGEDJSONLD}
+            echo "RENDER-DETAILS: Files succesfully merged and saved to: ${MERGEDFILE}"
+            prettyprint_jsonld ${MERGEDFILE}
         fi
     else
-        echo "${TRANSLATIONFILE} does not exist, nothing to merge. Just copy it"
+        echo "${INPUTTRANSLATIONFILE} does not exist, nothing to merge. Just copy it"
 	cp ${JSONI} ${MERGEDJSONLD}
     fi
 }
 
 render_translationfiles() {
-    echo "checking if translationfile exists for primelanguage $1, goallanguage $2 and file $3 in the directory $4"
+    echo "create translations for primelanguage $1, goallanguage $2 and file $3 in the directory $4"
     local PRIMELANGUAGE=$1
     local GOALLANGUAGE=$2
     local JSONI=$3
     local SLINE=$4
     local TLINE=$5
 
+    
+    FILENAME=$(jq -r ".name" ${JSONI})
+    PRIMEOUTPUTFILENAME=${FILENAME}_${PRIMELANGUAGE}.json
+    GOALOUTPUTFILENAME=${FILENAME}_${GOALLANGUAGE}.json
+
+
     COMMANDLANGJSON=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .translationjson')
-    JSON=$(jq -r "${COMMANDLANGJSON}" ${SLINE}/.names.json)
+    TRANSLATIONFILE=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
     # secure the case that the translation file is not mentioned
-    if [ "${JSON}" == ""  ] || [ "${JSON}" == "null" ] ; then
-         COMMANDNAME=$(echo '.[].name')
-          JSON=$(jq -r "${COMMANDNAME}" ${SLINE}/.names.json)
-         JSON="${JSON}_${GOALLANGUAGE}.json"
+    if [ "${TRANSLATIONFILE}" == ""  ] || [ "${TRANSLATIONFILE}" == "null" ] ; then
+         TRANSLATIONFILE=${GOALOUTPUTFILENAME}
     fi
 
-    FILE=${SLINE}/translation/${JSON}
-
     mkdir -p ${TLINE}/translation
-    OUTPUTFILE=${TLINE}/translation/${JSON}
+    INPUTTRANSLATIONFILE=${SLINE}/translation/${TRANSLATIONFILE}
+    OUTPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
 
-    if [ -f "${FILE}" ]; then
-        echo "${FILE} exists."
-        echo "UPDATE-TRANSLATIONFILE: node /app/translation-json-update.js -i ${FILE} -f ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTFILE}"
-        if ! node /app/translation-json-update.js -i ${FILE} -f ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTFILE}; then
+
+    if [ -f "${INPUTTRANSLATIONFILE}" ]; then
+        echo "A translation file ${TRANSLATIONFILE} exists."
+        echo "UPDATE the translation file: node /app/translation-json-generator.js -i ${FILE} -f ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTFILE}"
+        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
-            echo "RENDER-DETAILS: File succesfully updated"
-            pretty_print_json ${OUTPUTFILE}
+            echo "RENDER-DETAILS: translation file succesfully updated"
+            pretty_print_json ${OUTPUTTRANSLATIONFILE}
         fi
     else
-        echo "${FILE} does not exist"
-        echo "CREATE-TRANSLATIONFILE: node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTFILE}"
-        if ! node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTFILE}; then
+        echo "NO translation file ${TRANSLATIONFILE} exists"
+        echo "CREATE a translation file: node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}"
+        if ! node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
-            echo "RENDER-DETAILS: File succesfully created"
-            pretty_print_json ${OUTPUTFILE}
+            echo "RENDER-DETAILS: translation file succesfully created"
+            pretty_print_json ${OUTPUTTRANSLATIONFILE}
         fi
     fi
 }
@@ -620,7 +635,8 @@ cat ${CHECKOUTFILE} | while read line; do
                 render_xsd $SLINE $TLINE $i $RLINE ${g} 
 	        done
                 ;;
-            multilingual)
+            translation)
+                mkdir -p ${RLINE}
 		for g in ${GOALLANGUAGE} 
 		do 
                 render_translationfiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TRLINE}
@@ -628,10 +644,11 @@ cat ${CHECKOUTFILE} | while read line; do
                 render_translationfiles ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TRLINE}
                 ;;
             merge)
-                render_merged_files $i ${PRIMELANGUAGE} ${SLINE} ${TRLINE} ${RLINE}
+                mkdir -p ${RLINE}
+                render_merged_files ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TRLINE} ${RLINE}
 		for g in ${GOALLANGUAGE} 
 	        do
-                render_merged_files $i ${g} ${SLINE} ${TRLINE} ${RLINE}
+                render_merged_files ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TRLINE} ${RLINE}
 	        done
                 ;;
             report)
