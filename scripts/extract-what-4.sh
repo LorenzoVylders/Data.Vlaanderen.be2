@@ -14,6 +14,10 @@ CONFIGDIR=${2:-$CONFIGDIR_DEFAULT/config}
 # extraction command functions
 
 get_mapping_file() {
+    if [ -f ".names.json" ] ; then
+	    # mapping file is already extracted
+	MAPPINGFILE=".names.json"
+    else 
     local MAPPINGFILE=`jq -r 'if (.filename | length) > 0 then .filename else @sh "config/eap-mapping.json"  end' .publication-point.json`
     #local MAPPINGFILE="config/eap-mapping.json"
     if [ -f ".names.txt" ]
@@ -21,6 +25,7 @@ get_mapping_file() {
 	STR=".[] | select(.name == \"$(cat .names.txt)\") | [.]"
 	jq "${STR}" ${MAPPINGFILE} > .names.json
 	MAPPINGFILE=".names.json"
+    fi
     fi
     echo ${MAPPINGFILE}
 }
