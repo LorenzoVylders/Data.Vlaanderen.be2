@@ -221,7 +221,6 @@ render_rdf() { # SLINE TLINE JSON
 	fi
         echo "RENDER-DETAILS(RDF artefact): File was rendered in ${OUTPUT}"
 
-    fi
 }
 
 
