@@ -87,7 +87,6 @@ jobs:
       - run:
           name: upgrade configs to this toolchain 
           command: |
-            mkdir -p /tmp/workspace/translation
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
             ${CIRCLEWKD}/scripts/upgrade_config-4.sh /tmp/workspace ${CIRCLEWKD}/config
       - run:
@@ -269,17 +268,16 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - run:
-          name: upgrade configs to this toolchain
-          command: |
-            mkdir -p /tmp/workspace/translation
-            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
-            ${CIRCLEWKD}/scripts/upgrade_config.sh /tmp/workspace ${CIRCLEWKD}/config
-      - run:
           name: Render translation JSON from jsonld
           command: |
             mkdir -p /tmp/workspace/translation
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
             ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace translation ${CIRCLEWKD}/config
+      - run:
+          name: merge translations with the prime representation
+          command: |
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace merge ${CIRCLEWKD}/config
       - run:
           name: touch a file
           command: |

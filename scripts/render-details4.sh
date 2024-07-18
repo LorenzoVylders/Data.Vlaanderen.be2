@@ -58,10 +58,13 @@ render_merged_files() {
     FILENAME=$(jq -r ".name" ${JSONI})
     GOALFILENAME=${FILENAME}_${GOALLANGUAGE}.json
 
-    COMMANDLANGJSON=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .translationjson')
+    COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .translationjson')
     TRANSLATIONFILE=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
     # secure the case that the translation file is not mentioned
     if [ "${TRANSLATIONFILE}" == ""  ] || [ "${TRANSLATIONFILE}" == "null" ] ; then
+	    # if there is no translation file defined in the config then 
+	    # continue the creation of a merge only if there auto-translation is switched on
+	    # TODO: implemenet options
          TRANSLATIONFILE=${GOALFILENAME}
     fi
 
@@ -72,6 +75,7 @@ render_merged_files() {
         echo "A translation file ${TRANSLATIONFILE} exists."
     fi
 
+    mkdir -p ${RLINE}/merged
     MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
     MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
 
@@ -87,7 +91,7 @@ render_merged_files() {
         fi
     else
         echo "${INPUTTRANSLATIONFILE} does not exist, nothing to merge. Just copy it"
-	cp ${JSONI} ${MERGEDJSONLD}
+	cp ${JSONI} ${MERGEDFILE}
     fi
 }
 
@@ -105,7 +109,7 @@ render_translationfiles() {
     GOALOUTPUTFILENAME=${FILENAME}_${GOALLANGUAGE}.json
 
 
-    COMMANDLANGJSON=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .translationjson')
+    COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .translationjson')
     TRANSLATIONFILE=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
     # secure the case that the translation file is not mentioned
     if [ "${TRANSLATIONFILE}" == ""  ] || [ "${TRANSLATIONFILE}" == "null" ] ; then
@@ -565,7 +569,7 @@ write_report() {
 
     mkdir -p /tmp/workspace/report/translation
     FILENAME=$(jq -r ".name" ${JSONI})_${GOALLANGUAGE}
-    COMMANDLANGJSON=$(echo '.[].translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .translationjson')
+    COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .translationjson')
     TRANSLATIONFILE=${TRLINE}/translation/$(jq -r "${COMMANDLANGJSON}" ${SLINE}/.names.json)
     REPORTFILE=/tmp/workspace/report/translation/${FILENAME}.report
 
@@ -639,9 +643,9 @@ cat ${CHECKOUTFILE} | while read line; do
                 mkdir -p ${RLINE}
 		for g in ${GOALLANGUAGE} 
 		do 
-                render_translationfiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TRLINE}
+                render_translationfiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE}
 	        done
-                render_translationfiles ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TRLINE}
+                render_translationfiles ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TLINE}
                 ;;
             merge)
                 mkdir -p ${RLINE}
