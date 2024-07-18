@@ -266,12 +266,14 @@ jobs:
           name: upgrade configs to this toolchain
           command: |
             mkdir -p /tmp/workspace/translation
-            $PWD/scripts/upgrade_config.sh /tmp/workspace $PWD/config
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            ${CIRCLEWKD}/scripts/upgrade_config.sh /tmp/workspace ${CIRCLEWKD}/config
       - run:
           name: Render translation JSON from jsonld
           command: |
             mkdir -p /tmp/workspace/translation
-            $PWD/scripts/render-details.sh /tmp/workspace translation $PWD/config
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace translation ${CIRCLEWKD}/config
       - run:
           name: touch a file
           command: |
