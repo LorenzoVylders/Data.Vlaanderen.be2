@@ -85,6 +85,12 @@ jobs:
           name: install software
           command: sudo npm install --global @oslo-flanders/ea-converter
       - run:
+          name: upgrade configs to this toolchain 
+          command: |
+            mkdir -p /tmp/workspace/translation
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            ${CIRCLEWKD}/scripts/upgrade_config.sh /tmp/workspace ${CIRCLEWKD}/config
+      - run:
           name: Extract json details from UML diagram(s)
           command: |
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
