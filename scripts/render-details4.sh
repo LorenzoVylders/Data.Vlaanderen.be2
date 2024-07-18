@@ -395,8 +395,17 @@ render_context() { # SLINE TLINE JSON
     OUTFILE=${FILENAME}.jsonld
     OUTFILELANGUAGE=${FILENAME}_${GOALLANGUAGE}.jsonld
 
-    BASENAME=$(basename ${JSONI} .jsonld)
-    #    OUTFILE=${BASENAME}.jsonld
+    FILENAME=$(jq -r ".name" ${JSONI})
+    MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
+    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+
+     if [ -f ${MERGEDFILE} ] ; then
+            echo "translations integrated file found"
+     else
+            echo "defaulting to the primelanguage version"
+            local filename=$(cat ${SLINE}/.names.txt)
+            MERGEDFILE=${RRLINE}/all-${filename}.jsonld
+     fi
 
     REPORTFILE=${RLINE}/generator-jsonld-context.report
     mkdir -p ${RLINE}
@@ -407,14 +416,9 @@ render_context() { # SLINE TLINE JSON
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
 #        echo "RENDER-DETAILS(context): node /app/json-ld-generator.js -d -l label -i ${JSONI} -o ${TLINE}/context/${OUTFILELANGUAGE} "
         mkdir -p ${TLINE}/context
-#        COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .mergefile')
-#        LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${SLINE}/.names.json)
-#	if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
-#	    echo "configuration for language ${GOALLANGUAGE} not present. Ignore this language for ${SLINE}"
-#        else 
 	
 	oslo-jsonld-context-generator ${PARAMETERS} \
-	        --input ${JSONI} \
+	        --input ${MERGEDFILE} \
 	       	--language ${GOALLANGUAGE} \
 		--output ${TLINE}/context/${OUTFILELANGUAGE} \
                  &> ${REPORTFILE}
