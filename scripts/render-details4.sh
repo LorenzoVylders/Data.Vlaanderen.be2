@@ -156,46 +156,37 @@ render_rdf() { # SLINE TLINE JSON
     local LANGUAGE=$7
     local PRIMELANGUAGE=${8-false}
 
-    # XXX temporary overwrite TLINE with RRLINE
-    TLINE=${RRLINE}
-
-    BASENAME=$(basename ${JSONI} .jsonld)
-    #    OUTFILE=${BASENAME}.html
-    # precendence order: Theme repository > publication repository > tool repository
-    # XXX TODO: reactivate
-#    cp -n ${HOME}/project/templates/* ${SLINE}/templates
-#    cp -n /app/views/* ${SLINE}/templates
-    #cp -n ${HOME}/project/templates/icons/* ${SLINE}/templates/icons
-    mkdir -p ${RLINE}
-
-
-
     OUTPUTDIR=${TLINE}/voc
     mkdir -p ${OUTPUTDIR}
 
-    COMMANDTEMPLATELANG=$(echo '.[].translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
-    TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${SLINE}/.names.json)
-    COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .mergefile')
-    LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${SLINE}/.names.json)
-    if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
-	    echo "configuration for language ${GOALLANGUAGE} not present. Ignore this language for ${SLINE}"
-    else 
-	
-    MERGEDJSONLD=${RRLINE}/translation/${LANGUAGEFILENAMEJSONLD}
+    COMMANDTEMPLATELANG=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
+    TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${JSONI})
 
-     if [ -f ${MERGEDJSONLD} ] ; then
+    FILENAME=$(jq -r ".name" ${JSONI})
+    MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
+    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+
+#    COMMANDJSONLD=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .mergefile')
+#    LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${JSONI})
+#    if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
+#	    echo "configuration for language ${LANGUAGE} not present. Ignore this language for ${SLINE}"
+#    else 
+	
+#    MERGEDJSONLD=${RRLINE}/translation/${LANGUAGEFILENAMEJSONLD}
+
+     if [ -f ${MERGEDFILE} ] ; then
             echo "translations integrated file found"
      else
             echo "defaulting to the primelanguage version"
             local filename=$(cat ${SLINE}/.names.txt)
-            MERGEDJSONLD=${RRLINE}/all-${filename}.jsonld
+            MERGEDFILE=${RRLINE}/all-${filename}.jsonld
      fi
 
      COMMANDname=$(echo '.name')
-     VOCNAME=$(jq -r "${COMMANDname}" ${MERGEDJSONLD})
+     VOCNAME=$(jq -r "${COMMANDname}" ${MERGEDFILE})
 
      COMMANDtype=$(echo '.type')
-     TYPE=$(jq -r "${COMMANDtype}" ${MERGEDJSONLD})
+     TYPE=$(jq -r "${COMMANDtype}" ${MERGEDFILE})
  
      REPORTFILE=${RRLINE}/generator-rdf.report
 
@@ -205,7 +196,7 @@ render_rdf() { # SLINE TLINE JSON
 
     echo "RENDER-DETAILS(rdf): oslo-generator-rdf -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}"
 
-
+# TODO only render RDF in case of Vocabularies
     case $TYPE in
 	    ap) SPECTYPE="ApplicationProfile"
 		    ;;
@@ -225,15 +216,10 @@ render_rdf() { # SLINE TLINE JSON
                  &> ${REPORTFILE}
 
 
-#    if ! node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}; then
-#        echo "RENDER-DETAILS(language html): rendering failed"
-#	execution_strickness
-#    else
 	if [ ${PRIMELANGUAGE} == true ] ; then
 		cp ${OUTPUT} ${OUTPUTDIR}/${VOCNAME}.ttl
 	fi
-        echo "RENDER-DETAILS(language html): File was rendered in ${OUTPUT}"
-#    fi
+        echo "RENDER-DETAILS(RDF artefact): File was rendered in ${OUTPUT}"
 
     fi
 }
@@ -610,7 +596,6 @@ cat ${CHECKOUTFILE} | while read line; do
 	        done
                 ;;
             rdf)
-                RLINE=${TARGETDIR}/reporthtml/${line}
                 mkdir -p ${RLINE}
                 render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
 		for g in ${GOALLANGUAGE} 
