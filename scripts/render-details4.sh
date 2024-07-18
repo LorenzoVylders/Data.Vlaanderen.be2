@@ -69,6 +69,7 @@ render_merged_files() {
     fi
 
     # assume that previously the translation files have been copied to the target
+    # we must ensure that the relative directory from OSLOthema repo is followed
     INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
 
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
@@ -82,7 +83,7 @@ render_merged_files() {
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "${INPUTTRANSLATIONFILE} exists, the files will be merged."
         echo "RENDER-DETAILS(mergefile): node /app/translation-json-update.js -i ${JSONI} -f ${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE}"
-        if ! node /app/translation-json-update.js -i ${JSONI} -f ${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE}; then
+        if ! node /app/translation-json-update.js -i ${JSONI} -f ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE}; then
             echo "RENDER-DETAILS: failed"
 	    execution_strickness
         else
