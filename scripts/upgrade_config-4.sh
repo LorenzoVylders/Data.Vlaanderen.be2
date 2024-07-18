@@ -4,9 +4,28 @@ TARGETDIR=$1
 CONFIGDIR=$2
 CHECKOUTFILE=${TARGETDIR}/checkouts.txt
 
+#############################################################################################
+#
+# calculate the configuration from the specification
+#
+#############################################################################################
+get_mapping_file() {
+    local MAPPINGFILE=`jq -r 'if (.filename | length) > 0 then .filename else @sh "config/eap-mapping.json"  end' .publication-point.json`
+    #local MAPPINGFILE="config/eap-mapping.json"
+    if [ -f ".names.txt" ]
+    then
+	STR=".[] | select(.name == \"$(cat .names.txt)\") | [.]"
+	jq "${STR}" ${MAPPINGFILE} > .names.json
+	MAPPINGFILE=".names.json"
+    fi
+    echo ${MAPPINGFILE}
+}
+
+#############################################################################################
 #
 # convert older toolchain version configs to this version
 #
+#############################################################################################
 
 upgrade_config() {
     local SLINE=$1
@@ -19,8 +38,6 @@ upgrade_config() {
 
     HASTRANSLATION=$(jq -r .[0].translation[0].language ${SLINE}/.names.json)
     echo "${HASTRANSLATION}: if null then no translation is present and thus configuration will be updated."
-
-    echo "$(jq -r .[0])"
 
     TITLE=$(jq -r .[0].title ${SLINE}/.names.json)
     TEMPLATE=$(jq -r .[0].template ${SLINE}/.names.json)
@@ -75,6 +92,9 @@ cat ${CHECKOUTFILE} | while read line; do
     RLINE=${TARGETDIR}/report/${line}
     TRLINE=${TARGETDIR}/translation/${line}
     if [ -d "${SLINE}" ]; then
+         pushd ${SLINE}
+         MAPPINGFILE=$(get_mapping_file)   
+	 popd
         upgrade_config ${SLINE}
     else
         echo "Error: ${SLINE}"
