@@ -699,6 +699,9 @@ workflows:
       - render-html-details:
           requires:
             - render-merged-jsonld
+      - render-translation-4:
+          requires:
+            - extract-jsonld-details-4
       - render-rdf-details-4:
           requires:
             - extract-jsonld-details-4
