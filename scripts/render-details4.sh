@@ -182,8 +182,10 @@ render_rdf() { # SLINE TLINE JSON
      OUTPUT=${OUTPUTDIR}/${VOCNAME}_${LANGUAGE}.ttl
      OUTPUTFORMAT="text/turtle"
 
+    generator_parameters rdfgenerator4 ${JSONI}
+
     if [ ${TYPE} == "voc" ]; then
-    echo "RENDER-DETAILS(rdf): oslo-generator-rdf -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}"
+    echo "RENDER-DETAILS(rdf): oslo-generator-rdf -s ${TYPE} -i ${MERGEDFILE} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}"
 
     case $TYPE in
 	    ap) SPECTYPE="ApplicationProfile"
@@ -198,7 +200,8 @@ render_rdf() { # SLINE TLINE JSON
 
         echo "oslo-generator-rdf for language ${LANGUAGE}" &>> ${REPORTFILE}
         echo "-------------------------------------" &>> ${REPORTFILE}
-        oslo-generator-rdf --input ${MERGEDFILE} \
+        oslo-generator-rdf ${PARAMETERS} \
+	         --input ${MERGEDFILE} \
 	         --output ${OUTPUT} \
                  --contentType ${OUTPUTFORMAT} \
 		 --silent false \
@@ -256,7 +259,8 @@ render_html() { # SLINE TLINE JSON
 	
 
      REPORTFILE=${RRLINE}/generator-respec.report
-
+f
+    generator_parameters htmlgenerator4 ${JSONI}
 
     echo "RENDER-DETAILS(language html): node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}"
 
@@ -274,7 +278,8 @@ render_html() { # SLINE TLINE JSON
 
         echo "oslo-generator-respec for language ${LANGUAGE}" &>> ${REPORTFILE}
         echo "-------------------------------------" &>> ${REPORTFILE}
-        oslo-generator-respec --input ${MERGEDFILE} \
+        oslo-generator-respec ${PARAMETERS} \
+	         --input ${MERGEDFILE} \
 	         --output ${OUTPUT} \
                  --specificationType ${SPECTYPE} \
 		 --specificationName "Dummy Title" \
@@ -394,6 +399,8 @@ render_context() { # SLINE TLINE JSON
 
     COMMAND=$(echo '.type')
     TYPE=$(jq -r "${COMMAND}" ${JSONI})
+
+    generator_parameters contextgenerator4 ${JSONI}
 
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
 #        echo "RENDER-DETAILS(context): node /app/json-ld-generator.js -d -l label -i ${JSONI} -o ${TLINE}/context/${OUTFILELANGUAGE} "
