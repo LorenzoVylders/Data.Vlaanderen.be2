@@ -235,42 +235,34 @@ render_html() { # SLINE TLINE JSON
     local LANGUAGE=$7
     local PRIMELANGUAGE=${8-false}
 
-    # XXX temporary overwrite TLINE with RRLINE
-    TLINE=${RRLINE}
+    FILENAME=$(jq -r ".name" ${JSONI})
+    MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
+    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
 
-    BASENAME=$(basename ${JSONI} .jsonld)
-    #    OUTFILE=${BASENAME}.html
+     if [ -f ${MERGEDFILE} ] ; then
+            echo "translations integrated file found"
+     else
+            echo "defaulting to the primelanguage version"
+            MERGEDFILE=${JSONI}
+     fi
+
     # precendence order: Theme repository > publication repository > tool repository
     # XXX TODO: reactivate
-#    cp -n ${HOME}/project/templates/* ${SLINE}/templates
-#    cp -n /app/views/* ${SLINE}/templates
-    #cp -n ${HOME}/project/templates/icons/* ${SLINE}/templates/icons
+    cp -n ${HOME}/project/templates/* ${SLINE}/templates
+    cp -n /app/views/* ${SLINE}/templates
+    cp -n ${HOME}/project/templates/icons/* ${SLINE}/templates/icons
     mkdir -p ${RLINE}
 
-    COMMAND=$(echo '.[]|select(.name | contains("'${BASENAME}'"))|.type')
-    TYPE=$(jq -r "${COMMAND}" ${SLINE}/.names.json)
+    COMMAND=$(echo '.type')
+    TYPE=$(jq -r "${COMMAND}" ${JSONI})
 
     mkdir -p ${TLINE}/html
 
     OUTPUT=${TLINE}/index_${LANGUAGE}.html
-    COMMANDTEMPLATELANG=$(echo '.[].translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
-    TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${SLINE}/.names.json)
-    COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .mergefile')
-    LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${SLINE}/.names.json)
-    if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
-	    echo "configuration for language ${GOALLANGUAGE} not present. Ignore this language for ${SLINE}"
-    else 
+    COMMANDTEMPLATELANG=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
+    TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${JSONI})
 	
-    MERGEDJSONLD=${RRLINE}/translation/${LANGUAGEFILENAMEJSONLD}
 
-     if [ -f ${MERGEDJSONLD} ] ; then
-            echo "translations integrated file found"
-     else
-            echo "defaulting to the primelanguage version"
-            local filename=$(cat ${SLINE}/.names.txt)
-            MERGEDJSONLD=${RRLINE}/all-${filename}.jsonld
-     fi
- 
      REPORTFILE=${RRLINE}/generator-respec.report
 
 
@@ -290,7 +282,7 @@ render_html() { # SLINE TLINE JSON
 
         echo "oslo-generator-respec for language ${LANGUAGE}" &>> ${REPORTFILE}
         echo "-------------------------------------" &>> ${REPORTFILE}
-        oslo-generator-respec --input ${MERGEDJSONLD} \
+        oslo-generator-respec --input ${MERGEDFILE} \
 	         --output ${OUTPUT} \
                  --specificationType ${SPECTYPE} \
 		 --specificationName "Dummy Title" \
@@ -591,7 +583,6 @@ cat ${CHECKOUTFILE} | while read line; do
             echo "RENDER-DETAILS: convert $i to ${DETAILS} ($PWD)"
             case ${DETAILS} in
             html)
-                RLINE=${TARGETDIR}/reporthtml/${line}
                 mkdir -p ${RLINE}
                 render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
 		for g in ${GOALLANGUAGE} 
