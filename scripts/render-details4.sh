@@ -163,20 +163,11 @@ render_rdf() { # SLINE TLINE JSON
     MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
     MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
 
-#    COMMANDJSONLD=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .mergefile')
-#    LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${JSONI})
-#    if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
-#	    echo "configuration for language ${LANGUAGE} not present. Ignore this language for ${SLINE}"
-#    else 
-	
-#    MERGEDJSONLD=${RRLINE}/translation/${LANGUAGEFILENAMEJSONLD}
-
      if [ -f ${MERGEDFILE} ] ; then
             echo "translations integrated file found"
      else
             echo "defaulting to the primelanguage version"
-            local filename=$(cat ${SLINE}/.names.txt)
-            MERGEDFILE=${RRLINE}/all-${filename}.jsonld
+            MERGEDFILE=${JSONI}
      fi
 
      COMMANDname=$(echo '.name')
