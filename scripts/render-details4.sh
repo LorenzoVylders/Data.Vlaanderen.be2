@@ -451,22 +451,22 @@ render_shacl_languageaware() {
     local PRIMELANGUAGE=${7-false}
 
     FILENAME=$(jq -r ".name" ${JSONI})
-#    COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .mergefile')
-#    LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${JSONI})
-#
-#    if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
-#	    echo "configuration for language ${GOALLANGUAGE} not present. Ignore this language for ${SLINE}"
-#    else 
 
-#    MERGEDJSONLD=${RLINE}/translation/${LANGUAGEFILENAMEJSONLD}
+    MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
+    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+
+     if [ -f ${MERGEDFILE} ] ; then
+            echo "translations integrated file found"
+     else
+            echo "defaulting to the primelanguage version"
+            MERGEDFILE=${JSONI}
+     fi
+
     OUTFILE=${TLINE}/shacl/${FILENAME}-SHACL_${GOALLANGUAGE}.jsonld
     OUTREPORT=${RLINE}/shacl/${FILENAME}-SHACL_${GOALLANGUAGE}.report
 
     REPORTFILE=${LINE}/generator-shacl.report
 
-    BASENAME=$(basename ${JSONI} .jsonld)
-
-    
     COMMAND=$(echo '.type')
     TYPE=$(jq -r "${COMMAND}" ${JSONI})
 
@@ -478,8 +478,10 @@ render_shacl_languageaware() {
         mkdir -p ${TLINE}/shacl
         mkdir -p ${RLINE}/shacl
 
+        echo "oslo-shacl-template-generator for language ${GOALLANGUAGE}" &>> ${REPORTFILE}
+        echo "-------------------------------------" &>> ${REPORTFILE}
 	oslo-shacl-template-generator ${PARAMETERS} \
-	        --input ${JSONI} \
+	        --input ${MERGEDFILE} \
 	       	--language ${GOALLANGUAGE} \
 		--output ${OUTFILE} \
 		--shapeBaseURI ${DOMAIN} \
