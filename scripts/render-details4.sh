@@ -302,7 +302,6 @@ render_html() { # SLINE TLINE JSON
 #    fi
 
 #    pretty_print_json ${RLINE}/html-nj_${LANGUAGE}.json
-    fi
 }
 
 link_html() { # SLINE TLINE JSON
