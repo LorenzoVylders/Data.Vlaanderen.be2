@@ -205,7 +205,9 @@ render_rdf() { # SLINE TLINE JSON
 	       SPECTYPE="ApplicationProfile"	    
     esac
 
-        oslo-generator-rdf --input ${MERGEDJSONLD} \
+        echo "oslo-generator-rdf for language ${LANGUAGE}" &>> ${REPORTFILE}
+        echo "-------------------------------------" &>> ${REPORTFILE}
+        oslo-generator-rdf --input ${MERGEDFILE} \
 	         --output ${OUTPUT} \
                  --contentType ${OUTPUTFORMAT} \
 		 --silent false \
@@ -394,16 +396,14 @@ render_context() { # SLINE TLINE JSON
     OUTFILE=${FILENAME}.jsonld
     OUTFILELANGUAGE=${FILENAME}_${GOALLANGUAGE}.jsonld
 
-    FILENAME=$(jq -r ".name" ${JSONI})
-    MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
+    MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
     MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
 
      if [ -f ${MERGEDFILE} ] ; then
             echo "translations integrated file found"
      else
             echo "defaulting to the primelanguage version"
-            local filename=$(cat ${SLINE}/.names.txt)
-            MERGEDFILE=${RRLINE}/all-${filename}.jsonld
+            MERGEDFILE=${JSONI}
      fi
 
     REPORTFILE=${RLINE}/generator-jsonld-context.report
@@ -416,14 +416,14 @@ render_context() { # SLINE TLINE JSON
 #        echo "RENDER-DETAILS(context): node /app/json-ld-generator.js -d -l label -i ${JSONI} -o ${TLINE}/context/${OUTFILELANGUAGE} "
         mkdir -p ${TLINE}/context
 	
+        echo "oslo-jsonld-context-generator for language ${GOALLANGUAGE}" &>> ${REPORTFILE}
+        echo "-------------------------------------" &>> ${REPORTFILE}
 	oslo-jsonld-context-generator ${PARAMETERS} \
 	        --input ${MERGEDFILE} \
 	       	--language ${GOALLANGUAGE} \
 		--output ${TLINE}/context/${OUTFILELANGUAGE} \
                  &>> ${REPORTFILE}
 
-
-        MERGEDJSONLD=${RLINE}/translation/${LANGUAGEFILENAMEJSONLD}
 
 #        echo "RENDER-DETAILS(context-language-aware): node /app/json-ld-generator2.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/context/${OUTFILELANGUAGE} -m ${GOALLANGUAGE}"
 #        if ! node /app/json-ld-generator2.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/context/${OUTFILELANGUAGE} -m ${GOALLANGUAGE}; then
