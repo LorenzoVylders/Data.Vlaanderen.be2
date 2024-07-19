@@ -192,7 +192,7 @@ render_rdf() { # SLINE TLINE JSON
     local LANGUAGE=$7
     local PRIMELANGUAGE=${8-false}
 
-    generate_for_language
+    generate_for_language ${LANGUAGE} ${JSONI}
 
     if [ ${GENERATEDARTEFACT} == true ] ; then
 
