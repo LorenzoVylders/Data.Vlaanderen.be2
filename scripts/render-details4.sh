@@ -116,6 +116,11 @@ render_merged_files() {
     MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
     MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
 
+    if [ "${PRIMELANGUAGE}" == "${GOALLANGUAGE}" ]; then
+      echo "The primelanguage and the goallanguage are the same:  nothing to merge. Just copy it"
+      cp ${JSONI} ${MERGEDFILE}
+
+    else
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "${INPUTTRANSLATIONFILE} exists, the files will be merged."
         echo "RENDER-DETAILS(mergefile): node /app/translation-json-update.js -i ${JSONI} -f ${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE}"
@@ -129,6 +134,7 @@ render_merged_files() {
     else
         echo "${INPUTTRANSLATIONFILE} does not exist, nothing to merge. Just copy it"
    cp ${JSONI} ${MERGEDFILE}
+    fi
     fi
 }
 
@@ -614,7 +620,7 @@ cat ${CHECKOUTFILE} | while read line; do
                   render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
                   done
                 ;;
-            shacl) # render_shacl_languageaware $SLINE $TLINE $i $RLINE $LINE $LANGUAGE $PRIME
+            shacl) 
                   render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                   for g in ${GOALLANGUAGE} 
                   do 
@@ -636,11 +642,11 @@ cat ${CHECKOUTFILE} | while read line; do
                   done
                 ;;
             translation)
+                  render_translationfiles ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TLINE}
                   for g in ${GOALLANGUAGE} 
                   do 
                   render_translationfiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE}
                   done
-                  render_translationfiles ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TLINE}
                 ;;
             merge)
                   render_merged_files ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TRLINE} ${RLINE}
