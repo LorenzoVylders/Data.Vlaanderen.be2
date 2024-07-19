@@ -605,7 +605,6 @@ cat ${CHECKOUTFILE} | while read line; do
             echo "RENDER-DETAILS: convert $i using ${DETAILS}"
             case ${DETAILS} in
             html)
-                  mkdir -p ${RLINE}
                   render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                   for g in ${GOALLANGUAGE} 
                   do 
@@ -613,7 +612,6 @@ cat ${CHECKOUTFILE} | while read line; do
                   done
                 ;;
             rdf)
-                  mkdir -p ${RLINE}
                   render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                   for g in ${GOALLANGUAGE} 
                   do 
@@ -624,7 +622,10 @@ cat ${CHECKOUTFILE} | while read line; do
                   render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                   for g in ${GOALLANGUAGE} 
                   do 
-                  render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${g}
+                     generate_for_language ${g} ${i}
+                     if [ ${GENERATEDARTEFACT} == true ] ; then
+                        render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${g}
+                     fi
                   done
                 ;;
             context)
