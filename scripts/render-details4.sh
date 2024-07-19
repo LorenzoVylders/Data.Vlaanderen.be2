@@ -581,33 +581,6 @@ render_xsd() { # SLINE TLINE JSON
     fi
 }
 
-write_report() {
-    echo "Rendering the reportfiles of $1 with the json in $2 from $3 and to $4"
-    local JSONI=$1
-    local LANGUAGE=$2
-    local SLINE=$3
-    local TRLINE=$4
-    local RLINE=$5
-
-    mkdir -p /tmp/workspace/report/translation
-    FILENAME=$(jq -r ".name" ${JSONI})_${GOALLANGUAGE}
-    COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .translationjson')
-    TRANSLATIONFILE=${TRLINE}/translation/$(jq -r "${COMMANDLANGJSON}" ${SLINE}/.names.json)
-    REPORTFILE=/tmp/workspace/report/translation/${FILENAME}.report
-
-    if [ -f "${TRANSLATIONFILE}" ]; then
-        echo "${TRANSLATIONFILE} exists, the file will now be reviewed."
-        echo "RENDER-DETAILS(mergefile): node /app/generate-translation-report.js -i ${TRANSLATIONFILE} -l ${LANGUAGE} -o ${REPORTFILE}"
-        if ! node /app/generate-translation-report.js -i ${TRANSLATIONFILE} -l ${LANGUAGE} -o ${REPORTFILE}; then
-            echo "RENDER-DETAILS: failed"
-            execution_strickness
-        else
-            echo "RENDER-DETAILS: Report succesfully created and saved to: ${REPORTFILE}"
-        fi
-    else
-        echo "${TRANSLATIONFILE} does not exist, nothing to validate."
-    fi
-}
 
 echo "render-details: starting with $1 $2 $3"
 
@@ -617,77 +590,71 @@ cat ${CHECKOUTFILE} | while read line; do
     RLINE=${TARGETDIR}/report4/${line}
     TRLINE=${TARGETDIR}/translation/${line}
     echo "RENDER-DETAILS: Processing line ${SLINE} => ${TLINE},${RLINE}"
+#
+# TODO: the extract-what-4.sh writes the derived output in TLINE/RLINE 
+# In 3.0 version this was in the SLINE
+# Therefore the next test should be considered in redesign of extract-what-4
     if [ -d "${RLINE}" ]; then
         for i in ${RLINE}/all-*.jsonld; do
-            echo "RENDER-DETAILS: convert $i to ${DETAILS} ($PWD)"
+            echo "RENDER-DETAILS: convert $i using ${DETAILS}"
             case ${DETAILS} in
             html)
-                mkdir -p ${RLINE}
-                render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
-      for g in ${GOALLANGUAGE} 
-      do 
-                render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
-           done
+                  mkdir -p ${RLINE}
+                  render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
+                  for g in ${GOALLANGUAGE} 
+                  do 
+                  render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
+                  done
                 ;;
             rdf)
-                mkdir -p ${RLINE}
-                render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
-      for g in ${GOALLANGUAGE} 
-      do 
-                render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
-           done
+                  mkdir -p ${RLINE}
+                  render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
+                  for g in ${GOALLANGUAGE} 
+                  do 
+                  render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
+                  done
                 ;;
             shacl) # render_shacl_languageaware $SLINE $TLINE $i $RLINE $LINE $LANGUAGE $PRIME
-                mkdir -p ${RLINE}
-                render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
-      for g in ${GOALLANGUAGE} 
-      do 
-                render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${g}
-           done
+                  render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
+                  for g in ${GOALLANGUAGE} 
+                  do 
+                  render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${g}
+                  done
                 ;;
             context)
-                render_context $SLINE $TLINE $i $RLINE ${PRIMELANGUAGE} true
-      for g in ${GOALLANGUAGE} 
-      do 
-                render_context $SLINE $TLINE $i $RLINE ${g} 
-           done
+                  render_context $SLINE $TLINE $i $RLINE ${PRIMELANGUAGE} true
+                  for g in ${GOALLANGUAGE} 
+                  do 
+                  render_context $SLINE $TLINE $i $RLINE ${g} 
+                  done
                 ;;
             xsd)
-                render_xsd $SLINE $TLINE $i $RLINE ${PRIMELANGUAGE} true
-      for g in ${GOALLANGUAGE} 
-      do 
-                render_xsd $SLINE $TLINE $i $RLINE ${g} 
-           done
+                  render_xsd $SLINE $TLINE $i $RLINE ${PRIMELANGUAGE} true
+                  for g in ${GOALLANGUAGE} 
+                  do 
+                  render_xsd $SLINE $TLINE $i $RLINE ${g} 
+                  done
                 ;;
             translation)
-                mkdir -p ${RLINE}
-      for g in ${GOALLANGUAGE} 
-      do 
-                render_translationfiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE}
-           done
-                render_translationfiles ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TLINE}
+                  for g in ${GOALLANGUAGE} 
+                  do 
+                  render_translationfiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE}
+                  done
+                  render_translationfiles ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TLINE}
                 ;;
             merge)
-                mkdir -p ${RLINE}
-                render_merged_files ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TRLINE} ${RLINE}
-      for g in ${GOALLANGUAGE} 
-           do
-                render_merged_files ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TRLINE} ${RLINE}
-           done
-                ;;
-            report)
-                write_report $i ${PRIMELANGUAGE} ${SLINE} ${TRLINE} ${RLINE}
-      for g in ${GOALLANGUAGE} 
-      do
-                write_report $i ${g} ${SLINE} ${TRLINE} ${RLINE}
-           done
+                  render_merged_files ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TRLINE} ${RLINE}
+                  for g in ${GOALLANGUAGE} 
+                  do
+                  render_merged_files ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TRLINE} ${RLINE}
+                  done
                 ;;
             example)
-                render_example_template $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report/${line} ${PRIMELANGUAGE}
-      for g in ${GOALLANGUAGE} 
-      do
-                render_example_template $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report/${line} ${g}
-           done
+                  render_example_template $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report/${line} ${PRIMELANGUAGE}
+                  for g in ${GOALLANGUAGE} 
+                  do
+                  render_example_template $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report/${line} ${g}
+                  done
                 ;;
             *) echo "RENDER-DETAILS: ${DETAILS} not handled yet" ;;
             esac
