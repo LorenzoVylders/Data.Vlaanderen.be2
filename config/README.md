@@ -82,6 +82,9 @@ This has to be executed for each private repository.
                                             -- for now binary options lazy/not-lazy are supported
                                             -- where lazy means try to go as far as possible ignore possible erroneous cases
 	  "version": 3                      -- The toolchain version that is deployed, only adapt in case of toolchain management
+      "autotranslate": false            -- boolean to indicate if automatic translations is switched on and therefore artefacts are 
+                                           generated for all other languages. Per default switched off, and then only artefacts are created
+                                           for which the Thema reporisitory has switched the language on.
   }
 }
 ```
@@ -256,7 +259,8 @@ On the test branch the same procedure can be applied to publish it on the produc
 
 This setup also supports toolchain maintainers when propagating changes to layout or updates to the processing, as it much easier to create an incremental update and isolate problematic cases.
 
-
+# Multilingual support
+TODO
 
 # Disaster recovery & operational resources 
 
