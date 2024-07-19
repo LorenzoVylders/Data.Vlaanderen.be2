@@ -191,9 +191,9 @@ render_rdf() { # SLINE TLINE JSON
      OUTPUT=${OUTPUTDIR}/${VOCNAME}_${LANGUAGE}.ttl
      OUTPUTFORMAT="text/turtle"
 
+    if [ ${TYPE} == "voc" ]; then
     echo "RENDER-DETAILS(rdf): oslo-generator-rdf -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}"
 
-# TODO only render RDF in case of Vocabularies
     case $TYPE in
 	    ap) SPECTYPE="ApplicationProfile"
 		    ;;
@@ -218,7 +218,8 @@ render_rdf() { # SLINE TLINE JSON
 	if [ ${PRIMELANGUAGE} == true ] ; then
 		cp ${OUTPUT} ${OUTPUTDIR}/${VOCNAME}.ttl
 	fi
-        echo "RENDER-DETAILS(RDF artefact): File was rendered in ${OUTPUT}"
+        echo "RENDER-DETAILS(RDF): File was rendered in ${OUTPUT}"
+    fi
 
 }
 
