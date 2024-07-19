@@ -608,14 +608,20 @@ cat ${CHECKOUTFILE} | while read line; do
                   render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                   for g in ${GOALLANGUAGE} 
                   do 
-                  render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
+                     generate_for_language ${g} ${i}
+                     if [ ${GENERATEDARTEFACT} == true ] ; then
+                        render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
+                     fi
                   done
                 ;;
             rdf)
                   render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                   for g in ${GOALLANGUAGE} 
                   do 
-                  render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
+                     generate_for_language ${g} ${i}
+                     if [ ${GENERATEDARTEFACT} == true ] ; then
+                        render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
+                     fi
                   done
                 ;;
             shacl) 
@@ -632,14 +638,20 @@ cat ${CHECKOUTFILE} | while read line; do
                   render_context $SLINE $TLINE $i $RLINE ${PRIMELANGUAGE} true
                   for g in ${GOALLANGUAGE} 
                   do 
-                  render_context $SLINE $TLINE $i $RLINE ${g} 
+                     generate_for_language ${g} ${i}
+                     if [ ${GENERATEDARTEFACT} == true ] ; then
+                        render_context $SLINE $TLINE $i $RLINE ${g} 
+                     fi
                   done
                 ;;
             xsd)
                   render_xsd $SLINE $TLINE $i $RLINE ${PRIMELANGUAGE} true
                   for g in ${GOALLANGUAGE} 
                   do 
-                  render_xsd $SLINE $TLINE $i $RLINE ${g} 
+                     generate_for_language ${g} ${i}
+                     if [ ${GENERATEDARTEFACT} == true ] ; then
+                        render_xsd $SLINE $TLINE $i $RLINE ${g} 
+                     fi
                   done
                 ;;
             translation)
@@ -660,7 +672,10 @@ cat ${CHECKOUTFILE} | while read line; do
                   render_example_template $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report/${line} ${PRIMELANGUAGE}
                   for g in ${GOALLANGUAGE} 
                   do
-                  render_example_template $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report/${line} ${g}
+                     generate_for_language ${g} ${i}
+                     if [ ${GENERATEDARTEFACT} == true ] ; then
+                        render_example_template $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report/${line} ${g}
+                     fi
                   done
                 ;;
             *) echo "RENDER-DETAILS: ${DETAILS} not handled yet" ;;
