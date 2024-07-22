@@ -62,7 +62,7 @@ generate_for_language() {
    if [ ${AUTOTRANSLATE} == true ] ; then
 
     OTHERCOMMAND=$(echo '.otherLanguages | [ contains(["'${LANGUAGE}'"])')
-    OTHER=$(jq -r ${OTHERCOMMAND}  ${CONFIGDIR}/config.json)
+    OTHER=$(jq -r "${OTHERCOMMAND}"  ${CONFIGDIR}/config.json)
     if [ "${OTHER}" == "true"  ] || [ "${OTHER}" == true ] ; then
          GENERATEDARTEFACT=true
     else
