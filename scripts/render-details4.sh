@@ -198,10 +198,6 @@ render_rdf() { # SLINE TLINE JSON
     local LANGUAGE=$7
     local PRIMELANGUAGE=${8-false}
 
-    generate_for_language ${LANGUAGE} ${JSONI}
-
-    if [ ${GENERATEDARTEFACT} == true ] ; then
-
     OUTPUTDIR=${TLINE}/voc
     mkdir -p ${OUTPUTDIR}
 
@@ -259,7 +255,6 @@ render_rdf() { # SLINE TLINE JSON
       cp ${OUTPUT} ${OUTPUTDIR}/${VOCNAME}.ttl
    fi
         echo "RENDER-DETAILS(RDF): File was rendered in ${OUTPUT}"
-    fi
     fi
 
 }
