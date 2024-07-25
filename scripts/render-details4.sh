@@ -337,7 +337,9 @@ render_nunjunks_html() { # SLINE TLINE JSON
     echo "{}" > ${METADATA}
     echo "{}" > ${STAKEHOLDERS}
 
-    XXX a sudo execution is needed (@Kristof to ask to turn that around: to have the provided directory as base)
+#
+#XXX a sudo execution is needed (@Kristof to ask to turn that around: to have the provided directory as base)
+#
         sudo oslo-generator-html ${PARAMETERS} \
             --input ${INT_OUTPUT} \
             --output ${OUTPUT} \
