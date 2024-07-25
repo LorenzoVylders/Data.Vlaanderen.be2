@@ -494,6 +494,7 @@ render_example_template() { # SLINE TLINE JSON
     EXAMPLE=$(jq -r "${COMMAND}" ${MERGEDFILE})
     echo "example " ${EXAMPLE}
     if [ "${EXAMPLE}" == true ]; then
+        echo "no generator execution defined" 
 #        echo "RENDER-DETAILS(example generator): node /app/exampletemplate-generator2.js -i ${MERGEDJSONLD} -o ${OUTPUT} -l ${LANGUAGE} -h /doc/${TYPE}/${BASENAME}"
 #        if ! node /app/exampletemplate-generator2.js -i ${MERGEDJSONLD} -o ${OUTPUT} -l ${LANGUAGE} -h /doc/${TYPE}/${BASENAME}; then
 #            echo "RENDER-DETAILS(example generator): rendering failed"
