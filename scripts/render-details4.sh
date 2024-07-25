@@ -707,12 +707,12 @@ cat ${CHECKOUTFILE} | while read line; do
             echo "RENDER-DETAILS: convert $i using ${DETAILS}"
             case ${DETAILS} in
             html)
-                  render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
+                  render_nunjunks_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                   for g in ${GOALLANGUAGE} 
                   do 
                      generate_for_language ${g} ${i}
                      if [ ${GENERATEDARTEFACT} == true ] ; then
-                        render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
+                        render_nunjunks_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
                      fi
                   done
                 ;;
