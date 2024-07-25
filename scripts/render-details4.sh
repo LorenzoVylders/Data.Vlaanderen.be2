@@ -285,8 +285,8 @@ render_nunjunks_html() { # SLINE TLINE JSON
      # step 1: extract all information for a html representation
 
     mkdir -p ${RLINE}/html
-    INT_OUTPUT=${RLINE}/int_${FILENAME}_${LANGUAGE}.json
-    INT_REPORTFILE=${RRLINE}/generator-respec.report
+    INT_OUTPUT=${RLINE}/html/int_${FILENAME}_${LANGUAGE}.json
+    INT_REPORTFILE=${RRLINE}/generator-webuniversum-json.report
 
     generator_parameters webuniversumgenerator4 ${JSONI}
 
@@ -309,14 +309,15 @@ render_nunjunks_html() { # SLINE TLINE JSON
     # precendence order: Theme repository > publication repository > tool repository
     # XXX TODO: reactivate
     cp -n ${HOME}/project/templates/* ${SLINE}/templates
-    cp -n /app/views/* ${SLINE}/templates
-    cp -n ${HOME}/project/templates/icons/* ${SLINE}/templates/icons
+    #cp -n /app/views/* ${SLINE}/templates
+    #cp -n ${HOME}/project/templates/icons/* ${SLINE}/templates/icons
     mkdir -p ${RLINE}
 
     OUTPUT=${TLINE}/index_${LANGUAGE}.html
     COMMANDTEMPLATELANG=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
     TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${JSONI})
 
+    REPORTFILE=${RRLINE}/generator-html.report
     case $TYPE in
        ap) SPECTYPE="ApplicationProfile"
           ;;
