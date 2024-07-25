@@ -39,6 +39,8 @@ upgrade_config() {
     HASTRANSLATION=$(jq -r .[0].translation[0].language ${SLINE}/.names.json)
     echo "${HASTRANSLATION}: if null then no translation is present and thus configuration will be updated."
 
+    # SHOULD SUPPORT autotranslate option
+
     TITLE=$(jq -r .[0].title ${SLINE}/.names.json)
     TEMPLATE=$(jq -r .[0].template ${SLINE}/.names.json)
     NAME=$(jq -r .[0].name ${SLINE}/.names.json)

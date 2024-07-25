@@ -308,7 +308,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
 
     # precendence order: Theme repository > publication repository > tool repository
     # XXX TODO: reactivate
-    cp -n ${HOME}/project/templates/* ${SLINE}/templates
+    #cp -n ${HOME}/project/templates/* ${SLINE}/templates
     #cp -n /app/views/* ${SLINE}/templates
     #cp -n ${HOME}/project/templates/icons/* ${SLINE}/templates/icons
     mkdir -p ${RLINE}
@@ -316,6 +316,9 @@ render_nunjunks_html() { # SLINE TLINE JSON
     OUTPUT=${TLINE}/index_${LANGUAGE}.html
     COMMANDTEMPLATELANG=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
     TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${JSONI})
+    # in case of autotranslate all translations should exists
+    COMMANDTITLELANG=$(echo '.translation | .[] | select(.title | contains("'${LANGUAGE}'")) | .template')
+    TITLELANG=$(jq -r "${COMMANDTITLELANG}" ${JSONI})
 
     REPORTFILE=${RRLINE}/generator-html.report
     case $TYPE in
@@ -329,7 +332,13 @@ render_nunjunks_html() { # SLINE TLINE JSON
           SPECTYPE="ApplicationProfile"       
     esac
 
-        oslo-generator-html ${PARAMETERS} \
+    METADATA=${RLINE}/html/m.json
+    STAKEHOLDERS=${RLINE}/html/st.json
+    echo "{}" > ${METADATA}
+    echo "{}" > ${STAKEHOLDERS}
+
+    XXX a sudo execution is needed (@Kristof to ask to turn that around: to have the provided directory as base)
+        sudo oslo-generator-html ${PARAMETERS} \
             --input ${INT_OUTPUT} \
             --output ${OUTPUT} \
 	    --stakeholders ${STAKEHOLDERS} \
