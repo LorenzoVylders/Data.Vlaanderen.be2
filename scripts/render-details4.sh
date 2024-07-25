@@ -272,10 +272,10 @@ render_nunjunks_html() { # SLINE TLINE JSON
     local PRIMELANGUAGE=${8-false}
 
     FILENAME=$(jq -r ".name" ${JSONI})
-    MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
+    MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
     MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
 
-     if [ -f ${MERGEDFILE} ] ; then
+     if [ -f "${MERGEDFILE}" ] ; then
             echo "translations integrated file found"
      else
             echo "defaulting to the primelanguage version"
@@ -372,7 +372,7 @@ render_respec_html() { # SLINE TLINE JSON
     local PRIMELANGUAGE=${8-false}
 
     FILENAME=$(jq -r ".name" ${JSONI})
-    MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
+    MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
     MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
 
      if [ -f ${MERGEDFILE} ] ; then
@@ -476,7 +476,7 @@ render_example_template() { # SLINE TLINE JSON
     echo "XXX TODO This option is not yet implemented as a solution in version 4" 
 
     FILENAME=$(jq -r ".name" ${JSONI})
-    MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
+    MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
     MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
 
      if [ -f ${MERGEDFILE} ] ; then
