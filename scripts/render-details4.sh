@@ -259,8 +259,106 @@ render_rdf() { # SLINE TLINE JSON
 
 }
 
+render_nunjunks_html() { # SLINE TLINE JSON
+    echo "render_html: $1 $2 $3 $4 $5 $6 $7"
+    echo "render_html: $1 $2 $3 $4 $5"
+    local SLINE=$1
+    local TLINE=$2
+    local JSONI=$3
+    local RLINE=$4
+    local DROOT=$5
+    local RRLINE=$6
+    local LANGUAGE=$7
+    local PRIMELANGUAGE=${8-false}
 
-render_html() { # SLINE TLINE JSON
+    FILENAME=$(jq -r ".name" ${JSONI})
+    MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
+    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+
+     if [ -f ${MERGEDFILE} ] ; then
+            echo "translations integrated file found"
+     else
+            echo "defaulting to the primelanguage version"
+            MERGEDFILE=${JSONI}
+     fi
+
+     # step 1: extract all information for a html representation
+
+    mkdir -p ${RLINE}/html
+    INT_OUTPUT=${RLINE}/int_${FILENAME}_${LANGUAGE}.json
+    INT_REPORTFILE=${RRLINE}/generator-respec.report
+
+    generator_parameters webuniversumgenerator4 ${JSONI}
+
+        echo "oslo-webuniversum-json-generator for language ${LANGUAGE}" &>> ${INT_REPORTFILE}
+        echo "-------------------------------------" &>> ${INT_REPORTFILE}
+	oslo-webuniversum-json-generator ${PARAMETERS} \
+            --input ${MERGEDFILE} \
+            --output ${INT_OUTPUT} \
+            --language ${LANGUAGE} \
+                 &>> ${INT_REPORTFILE}
+
+      # step 2: create the html
+      
+
+    generator_parameters htmlgenerator4 ${JSONI}
+
+    COMMAND=$(echo '.type')
+    TYPE=$(jq -r "${COMMAND}" ${JSONI})
+
+    # precendence order: Theme repository > publication repository > tool repository
+    # XXX TODO: reactivate
+    cp -n ${HOME}/project/templates/* ${SLINE}/templates
+    cp -n /app/views/* ${SLINE}/templates
+    cp -n ${HOME}/project/templates/icons/* ${SLINE}/templates/icons
+    mkdir -p ${RLINE}
+
+    OUTPUT=${TLINE}/index_${LANGUAGE}.html
+    COMMANDTEMPLATELANG=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
+    TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${JSONI})
+
+    case $TYPE in
+       ap) SPECTYPE="ApplicationProfile"
+          ;;
+            voc) SPECTYPE="Vocabulary"
+          ;;
+            oj) SPECTYPE="ApplicationProfile"
+          ;;
+            *) echo "ERROR: ${SPECTYPE} not recognized"
+          SPECTYPE="ApplicationProfile"       
+    esac
+
+        oslo-generator-html ${PARAMETERS} \
+            --input ${INT_OUTPUT} \
+            --output ${OUTPUT} \
+	    --stakeholders ${STAKEHOLDERS} \
+	    --metadata ${METADATA} \
+            --specificationType ${SPECTYPE} \
+            --specificationName "Dummy Title" \
+	    --templates ${SLINE}/templates \
+	    --rootTemplate ${TEMPLATELANG} \
+            --silent false \
+            --language ${LANGUAGE} \
+                 &>> ${REPORTFILE}
+
+
+#	oslo-generator-html --input ./webuniversum-config.json --language nl --stakeholders ./stakeholders.json --metadata ./metadata.json --specificationName "OSLO-verkeersmetingen" --specificationType Vocabulary --templates ./templates --rootTemplate vrachtwagenParkeren-voc.njk
+
+
+#    if ! node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}; then
+#        echo "RENDER-DETAILS(language html): rendering failed"
+#   execution_strickness
+#    else
+   if [ ${PRIMELANGUAGE} == true ] ; then
+      cp ${OUTPUT} ${TLINE}/index.html
+   fi
+        echo "RENDER-DETAILS(language html): File was rendered in ${OUTPUT}"
+#    fi
+
+#    pretty_print_json ${RLINE}/html-nj_${LANGUAGE}.json
+}
+
+render_respec_html() { # SLINE TLINE JSON
     echo "render_html: $1 $2 $3 $4 $5 $6 $7"
     echo "render_html: $1 $2 $3 $4 $5"
     local SLINE=$1
@@ -285,9 +383,9 @@ render_html() { # SLINE TLINE JSON
 
     # precendence order: Theme repository > publication repository > tool repository
     # XXX TODO: reactivate
-    cp -n ${HOME}/project/templates/* ${SLINE}/templates
-    cp -n /app/views/* ${SLINE}/templates
-    cp -n ${HOME}/project/templates/icons/* ${SLINE}/templates/icons
+    #cp -n ${HOME}/project/templates/* ${SLINE}/templates
+    #cp -n /app/views/* ${SLINE}/templates
+    #cp -n ${HOME}/project/templates/icons/* ${SLINE}/templates/icons
     mkdir -p ${RLINE}
 
     COMMAND=$(echo '.type')
@@ -295,7 +393,7 @@ render_html() { # SLINE TLINE JSON
 
     mkdir -p ${TLINE}/html
 
-    OUTPUT=${TLINE}/index_${LANGUAGE}.html
+    OUTPUT=${TLINE}/respec-index_${LANGUAGE}.html
     COMMANDTEMPLATELANG=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
     TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${JSONI})
    
@@ -334,10 +432,11 @@ f
 #        echo "RENDER-DETAILS(language html): rendering failed"
 #   execution_strickness
 #    else
-   if [ ${PRIMELANGUAGE} == true ] ; then
-      cp ${OUTPUT} ${TLINE}/index.html
-   fi
-        echo "RENDER-DETAILS(language html): File was rendered in ${OUTPUT}"
+#   There might be a parameter to make this a active, but for now respec is considered not as the main output
+#   if [ ${PRIMELANGUAGE} == true ] ; then
+#      cp ${OUTPUT} ${TLINE}/index.html
+#   fi
+#        echo "RENDER-DETAILS(language html): File was rendered in ${OUTPUT}"
 #    fi
 
 #    pretty_print_json ${RLINE}/html-nj_${LANGUAGE}.json
@@ -372,32 +471,36 @@ render_example_template() { # SLINE TLINE JSON
     local DROOT=$5
     local RRLINE=$6
     local LANGUAGE=$7
-    BASENAME=$(basename ${JSONI} .jsonld)
-    mkdir -p ${RLINE}
-    touch ${RLINE}/
 
-    COMMANDTYPE=$(echo '.[]|select(.name | contains("'${BASENAME}'"))|.type')
-    TYPE=$(jq -r "${COMMANDTYPE}" ${SLINE}/.names.json)
+    echo "XXX TODO This option is not yet implemented as a solution in version 4" 
 
-    OUTPUT=/tmp/workspace/examples/${DROOT}
+    FILENAME=$(jq -r ".name" ${JSONI})
+    MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
+    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+
+     if [ -f ${MERGEDFILE} ] ; then
+            echo "translations integrated file found"
+     else
+            echo "defaulting to the primelanguage version"
+            MERGEDFILE=${JSONI}
+     fi
+
+    OUTPUT=${TLINE}/examples/
     mkdir -p ${OUTPUT}
     mkdir -p ${OUTPUT}/context
     touch ${OUTPUT}/.gitignore
 
-    COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .mergefile')
-    MERGEDJSONLD=${RRLINE}/translation/$(jq -r "${COMMANDJSONLD}" ${SLINE}/.names.json)
-    #       cat ${MERGEDJSONLD}
     COMMAND=$(echo '.examples')
-    EXAMPLE=$(jq -r "${COMMAND}" ${MERGEDJSONLD})
+    EXAMPLE=$(jq -r "${COMMAND}" ${MERGEDFILE})
     echo "example " ${EXAMPLE}
     if [ "${EXAMPLE}" == true ]; then
-        echo "RENDER-DETAILS(example generator): node /app/exampletemplate-generator2.js -i ${MERGEDJSONLD} -o ${OUTPUT} -l ${LANGUAGE} -h /doc/${TYPE}/${BASENAME}"
-        if ! node /app/exampletemplate-generator2.js -i ${MERGEDJSONLD} -o ${OUTPUT} -l ${LANGUAGE} -h /doc/${TYPE}/${BASENAME}; then
-            echo "RENDER-DETAILS(example generator): rendering failed"
-            execution_strickness
-        else
-            echo "RENDER-DETAILS(example generator): Files were rendered in ${OUTPUT}"
-        fi
+#        echo "RENDER-DETAILS(example generator): node /app/exampletemplate-generator2.js -i ${MERGEDJSONLD} -o ${OUTPUT} -l ${LANGUAGE} -h /doc/${TYPE}/${BASENAME}"
+#        if ! node /app/exampletemplate-generator2.js -i ${MERGEDJSONLD} -o ${OUTPUT} -l ${LANGUAGE} -h /doc/${TYPE}/${BASENAME}; then
+#            echo "RENDER-DETAILS(example generator): rendering failed"
+#            execution_strickness
+#        else
+#            echo "RENDER-DETAILS(example generator): Files were rendered in ${OUTPUT}"
+#        fi
     fi
 }
 
@@ -544,42 +647,45 @@ render_xsd() { # SLINE TLINE JSON
     local GOALLANGUAGE=$5
     local PRIMELANGUAGE=${6-false}
 
+    echo "XXX TODO This option is not yet implemented as a solution in version 4" 
+
     FILENAME=$(jq -r ".name" ${JSONI})
+    MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
+    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+
+     if [ -f ${MERGEDFILE} ] ; then
+            echo "translations integrated file found"
+     else
+            echo "defaulting to the primelanguage version"
+            MERGEDFILE=${JSONI}
+     fi
+
     OUTFILE=${FILENAME}.xsd
     OUTFILELANGUAGE=${FILENAME}_${GOALLANGUAGE}.xsd
 
-    BASENAME=$(basename ${JSONI} .jsonld)
+    mkdir -p ${TLINE}/xsd
+    touch ${TLINE}/xsd/.gitignore
 
-    COMMAND=$(echo '.[]|select(.name | contains("'${BASENAME}'"))|.type')
-    TYPE=$(jq -r "${COMMAND}" ${SLINE}/.names.json)
+    COMMAND=$(echo '.type')
+    TYPE=$(jq -r "${COMMAND}" ${JSONI})
 
-    XSDDOMAIN="https://data.europa.eu/m8g/xml/"
+#    XSDDOMAIN="https://data.europa.eu/m8g/xml/"
 
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
 
-        mkdir -p ${TLINE}/xsd
-        COMMANDJSONLD=$(echo '.[].translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .mergefile')
-        LANGUAGEFILENAMEJSONLD=$(jq -r "${COMMANDJSONLD}" ${SLINE}/.names.json)
-   if [ "${LANGUAGEFILENAMEJSONLD}" == "" ] ; then
-       echo "configuration for language ${GOALLANGUAGE} not present. Ignore this language for ${SLINE}"
-        else 
-   
-        MERGEDJSONLD=${RLINE}/translation/${LANGUAGEFILENAMEJSONLD}
-
-        echo "RENDER-DETAILS(xsd): node /app/xsd-generator.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/xsd/${OUTFILELANGUAGE} -m ${GOALLANGUAGE} -b ${XSDDOMAIN}"
-        if ! node /app/xsd-generator.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/xsd/${OUTFILELANGUAGE} -m ${GOALLANGUAGE} -b ${XSDDOMAIN}; then
-            echo "RENDER-DETAILS(xsd): See XXX for more details, Rendering failed"
-            execution_strickness
-        else
-            echo "RENDER-DETAILS(xsd): Rendering successfull, File saved to  ${TLINE}/xsd/${OUTFILELANGUAGE}"
-        fi
+#        echo "RENDER-DETAILS(xsd): node /app/xsd-generator.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/xsd/${OUTFILELANGUAGE} -m ${GOALLANGUAGE} -b ${XSDDOMAIN}"
+#        if ! node /app/xsd-generator.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/xsd/${OUTFILELANGUAGE} -m ${GOALLANGUAGE} -b ${XSDDOMAIN}; then
+#            echo "RENDER-DETAILS(xsd): See XXX for more details, Rendering failed"
+#            execution_strickness
+#        else
+#            echo "RENDER-DETAILS(xsd): Rendering successfull, File saved to  ${TLINE}/xsd/${OUTFILELANGUAGE}"
+#        fi
 
    if [ ${PRIMELANGUAGE} == true ] ; then
       cp ${TLINE}/xsd/${OUTFILELANGUAGE} ${TLINE}/xsd/${OUTFILE}
    fi
 
    fi 
-    fi
 }
 
 
@@ -606,6 +712,16 @@ cat ${CHECKOUTFILE} | while read line; do
                      generate_for_language ${g} ${i}
                      if [ ${GENERATEDARTEFACT} == true ] ; then
                         render_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
+                     fi
+                  done
+                ;;
+            respec)
+                  render_respec_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
+                  for g in ${GOALLANGUAGE} 
+                  do 
+                     generate_for_language ${g} ${i}
+                     if [ ${GENERATEDARTEFACT} == true ] ; then
+                        render_respec_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${g}
                      fi
                   done
                 ;;
