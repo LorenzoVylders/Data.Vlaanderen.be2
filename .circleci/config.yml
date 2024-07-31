@@ -713,27 +713,27 @@ workflows:
   generate_documentation:
     jobs:
       - checkout
-      - extract-jsonld-details:
-          requires:
-            - checkout
+      # - extract-jsonld-details:
+      #     requires:
+      #       - checkout
       - extract-jsonld-details-4:
           requires:
             - checkout
-      - normalise-jsonld:
-          requires:
-            - extract-jsonld-details
-      - validate-report:
-          requires:
-            - extract-jsonld-details
-      - render-merged-jsonld:
-          requires:
-            - render-translation-json
-      - render-example-templates:
-          requires:
-            - render-merged-jsonld
-      - render-html-details:
-          requires:
-            - render-merged-jsonld
+      # - normalise-jsonld:
+      #     requires:
+      #       - extract-jsonld-details
+      # - validate-report:
+      #     requires:
+      #       - extract-jsonld-details
+      # - render-merged-jsonld:
+      #     requires:
+      #       - render-translation-json
+      # - render-example-templates:
+      #     requires:
+      #       - render-merged-jsonld
+      # - render-html-details:
+      #     requires:
+      #       - render-merged-jsonld
       - render-translation-4:
           requires:
             - extract-jsonld-details-4
@@ -752,42 +752,42 @@ workflows:
       - render-shacl-details-4:
           requires:
             - render-context-details-4
-      - render-voc-jsonld:
-          requires:
-            - render-merged-jsonld
-      - render-voc-rdf:
-          requires:
-            - render-voc-jsonld
-      - render-shacl-details:
-          requires:
-            - render-merged-jsonld
-      - convert-json-to-ttl:
-          requires:
-            - render-shacl-details
-      - render-context-details:
-          requires:
-            - render-merged-jsonld
+      # - render-voc-jsonld:
+      #     requires:
+      #       - render-merged-jsonld
+      # - render-voc-rdf:
+      #     requires:
+      #       - render-voc-jsonld
+      # - render-shacl-details:
+      #     requires:
+      #       - render-merged-jsonld
+      # - convert-json-to-ttl:
+      #     requires:
+      #       - render-shacl-details
+      # - render-context-details:
+      #     requires:
+      #       - render-merged-jsonld
       #      - render-xsd-details:
       #          requires:
       #            - render-merged-jsonld
-      - render-translation-json:
-          requires:
-            - normalise-jsonld
-      - validate-and-generate-translation-report:
-          requires:
-            - render-translation-json
+      # - render-translation-json:
+      #     requires:
+      #       - normalise-jsonld
+      # - validate-and-generate-translation-report:
+      #     requires:
+      #       - render-translation-json
       - copy-raw:
           requires:
             - checkout
       - expand-links:
           requires:
             - render-shacl-details-4
-            - render-example-templates
-            - convert-json-to-ttl
-            - render-html-details
-            - copy-raw
-            - render-context-details
-            - render-voc-rdf
+            # - render-example-templates
+            # - convert-json-to-ttl
+            # - render-html-details
+            # - copy-raw
+            # - render-context-details
+            # - render-voc-rdf
       - create-artifact:
           generatedRepoFingerprint: "5a:2a:cd:77:20:ea:62:ca:a3:83:f7:6c:fd:f4:e3:f0"
           requires:
