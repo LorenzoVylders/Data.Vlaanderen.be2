@@ -613,7 +613,7 @@ render_shacl_languageaware() {
     OUTFILE=${TLINE}/shacl/${FILENAME}-SHACL_${GOALLANGUAGE}.jsonld
     OUTREPORT=${RLINE}/shacl/${FILENAME}-SHACL_${GOALLANGUAGE}.report
 
-    REPORTFILE=${LINE}/generator-shacl.report
+    REPORTFILE=${RLINE}/generator-shacl.report
 
     COMMAND=$(echo '.type')
     TYPE=$(jq -r "${COMMAND}" ${JSONI})
@@ -761,6 +761,10 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             context)
+                TLINE=${TARGETDIR}/target/${line}
+                RLINE=${TARGETDIR}/report4/context/${line}
+		mkdir -p ${TLINE}
+		mkdir -p ${RLINE}
                 render_context $SLINE $TLINE $i $RLINE ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}

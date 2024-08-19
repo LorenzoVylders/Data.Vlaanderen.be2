@@ -755,7 +755,7 @@ workflows:
             - render-html-details-4
       - render-shacl-details-4:
           requires:
-            - render-html-details-4
+            - render-translation-4
       # - render-voc-jsonld:
       #     requires:
       #       - render-merged-jsonld
