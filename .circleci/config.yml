@@ -381,7 +381,7 @@ jobs:
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
-            - report4/
+            - report4/shacl
             - doc/
   render-context-details-4:
     docker:

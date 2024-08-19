@@ -1,4 +1,4 @@
-#!/bin/bash
+!/bin/bash
 
 TARGETDIR=$1
 DETAILS=$2
@@ -745,7 +745,9 @@ cat ${CHECKOUTFILE} | while read line; do
                 ;;
             shacl)
                 TLINE=${TARGETDIR}/${line}
-                RLINE=${TARGETDIR}/report4/${line}/shacl
+                RLINE=${TARGETDIR}/report4/shacl/${line}
+		mkdir -p ${TLINE}
+		mkdir -p ${RLINE}
                 render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}
