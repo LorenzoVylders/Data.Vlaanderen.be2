@@ -352,8 +352,8 @@ jobs:
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
-            - report4html/
-            - report4/
+            - target
+            - report4/rdf
   render-shacl-details-4:
     docker:
       - image: cimg/node:20.15.0
@@ -746,7 +746,7 @@ workflows:
             - render-translation-4
       - render-respec-html-details-4:
           requires:
-            - render-rdf-details-4
+            - render-translation-4
       - render-html-details-4:
           requires:
             - render-respec-html-details-4
@@ -787,6 +787,7 @@ workflows:
           requires:
             - render-context-details-4
             - render-shacl-details-4
+            - render-rdf-details-4
             # - render-example-templates
             # - convert-json-to-ttl
             # - render-html-details

@@ -214,7 +214,7 @@ render_rdf() { # SLINE TLINE JSON
     COMMANDtype=$(echo '.type')
     TYPE=$(jq -r "${COMMANDtype}" ${MERGEDFILE})
 
-    REPORTFILE=${RRLINE}/generator-rdf.report
+    REPORTFILE=${RLINE}/generator-rdf.report
 
     # XXX TODO create an iterator for each format
     OUTPUT=${OUTPUTDIR}/${VOCNAME}_${LANGUAGE}.ttl
@@ -735,6 +735,10 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             rdf)
+                TLINE=${TARGETDIR}/target/${line}
+                RLINE=${TARGETDIR}/report4/rdf/${line}
+		mkdir -p ${TLINE}
+		mkdir -p ${RLINE}
                 render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}
