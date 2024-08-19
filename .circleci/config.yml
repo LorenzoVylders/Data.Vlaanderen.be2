@@ -323,7 +323,6 @@ jobs:
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
-            - report4html/
             - report4/
   render-rdf-details-4:
     docker:
@@ -411,8 +410,8 @@ jobs:
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
-            - report4html/
-            - report4/
+            - target
+            - report4/context
   render-example-templates:
     docker:
       - image: informatievlaanderen/oslo-specification-generator:multilingual-dev-0.9
