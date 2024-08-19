@@ -744,7 +744,7 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             shacl)
-                TLINE=${TARGETDIR}/${line}
+                TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/shacl/${line}
 		mkdir -p ${TLINE}
 		mkdir -p ${RLINE}
