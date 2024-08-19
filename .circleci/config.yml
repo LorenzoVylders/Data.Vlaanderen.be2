@@ -381,8 +381,8 @@ jobs:
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
-            - report4html/
             - report4/
+            - doc/
   render-context-details-4:
     docker:
       - image: cimg/node:20.15.0

@@ -744,6 +744,8 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             shacl)
+                TLINE=${TARGETDIR}/${line}
+                RLINE=${TARGETDIR}/report4/${line}/shacl
                 render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}
