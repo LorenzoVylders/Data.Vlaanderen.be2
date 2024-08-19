@@ -286,7 +286,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
 
     mkdir -p ${RLINE}/html
     INT_OUTPUT=${RLINE}/html/int_${FILENAME}_${LANGUAGE}.json
-    INT_REPORTFILE=${RRLINE}/generator-webuniversum-json.report
+    INT_REPORTFILE=${RLINE}/generator-webuniversum-json.report
 
     generator_parameters webuniversumgenerator4 ${JSONI}
 
@@ -319,7 +319,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
     COMMANDTITLELANG=$(echo '.translation | .[] | select(.title | contains("'${LANGUAGE}'")) | .template')
     TITLELANG=$(jq -r "${COMMANDTITLELANG}" ${JSONI})
 
-    REPORTFILE=${RRLINE}/generator-html.report
+    REPORTFILE=${RLINE}/generator-html.report
     case $TYPE in
     ap)
         SPECTYPE="ApplicationProfile"
@@ -717,6 +717,10 @@ cat ${CHECKOUTFILE} | while read line; do
             echo "RENDER-DETAILS: convert $i using ${DETAILS}"
             case ${DETAILS} in
             html)
+                TLINE=${TARGETDIR}/target/${line}
+                RLINE=${TARGETDIR}/report4/html/${line}
+		mkdir -p ${TLINE}
+		mkdir -p ${RLINE}
                 render_nunjunks_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}
