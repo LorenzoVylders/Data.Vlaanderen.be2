@@ -788,7 +788,7 @@ workflows:
             # - render-example-templates
             # - convert-json-to-ttl
             # - render-html-details
-            # - copy-raw
+            - copy-raw
             # - render-context-details
             # - render-voc-rdf
       - create-artifact:
