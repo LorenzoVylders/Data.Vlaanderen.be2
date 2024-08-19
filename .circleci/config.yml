@@ -85,6 +85,9 @@ jobs:
           name: install software
           command: sudo npm install --global @oslo-flanders/ea-converter
       - run:
+          name: install software stakeholders
+          command: sudo npm install --global @oslo-flanders/stakeholders-converter
+      - run:
           name: upgrade configs to this toolchain 
           command: |
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
