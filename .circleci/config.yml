@@ -754,7 +754,7 @@ workflows:
             - render-html-details-4
       - render-shacl-details-4:
           requires:
-            - render-context-details-4
+            - render-html-details-4
       # - render-voc-jsonld:
       #     requires:
       #       - render-merged-jsonld
@@ -784,6 +784,7 @@ workflows:
             - checkout
       - expand-links:
           requires:
+            - render-context-details-4
             - render-shacl-details-4
             # - render-example-templates
             # - convert-json-to-ttl
