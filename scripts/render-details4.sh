@@ -103,12 +103,19 @@ render_merged_files() {
         TRANSLATIONFILE=${GOALFILENAME}
     fi
 
-    # assume that previously the translation files have been copied to the target
-    # we must ensure that the relative directory from OSLOthema repo is followed
-    INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
+    AUTOTRANSLATE=$(jq -r .toolchain.autotranslate ${CONFIGDIR}/config.json)
+    if [ ${AUTOTRANSLATE} == true ]; then
+        INPUTTRANSLATIONFILE=${TLINE}/autotranslation/${TRANSLATIONFILE}
+    else
+    	# assume that previously the translation files have been copied to the target
+    	# we must ensure that the relative directory from OSLOthema repo is followed
+    	INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
+    fi
+
 
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "A translation file ${TRANSLATIONFILE} exists."
+	sed -i -e "s/${GOALLANGUAGE}-t-${PRIMELANGUAGE}/${GOALLANGUAGE}/g" ${INPUTTRANSLATIONFILE}
     fi
 
     mkdir -p ${RLINE}/merged
@@ -374,10 +381,10 @@ render_nunjunks_html() { # SLINE TLINE JSON
     esac
 
     METADATA=${RLINE}/html/m.json
-#    STAKEHOLDERS=${RLINE}/html/st.json
+    STAKEHOLDERS=${RLINE}/html/st.json
     echo "{}" >${METADATA}
-#    echo "{}" >${STAKEHOLDERS}
-    STAKEHOLDERS=${SLINE}/stakeholders.json
+    echo "{}" >${STAKEHOLDERS}
+#    STAKEHOLDERS=${SLINE}/stakeholders.json
 
     oslo-generator-html ${PARAMETERS} \
         --input ${INT_OUTPUT} \
@@ -834,10 +841,12 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             autotranslate)
-                autotranslatefiles ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TLINE}
+                AUTOTRANSLATE=$(jq -r .toolchain.autotranslate ${CONFIGDIR}/config.json)
+    		if [ ${AUTOTRANSLATE} == true ]; then
                 for g in ${GOALLANGUAGE}; do
                     autotranslatefiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE}
                 done
+		fi
                 ;;
             merge)
                 render_merged_files ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TRLINE} ${RLINE}
