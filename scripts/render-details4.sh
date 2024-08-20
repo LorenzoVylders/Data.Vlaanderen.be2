@@ -428,7 +428,7 @@ render_respec_html() { # SLINE TLINE JSON
 
     FILENAME=$(jq -r ".name" ${JSONI})
     MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
-    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+    MERGEDFILE=${RRLINE}/merged/${MERGEDFILENAME}
 
     if [ -f ${MERGEDFILE} ]; then
         echo "translations integrated file found"
