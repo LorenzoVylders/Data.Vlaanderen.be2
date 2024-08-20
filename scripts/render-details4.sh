@@ -317,7 +317,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
 
     FILENAME=$(jq -r ".name" ${JSONI})
     MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
-    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+    MERGEDFILE=${RRLINE}/merged/${MERGEDFILENAME} # XXX This should be the source of the translation merged files
 
     if [ -f "${MERGEDFILE}" ]; then
         echo "translations integrated file found"
