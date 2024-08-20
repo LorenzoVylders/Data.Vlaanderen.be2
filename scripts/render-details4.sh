@@ -410,7 +410,6 @@ render_respec_html() { # SLINE TLINE JSON
     TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${JSONI})
 
     REPORTFILE=${RLINE}/generator-respec.report
-    f
     generator_parameters htmlgenerator4 ${JSONI}
 
     echo "RENDER-DETAILS(language html): node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RLINE}"

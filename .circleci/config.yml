@@ -286,9 +286,9 @@ jobs:
             mkdir -p /tmp/workspace/target /tmp/workspace/reporthtml
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
             ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace respec $PWD/config
-      - run:
-          name: copy the site-skeleton for the html
-          command: $PWD/scripts/copy_skeleton.sh
+#      - run:
+#          name: copy the site-skeleton for the html -- XXX to be activated when only using this as hmtl renderer / or updated with a target to disambiguate 
+#          command: $PWD/scripts/copy_skeleton.sh
       - run:
           name: List the files which have been created
           command: |
