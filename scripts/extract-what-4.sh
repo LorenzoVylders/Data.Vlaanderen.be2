@@ -77,7 +77,9 @@ extract_json() {
                  --publicationEnvironment ${HOSTNAME} \
                  &> ${REPORTFILE}
 
+    # XXX use one export for reporting one for processing
     oslo-stakeholders-converter --input stakeholders.csv --output ${TTDIR}/stakeholders.jsonld
+    oslo-stakeholders-converter --input stakeholders.csv --output stakeholders.jsonld
 
 #   exit code of java program is not reliable for detecting processing error
 #    if  [ $? -eq 0 ] ; then
