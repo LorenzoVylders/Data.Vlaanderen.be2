@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 
 TARGETDIR=$1
 DETAILS=$2
@@ -340,7 +340,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
 #    STAKEHOLDERS=${RLINE}/html/st.json
     echo "{}" >${METADATA}
 #    echo "{}" >${STAKEHOLDERS}
-    STAKEHOLDERS=${SLINE}/stakeholders.jsonld
+    STAKEHOLDERS=${SLINE}/stakeholders.json
 
     oslo-generator-html ${PARAMETERS} \
         --input ${INT_OUTPUT} \
