@@ -312,6 +312,12 @@ jobs:
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
             ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace translation ${CIRCLEWKD}/config
       - run:
+          name: Autotranslate the translation files
+          command: |
+            mkdir -p /tmp/workspace/translation
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace autotranslate ${CIRCLEWKD}/config
+      - run:
           name: merge translations with the prime representation
           command: |
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )

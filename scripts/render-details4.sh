@@ -183,6 +183,43 @@ render_translationfiles() {
     fi
 }
 
+
+autotranslatefiles() {
+    echo "translate for primelanguage $1, goallanguage $2 and file $3 in the directory $4"
+    local PRIMELANGUAGE=$1
+    local GOALLANGUAGE=$2
+    local JSONI=$3
+    local SLINE=$4
+    local TLINE=$5
+
+    FILENAME=$(jq -r ".name" ${JSONI})
+    PRIMEOUTPUTFILENAME=${FILENAME}_${PRIMELANGUAGE}.json
+    GOALOUTPUTFILENAME=${FILENAME}_${GOALLANGUAGE}.json
+
+    COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .translationjson')
+    TRANSLATIONFILE=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
+    # secure the case that the translation file is not mentioned
+    if [ "${TRANSLATIONFILE}" == "" ] || [ "${TRANSLATIONFILE}" == "null" ]; then
+        TRANSLATIONFILE=${GOALOUTPUTFILENAME}
+    fi
+
+    mkdir -p ${TLINE}/autotranslation
+    INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
+    OUTPUTTRANSLATIONFILE=${TLINE}/autotranslation/${TRANSLATIONFILE}
+
+    if [ -f "${INPUTTRANSLATIONFILE}" ]; then
+        echo "A translation file ${TRANSLATIONFILE} exists."
+        echo "UPDATE the translation file: node /app/autotranslate.js -i ${INPUTTRANSLATIONFILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTFILE}"
+        if ! node /app/autotranslate.js -i ${INPUTTRANSLATIONFILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}; then
+            echo "RENDER-DETAILS: failed"
+            execution_strickness
+        else
+            echo "RENDER-DETAILS: translation file succesfully updated"
+            pretty_print_json ${OUTPUTTRANSLATIONFILE}
+        fi
+    fi
+}
+
 render_rdf() { # SLINE TLINE JSON
     echo "render_rdf: $1 $2 $3 $4 $5 $6 $7"
     local SLINE=$1
@@ -794,6 +831,12 @@ cat ${CHECKOUTFILE} | while read line; do
                 render_translationfiles ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TLINE}
                 for g in ${GOALLANGUAGE}; do
                     render_translationfiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE}
+                done
+                ;;
+            autotranslate)
+                autotranslatefiles ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TLINE}
+                for g in ${GOALLANGUAGE}; do
+                    autotranslatefiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE}
                 done
                 ;;
             merge)
