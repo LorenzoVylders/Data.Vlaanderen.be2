@@ -296,8 +296,8 @@ jobs:
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
-            - report4html/
-            - report4/
+            - report4/respec/
+            - target/
   render-translation-4:
     docker:
       - image: informatievlaanderen/oslo-specification-generator:multilingual-dev4.0
@@ -748,7 +748,7 @@ workflows:
             - render-translation-4
       - render-html-details-4:
           requires:
-            - render-respec-html-details-4
+            - render-translation-4
       - render-context-details-4:
           requires:
             - render-translation-4
@@ -788,6 +788,7 @@ workflows:
             - render-shacl-details-4
             - render-rdf-details-4
             - render-html-details-4
+            - render-respec-html-details-4
             # - render-example-templates
             # - convert-json-to-ttl
             # - render-html-details

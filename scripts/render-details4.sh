@@ -408,11 +408,11 @@ render_respec_html() { # SLINE TLINE JSON
     COMMANDTEMPLATELANG=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
     TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${JSONI})
 
-    REPORTFILE=${RRLINE}/generator-respec.report
+    REPORTFILE=${RLINE}/generator-respec.report
     f
     generator_parameters htmlgenerator4 ${JSONI}
 
-    echo "RENDER-DETAILS(language html): node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}"
+    echo "RENDER-DETAILS(language html): node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RLINE}"
 
     case $TYPE in
     ap)
@@ -730,6 +730,10 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             respec)
+                TLINE=${TARGETDIR}/target/${line}
+                RLINE=${TARGETDIR}/report4/respec/${line}
+		mkdir -p ${TLINE}
+		mkdir -p ${RLINE}
                 render_respec_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}
