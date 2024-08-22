@@ -154,7 +154,7 @@ render_metadata() {
 
     FILENAME=$(jq -r ".name" ${JSONI})
     METAOUTPUTFILENAME=meta_${FILENAME}.json
-    mkdir ${TLINE}/html
+    mkdir -p ${TLINE}/html
     METAOUTPUT=${TLINE}/html/${METAOUTPUTFILENAME}
 
         if ! node /app/html-metadata-generator.js -i ${JSONI} -m ${GOALLANGUAGE} -h ${HOSTNAME} -r /${DROOT} -o ${METAOUTPUT}; then
@@ -412,11 +412,11 @@ render_nunjunks_html() { # SLINE TLINE JSON
         ;;
     esac
 
-    METADATA=${RLINE}/html/m.json
-    STAKEHOLDERS=${RLINE}/html/st.json
-    echo "{}" >${METADATA}
+    METADATA=${RLINE}/html/meta_${FILENAME}.json
+#    STAKEHOLDERS=${RLINE}/html/st.json
+#    echo "{}" >${METADATA}
     echo "{}" >${STAKEHOLDERS}
-#    STAKEHOLDERS=${SLINE}/stakeholders.json
+    STAKEHOLDERS=${SLINE}/stakeholders.json
 
     oslo-generator-html ${PARAMETERS} \
         --input ${INT_OUTPUT} \
