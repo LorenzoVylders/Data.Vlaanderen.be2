@@ -306,6 +306,11 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - run:
+          name: Render metadata JSON from jsonld
+          command: |
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace metadata ${CIRCLEWKD}/config
+      - run:
           name: Render translation JSON from jsonld
           command: |
             mkdir -p /tmp/workspace/translation

@@ -144,6 +144,29 @@ render_merged_files() {
     fi
 }
 
+render_metadata() {
+    echo "create metadata for language $1 for $2 in the directory $5"
+    local GOALLANGUAGE=$1
+    local JSONI=$2
+    local DROOT=$3
+    local SLINE=$4
+    local TLINE=$5
+
+    FILENAME=$(jq -r ".name" ${JSONI})
+    METAOUTPUTFILENAME=meta_${FILENAME}.json
+    mkdir ${TLINE}/html
+    METAOUTPUT=${TLINE}/html/${METAOUTPUTFILENAME}
+
+        if ! node /app/html-metadata-generator.js -i ${JSONI} -m ${GOALLANGUAGE} -h ${HOSTNAME} -r /${DROOT} -o ${METAOUTPUT}; then
+            echo "RENDER-DETAILS: failed"
+            execution_strickness
+        else
+            echo "RENDER-DETAILS: metadata file succesfully updated"
+            pretty_print_json ${METAOUTPUT}
+        fi
+
+}
+
 render_translationfiles() {
     echo "create translations for primelanguage $1, goallanguage $2 and file $3 in the directory $4"
     local PRIMELANGUAGE=$1
@@ -841,6 +864,12 @@ cat ${CHECKOUTFILE} | while read line; do
                     if [ ${GENERATEDARTEFACT} == true ]; then
                         render_xsd $SLINE $TLINE $i $RLINE ${g}
                     fi
+                done
+                ;;
+            metadata)
+                render_metadata ${PRIMELANGUAGE} $i ${line} ${SLINE} ${TLINE}
+                for g in ${GOALLANGUAGE}; do
+                    render_metadata ${g} $i ${line} ${SLINE} ${TLINE}
                 done
                 ;;
             translation)
