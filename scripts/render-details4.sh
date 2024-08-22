@@ -228,9 +228,9 @@ autotranslatefiles() {
 
     # autotranslate the descriptions in the local templates
     pushd ${SLINE}/templates
-    FILESTOPROCESS=$(find . -name j2 -exec basename {} .j2 ;)
-    for i in ${FILESTOPROCESS} do;
-	    echo "process $i" ;
+    FILESTOPROCESS=$(find . -name "*.j2" -exec basename {} .j2 \; )
+    for i in ${FILESTOPROCESS} ; do 
+	    echo "process $i" 
 	    node /app/autotranslateJ2.js -i ${i}.j2 -o ${TLINE}/autotranslation/${i}_${GOALLANGUAGE}.j2 -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
     done
     popd
