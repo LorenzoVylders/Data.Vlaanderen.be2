@@ -415,7 +415,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
     METADATA=${RLINE}/html/meta_${FILENAME}.json
 #    STAKEHOLDERS=${RLINE}/html/st.json
 #    echo "{}" >${METADATA}
-    echo "{}" >${STAKEHOLDERS}
+#    echo "{}" >${STAKEHOLDERS}
     STAKEHOLDERS=${SLINE}/stakeholders.json
 
     oslo-generator-html ${PARAMETERS} \
