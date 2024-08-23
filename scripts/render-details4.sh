@@ -383,6 +383,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
 
     # precendence order: Theme repository > publication repository > tool repository
     # the tool installed templates are located at /usr/local/lib/node_modules/@oslo-flanders/html-generator/lib/templates
+    mkdir -p ${RRLINE}/templates
     cp -n ${SLINE}/templates/* ${RRLINE}/templates
     cp -n ${RRLINE}/autotranslation/*.j2 ${RRLINE}/templates
     cp -n ${HOME}/project/templates/* ${RRLINE}/templates
@@ -619,7 +620,7 @@ render_context() { # SLINE TLINE JSON
     OUTFILELANGUAGE=${FILENAME}_${GOALLANGUAGE}.jsonld
 
     MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
-    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+    MERGEDFILE=${SLINE}/merged/${MERGEDFILENAME}
 
     if [ -f ${MERGEDFILE} ]; then
         echo "translations integrated file found"
@@ -844,6 +845,8 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             context)
+		   # the source for the context generated is solely the intermediate json
+                SLINE=${TARGETDIR}/report4/${line}
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/context/${line}
 		mkdir -p ${TLINE}
