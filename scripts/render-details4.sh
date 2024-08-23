@@ -382,8 +382,10 @@ render_nunjunks_html() { # SLINE TLINE JSON
     TYPE=$(jq -r "${COMMAND}" ${JSONI})
 
     # precendence order: Theme repository > publication repository > tool repository
-    # XXX TODO: reactivate
-    #cp -n ${HOME}/project/templates/* ${SLINE}/templates
+    # the tool installed templates are located at /usr/local/lib/node_modules/@oslo-flanders/html-generator/lib/templates
+    cp -n ${SLINE}/templates/* ${RRLINE}/templates
+    cp -n ${RRLINE}/autotranslation/*.j2 ${RRLINE}/templates
+    cp -n ${HOME}/project/templates/* ${RRLINE}/templates
     #cp -n /app/views/* ${SLINE}/templates
     #cp -n ${HOME}/project/templates/icons/* ${SLINE}/templates/icons
     mkdir -p ${RLINE}
@@ -422,7 +424,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
         --metadata ${METADATA} \
         --specificationType ${SPECTYPE} \
         --specificationName "Dummy Title" \
-        --templates ${SLINE}/templates \
+        --templates ${RRLINE}/templates \
         --rootTemplate ${TEMPLATELANG} \
         --silent false \
         --language ${LANGUAGE} \
