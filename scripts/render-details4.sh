@@ -620,7 +620,7 @@ render_context() { # SLINE TLINE JSON
     OUTFILELANGUAGE=${FILENAME}_${GOALLANGUAGE}.jsonld
 
     MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
-    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+    MERGEDFILE=${RRLINE}/merged/${MERGEDFILENAME}
 
     if [ -f ${MERGEDFILE} ]; then
         echo "translations integrated file found"
