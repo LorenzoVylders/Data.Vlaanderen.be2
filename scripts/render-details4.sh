@@ -620,7 +620,7 @@ render_context() { # SLINE TLINE JSON
     OUTFILELANGUAGE=${FILENAME}_${GOALLANGUAGE}.jsonld
 
     MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
-    MERGEDFILE=${RRLINE}/merged/${MERGEDFILENAME}
+    MERGEDFILE=${SLINE}/merged/${MERGEDFILENAME}
 
     if [ -f ${MERGEDFILE} ]; then
         echo "translations integrated file found"
@@ -845,6 +845,8 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             context)
+		   # the source for the context generated is solely the intermediate json
+                SLINE=${TARGETDIR}/report4/${line}
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/context/${line}
 		mkdir -p ${TLINE}
