@@ -677,7 +677,7 @@ render_shacl_languageaware() {
     FILENAME=$(jq -r ".name" ${JSONI})
 
     MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
-    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+    MERGEDFILE=${SLINE}/merged/${MERGEDFILENAME}
 
     if [ -f ${MERGEDFILE} ]; then
         echo "translations integrated file found"
@@ -832,6 +832,8 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             shacl)
+		   # the source for the shacl generator is solely the intermediate json
+                SLINE=${TARGETDIR}/report4/${line}
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/shacl/${line}
 		mkdir -p ${TLINE}
@@ -845,7 +847,7 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             context)
-		   # the source for the context generated is solely the intermediate json
+		   # the source for the context generator is solely the intermediate json
                 SLINE=${TARGETDIR}/report4/${line}
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/context/${line}
