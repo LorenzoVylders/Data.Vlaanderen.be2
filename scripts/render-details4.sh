@@ -383,6 +383,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
 
     # precendence order: Theme repository > publication repository > tool repository
     # the tool installed templates are located at /usr/local/lib/node_modules/@oslo-flanders/html-generator/lib/templates
+    mkdir -p ${RRLINE}/templates
     cp -n ${SLINE}/templates/* ${RRLINE}/templates
     cp -n ${RRLINE}/autotranslation/*.j2 ${RRLINE}/templates
     cp -n ${HOME}/project/templates/* ${RRLINE}/templates
