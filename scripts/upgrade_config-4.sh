@@ -42,12 +42,15 @@ upgrade_config() {
     # SHOULD SUPPORT autotranslate option
 
     TITLE=$(jq -r .[0].title ${SLINE}/.names.json)
-    TEMPLATE=$(jq -r .[0].template ${SLINE}/.names.json)
+    TEMPLATEORIG=$(jq -r .[0].template ${SLINE}/.names.json)
     NAME=$(jq -r .[0].name ${SLINE}/.names.json)
 
     echo "title: $TITLE"
-    echo "template: $TEMPLATE"
+    echo "template original: $TEMPLATEORIG"
     echo "name: $NAME"
+
+    TEMPLATE=${TEMPLATEORIG/.j2/_${jqlanguage}.j2}
+    echo "template: $TEMPLATE"
 
     TRANSLATIONOBJTEMPLATE='{"translation" : [{
        "language" : $jqlanguage,

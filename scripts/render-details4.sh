@@ -81,6 +81,15 @@ generate_for_language() {
 
 }
 
+REPORTLINEPREFIX='#||#'
+check_tool_output_for_non_emptiness() {
+	local REPORT=$1
+
+	sed  "/${REPORTLINEPREFIX}/d" $REPORT > /tmp/out
+
+}
+
+
 render_merged_files() {
     echo "Merge the translation file for language $2 with the source $3"
     local PRIMELANGUAGE=$1
