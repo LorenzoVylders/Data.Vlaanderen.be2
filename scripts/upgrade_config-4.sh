@@ -112,12 +112,15 @@ upgrade_config() {
 
     THEMACONFIGFILE=${SLINE}/.names.json
     TMPFILE=/tmp/upgradeconfig
+    TMPFILEINPUT=/tmp/upgradeconfig_input
 
-    node /app/update-config-translation.js -i ${THEMACONFIGFILE}  -g ${PRIMELANGUAGE} -m ${PRIMELANGUAGE} -s ${AZURETRANLATIONKEY} > ${TMPFILE}
+    node /app/update-config-translation.js -i ${THEMACONFIGFILE}  -g ${PRIMELANGUAGE} -m ${PRIMELANGUAGE} -s ${AZURETRANLATIONKEY} -o ${TMPFILE}
     for g in ${GOALLANGUAGE}; do
-    node /app/update-config-translation.js -i ${TMPFILE}  -g ${g} -m ${PRIMELANGUAGE} -s ${AZURETRANLATIONKEY} > ${TMPFILE}
+	    cp ${TMPFILE} ${TMPFILEINPUT}
+    node /app/update-config-translation.js -i ${TMPFILEINPUT}  -g ${g} -m ${PRIMELANGUAGE} -s ${AZURETRANLATIONKEY} -o ${TMPFILE}
     done
 
+    cp ${TMPFILE} ${THEMACONFIGFILE}
 
 }
 
