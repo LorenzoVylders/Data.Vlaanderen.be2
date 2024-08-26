@@ -433,7 +433,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
         --stakeholders ${STAKEHOLDERS} \
         --metadata ${METADATA} \
         --specificationType ${SPECTYPE} \
-        --specificationName "Dummy Title" \
+        --specificationName ${TITLELANG} \
         --templates ${RRLINE}/templates \
         --rootTemplate ${TEMPLATELANG} \
         --silent false \
