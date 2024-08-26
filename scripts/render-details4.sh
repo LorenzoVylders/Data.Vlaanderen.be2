@@ -162,7 +162,7 @@ render_metadata() {
     local TLINE=$5
 
     FILENAME=$(jq -r ".name" ${JSONI})
-    METAOUTPUTFILENAME=meta_${FILENAME}.json
+    METAOUTPUTFILENAME=meta_${FILENAME}_${GOALLANGUAGE}.json
     mkdir -p ${TLINE}/html
     METAOUTPUT=${TLINE}/html/${METAOUTPUTFILENAME}
 
@@ -424,7 +424,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
         ;;
     esac
 
-    METADATA=${RRLINE}/html/meta_${FILENAME}.json
+    METADATA=${RRLINE}/html/meta_${FILENAME}_${LANGUAGE}.json
     STAKEHOLDERS=${RRLINE}/stakeholders.json
 
     oslo-generator-html ${PARAMETERS} \
