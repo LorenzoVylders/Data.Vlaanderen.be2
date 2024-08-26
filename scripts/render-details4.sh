@@ -493,6 +493,9 @@ render_respec_html() { # SLINE TLINE JSON
     OUTPUT=${TLINE}/respec-index_${LANGUAGE}.html
     COMMANDTEMPLATELANG=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
     TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${JSONI})
+    # in case of autotranslate all translations should exists
+    COMMANDTITLELANG=$(echo '.translation | .[] | select(.title | contains("'${LANGUAGE}'")) | .template')
+    TITLELANG=$(jq -r "${COMMANDTITLELANG}" ${JSONI})
 
     REPORTFILE=${RLINE}/generator-respec.report
     generator_parameters htmlgenerator4 ${JSONI}
@@ -521,7 +524,7 @@ render_respec_html() { # SLINE TLINE JSON
         --input ${MERGEDFILE} \
         --output ${OUTPUT} \
         --specificationType ${SPECTYPE} \
-        --specificationName "Dummy Title" \
+        --specificationName ${TITLELANG} \
         --silent false \
         --language ${LANGUAGE} \
         &>>${REPORTFILE}
