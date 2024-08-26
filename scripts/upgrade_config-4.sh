@@ -49,7 +49,7 @@ upgrade_config() {
     echo "template original: $TEMPLATEORIG"
     echo "name: $NAME"
 
-    TEMPLATE=${TEMPLATEORIG/.j2/_${jqlanguage}.j2}
+    TEMPLATE=${TEMPLATEORIG/.j2/_${PRIMELANGUAGE}.j2}
     echo "template: $TEMPLATE"
 
     TRANSLATIONOBJTEMPLATE='{"translation" : [{
