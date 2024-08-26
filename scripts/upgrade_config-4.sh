@@ -108,9 +108,14 @@ upgrade_config() {
     local SLINE=$1
     echo "upgrade config for $SLINE"
 
-    node /app/update-config-translation.js -i input  -g ${PRIMELANGUAGE} -m ${PRIMELANGUAGE} -s ${AZURETRANLATIONKEY} 
+    set -x
+
+    THEMACONFIGFILE=${SLINE}/.names.json
+    TMPFILE=/tmp/upgradeconfig
+
+    node /app/update-config-translation.js -i ${THEMACONFIGFILE}  -g ${PRIMELANGUAGE} -m ${PRIMELANGUAGE} -s ${AZURETRANLATIONKEY} > ${TMPFILE}
     for g in ${GOALLANGUAGE}; do
-    node /app/update-config-translation.js -i input  -g ${g} -m ${PRIMELANGUAGE} -s ${AZURETRANLATIONKEY} 
+    node /app/update-config-translation.js -i ${TMPFILE}  -g ${g} -m ${PRIMELANGUAGE} -s ${AZURETRANLATIONKEY} > ${TMPFILE}
     done
 
 
