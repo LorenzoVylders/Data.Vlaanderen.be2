@@ -4,6 +4,13 @@ TARGETDIR=$1
 CONFIGDIR=$2
 CHECKOUTFILE=${TARGETDIR}/checkouts.txt
 
+PRIMELANGUAGECONFIG=$(jq -r .primeLanguage ${CONFIGDIR}/config.json)
+GOALLANGUAGECONFIG=$(jq -r '.otherLanguages | @sh' ${CONFIGDIR}/config.json)
+GOALLANGUAGECONFIG=$(echo ${GOALLANGUAGECONFIG} | sed -e "s/'//g")
+
+PRIMELANGUAGE=${3-${PRIMELANGUAGECONFIG}}
+GOALLANGUAGE=${4-${GOALLANGUAGECONFIG}}
+
 #############################################################################################
 #
 # calculate the configuration from the specification
@@ -26,8 +33,9 @@ get_mapping_file() {
 # convert older toolchain version configs to this version
 #
 #############################################################################################
-
-upgrade_config() {
+# incomplete bash version
+#
+upgrade_config_old() {
     local SLINE=$1
     echo "upgrade config for $SLINE"
 
@@ -89,6 +97,25 @@ upgrade_config() {
     fi
 
 }
+
+#############################################################################################
+#
+# convert older toolchain version configs to this version
+#
+#############################################################################################
+
+upgrade_config() {
+    local SLINE=$1
+    echo "upgrade config for $SLINE"
+
+    node /app/update-config-translation.js -i input  -g ${PRIMELANGUAGE} -m ${PRIMELANGUAGE} -s ${AZURETRANLATIONKEY} 
+    for g in ${GOALLANGUAGE}; do
+    node /app/update-config-translation.js -i input  -g ${g} -m ${PRIMELANGUAGE} -s ${AZURETRANLATIONKEY} 
+    done
+
+
+}
+
 
 echo "upgrade config: starting with $TARGETDIR $CONFIGDIR"
 
