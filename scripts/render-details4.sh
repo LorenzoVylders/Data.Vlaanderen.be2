@@ -104,23 +104,22 @@ render_merged_files() {
     FILENAME=$(jq -r ".name" ${JSONI})
     GOALFILENAME=${FILENAME}_${GOALLANGUAGE}.json
 
-    COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .translationjson')
-    TRANSLATIONFILE=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
+    COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .autotranslate')
+    USEAUTOTRANSLATION=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
     # secure the case that the translation file is not mentioned
-    if [ "${TRANSLATIONFILE}" == "" ] || [ "${TRANSLATIONFILE}" == "null" ]; then
-        # if there is no translation file defined in the config then
-        # continue the creation of a merge only if there auto-translation is switched on
-        # TODO: implemenet options
-        TRANSLATIONFILE=${GOALFILENAME}
-    fi
-
-    AUTOTRANSLATE=$(jq -r .toolchain.autotranslate ${CONFIGDIR}/config.json)
-    if [ ${AUTOTRANSLATE} == true ]; then
-        INPUTTRANSLATIONFILE=${TLINE}/autotranslation/${TRANSLATIONFILE}
-    else
-    	# assume that previously the translation files have been copied to the target
-    	# we must ensure that the relative directory from OSLOthema repo is followed
+    if [ "${USEAUTOTRANSLATION}" == "" ] || [ "${USEAUTOTRANSLATION}" == "null" ]; then
     	INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
+    else 
+	    if [ "${USEAUTOTRANSLATION}" == true ] ; then
+    		AUTOTRANSLATE=$(jq -r .toolchain.autotranslate ${CONFIGDIR}/config.json)
+    		if [ ${AUTOTRANSLATE} == true ]; then
+        		INPUTTRANSLATIONFILE=${TLINE}/autotranslation/${TRANSLATIONFILE}
+    		else
+        		INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
+		fi
+	    else
+    		INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
+	    fi
     fi
 
 
@@ -259,6 +258,9 @@ autotranslatefiles() {
 
     REPORTFILE=${TLINE}/autotranslate.report
 
+    #
+    # XXX maybe also implement md5sum for the json file
+    #
     if [ -f ${MEMORYLINE}/${TRANSLATIONFILE} ] ; then
 	echo "translation memory exists on ${MEMORYLINE}."
         if ! node /app/translation-json-generator.js -i ${JSONI} -t ${MEMORYLINE}/${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${INPUTTRANSLATIONFILE}; then
