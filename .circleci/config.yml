@@ -338,7 +338,7 @@ jobs:
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
             GENERATEDREPO=$(jq --arg bt "${CIRCLE_BRANCH}" -r '.generatedrepository + {"filepath":"autotranslation.tgz", "branchtag":"\($bt)"}' ${CIRCLEWKD}/config/config.json)
             ${CIRCLEWKD}/scripts/downloadFileGithub.sh "${GENERATEDREPO}" autotranslation.tgz ${TOOLCHAIN_TOKEN}
-            tar -xzf autotranslation.tgz
+            if [ -f autotranslation.tgz ] ; then tar -xzf autotranslation.tgz fi
       - run:
           name: Render metadata JSON from jsonld
           command: |
