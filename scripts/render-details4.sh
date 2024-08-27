@@ -263,7 +263,7 @@ autotranslatefiles() {
     #
     if [ -f ${MEMORYLINE}/${TRANSLATIONFILE} ] ; then
 	echo "translation memory exists on ${MEMORYLINE}."
-        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${MEMORYLINE}/${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${INPUTTRANSLATIONFILE}; then
+        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${MEMORYLINE}/${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}-t-${PRIMELANGUAGE} -o ${INPUTTRANSLATIONFILE}; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
