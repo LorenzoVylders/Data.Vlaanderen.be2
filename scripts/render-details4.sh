@@ -253,7 +253,7 @@ autotranslatefiles() {
     fi
 
     mkdir -p ${TLINE}/autotranslation
-    mkdir -p ${TLINE}/autotranslation_input
+    mkdir -p ${TLINE}/translation_input
     INPUTTRANSLATIONFILE=${TLINE}/translation_input/${TRANSLATIONFILE}
     OUTPUTTRANSLATIONFILE=${TLINE}/autotranslation/${TRANSLATIONFILE}
 
