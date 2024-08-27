@@ -274,6 +274,7 @@ autotranslatefiles() {
     popd
 
     # copy the translation files to the auto translation repository for reuse in the future
+    mkdir -p ${AUTOTLINE}
     cp -r ${TLINE}/autotranslation/*  ${AUTOTLINE}
 }
 
