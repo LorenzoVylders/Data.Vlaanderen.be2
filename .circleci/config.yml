@@ -321,11 +321,10 @@ jobs:
       - run:
           name: Checkout translation repo
           command: |
-            rm -rf /tmp/workspace/autotranslate
-            echo ${CIRCLEWKD}
+            rm -rf /tmp/workspace/autotranslation
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
             export REPO=$(jq -r .translationrepository ${CIRCLEWKD}/config/config.json)
-            ${CIRCLEWKD}/scripts/checkoutRepoGithub.sh "${REPO}" /tmp/workspace/autotranslate ${TOOLCHAIN_TOKEN}
+            ${CIRCLEWKD}/scripts/checkoutRepoGithub.sh "${REPO}" /tmp/workspace/autotranslation ${TOOLCHAIN_TOKEN}
       - run:
           name: clean the generated directory
           working_directory: /tmp/workspace/autotranslate
