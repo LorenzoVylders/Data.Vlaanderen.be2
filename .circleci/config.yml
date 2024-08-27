@@ -774,6 +774,7 @@ workflows:
       #     requires:
       #       - render-merged-jsonld
       - render-translation-4:
+          generatedRepoFingerprint: "5a:2a:cd:77:20:ea:62:ca:a3:83:f7:6c:fd:f4:e3:f0"
           requires:
             - extract-jsonld-details-4
       - render-rdf-details-4:
