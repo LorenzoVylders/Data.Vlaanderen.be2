@@ -718,10 +718,9 @@ jobs:
             if [ -d examples ] ; then if [ ! "$(ls -A examples)" ] ; then echo "directory examples is empty" ; else cp -rT examples /tmp/generated/examples/ ; fi fi
       - run:
           name: Create new autotranslate memory
-          working_directory: /tmp/workspace/autotranslation
+          working_directory: /tmp/workspace/
           command: |
-            tar -cfz autotranslation.tgz autotranslation
-            cp autotranslation.tgz /tmp/generated/autotranslation.tgz
+            if [ -d autotranslation ] ; then tar -cfz autotranslation.tgz autotranslation ; cp autotranslation.tgz /tmp/generated/autotranslation.tgz ; fi
       - run:
           name: check if all publication points are generated
           working_directory: /tmp/generated
