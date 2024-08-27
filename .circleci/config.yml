@@ -313,24 +313,32 @@ jobs:
           fingerprints:
             - << parameters.generatedRepoFingerprint >>
       - run:
-          name: update and add extra statements of updating the ssh config for each private ssh key
+          name: download translation memory
+          working_directory: /tmp/workspace
           command: |
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
-            export TRANSLATIONREPO=$(jq -r .translationrepository.repository ${CIRCLEWKD}/config/config.json)
-            ${CIRCLEWKD}/scripts/update_sshconfig.sh ${TRANSLATIONREPO}
-      - run:
-          name: Checkout translation repo | XXX this repo could be replaced with a tar.gz file in the generated repo. Probably translationfiles are very good compressable. But we loose diffs.
-          command: |
-            rm -rf /tmp/workspace/autotranslation
-            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
-            export REPO=$(jq -r .translationrepository ${CIRCLEWKD}/config/config.json)
-            ${CIRCLEWKD}/scripts/checkoutRepoGithub.sh "${REPO}" /tmp/workspace/autotranslation ${TOOLCHAIN_TOKEN}
-      - run:
-          name: clean the generated directory
-          working_directory: /tmp/workspace/autotranslation
-          command: |
-            git fetch origin
-            git checkout -b "${CIRCLE_BRANCH}" --track "origin/${CIRCLE_BRANCH}" || git checkout "${CIRCLE_BRANCH}"
+            GENERATEDREPO=$(jq --arg bt "${CIRCLE_BRANCH}" -r '.generatedrepository + {"filepath":"autotranslation.tgz", "branchtag":"\($bt)"}' ${CIRCLEWKD}/config/config.json)
+            ${CIRCLEWKD}/scripts/downloadFileGithub.sh "${GENERATEDREPO}" autotranslation.tgz ${TOOLCHAIN_TOKEN}
+            tar -xzf autotranslation.tgz
+#      - run:
+#          name: update and add extra statements of updating the ssh config for each private ssh key
+#          command: |
+#            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+#            export TRANSLATIONREPO=$(jq -r .translationrepository.repository ${CIRCLEWKD}/config/config.json)
+#            ${CIRCLEWKD}/scripts/update_sshconfig.sh ${TRANSLATIONREPO}
+#      - run:
+#          name: Checkout translation repo | XXX this repo could be replaced with a tar.gz file in the generated repo. Probably translationfiles are very good compressable. But we loose diffs.
+#          command: |
+#            rm -rf /tmp/workspace/autotranslation
+#            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+#            export REPO=$(jq -r .translationrepository ${CIRCLEWKD}/config/config.json)
+#            ${CIRCLEWKD}/scripts/checkoutRepoGithub.sh "${REPO}" /tmp/workspace/autotranslation ${TOOLCHAIN_TOKEN}
+#      - run:
+#          name: clean the generated directory
+#          working_directory: /tmp/workspace/autotranslation
+#          command: |
+#            git fetch origin
+#            git checkout -b "${CIRCLE_BRANCH}" --track "origin/${CIRCLE_BRANCH}" || git checkout "${CIRCLE_BRANCH}"
       - run:
           name: Render metadata JSON from jsonld
           command: |
@@ -709,6 +717,12 @@ jobs:
             if [ -d json ] ; then if [ ! "$(ls -A json)" ] ; then echo "directory json is empty" ; else cp -rT json /tmp/generated/report/ ; fi fi
             if [ -d translation ] ; then if [ ! "$(ls -A translation)" ] ; then echo "directory translation is empty" ; else cp -rT translation /tmp/generated/report/ ; fi fi
             if [ -d examples ] ; then if [ ! "$(ls -A examples)" ] ; then echo "directory examples is empty" ; else cp -rT examples /tmp/generated/examples/ ; fi fi
+      - run:
+          name: Create new autotranslate memory
+          working_directory: /tmp/workspace/autotranslation
+          command: |
+            tar -cfz autotranslation.tgz autotranslation
+            cp autotranslation.tgz /tmp/generated/autotranslation.tgz
       - run:
           name: check if all publication points are generated
           working_directory: /tmp/generated
