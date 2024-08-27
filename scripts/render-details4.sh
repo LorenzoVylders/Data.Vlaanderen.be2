@@ -298,7 +298,7 @@ autotranslatefiles() {
 		echo "translation memory contains ${J2FILE}"
 		if [ -f ${MEMORYLINE}/$MD5SUMFILE ] ; then
 		   CURSUM=$( md5sum ${transi}.j2 )
-		   MEMSUM=$( cat ${MEMORYLINE/${MD5SUMFILE} )
+		   MEMSUM=$( cat ${MEMORYLINE}/${MD5SUMFILE} )
 		   if [ "${CURSUM}" = "${MEMSUM}" ] ; then
 		       cp ${MEMORYLINE}/${J2FILE} ${TLINE}/autotranslation/${J2FILE}
 		   else 
