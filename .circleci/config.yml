@@ -299,6 +299,25 @@ jobs:
           paths:
             - report4/respec/
             - target/
+#      - run:
+#          name: update and add extra statements of updating the ssh config for each private ssh key
+#          command: |
+#            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+#            export TRANSLATIONREPO=$(jq -r .translationrepository.repository ${CIRCLEWKD}/config/config.json)
+#            ${CIRCLEWKD}/scripts/update_sshconfig.sh ${TRANSLATIONREPO}
+#      - run:
+#          name: Checkout translation repo | XXX this repo could be replaced with a tar.gz file in the generated repo. Probably translationfiles are very good compressable. But we loose diffs.
+#          command: |
+#            rm -rf /tmp/workspace/autotranslation
+#            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+#            export REPO=$(jq -r .translationrepository ${CIRCLEWKD}/config/config.json)
+#            ${CIRCLEWKD}/scripts/checkoutRepoGithub.sh "${REPO}" /tmp/workspace/autotranslation ${TOOLCHAIN_TOKEN}
+#      - run:
+#          name: clean the generated directory
+#          working_directory: /tmp/workspace/autotranslation
+#          command: |
+#            git fetch origin
+#            git checkout -b "${CIRCLE_BRANCH}" --track "origin/${CIRCLE_BRANCH}" || git checkout "${CIRCLE_BRANCH}"
   render-translation-4:
     docker:
       - image: informatievlaanderen/oslo-specification-generator:multilingual-dev4.0
@@ -320,25 +339,6 @@ jobs:
             GENERATEDREPO=$(jq --arg bt "${CIRCLE_BRANCH}" -r '.generatedrepository + {"filepath":"autotranslation.tgz", "branchtag":"\($bt)"}' ${CIRCLEWKD}/config/config.json)
             ${CIRCLEWKD}/scripts/downloadFileGithub.sh "${GENERATEDREPO}" autotranslation.tgz ${TOOLCHAIN_TOKEN}
             tar -xzf autotranslation.tgz
-#      - run:
-#          name: update and add extra statements of updating the ssh config for each private ssh key
-#          command: |
-#            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
-#            export TRANSLATIONREPO=$(jq -r .translationrepository.repository ${CIRCLEWKD}/config/config.json)
-#            ${CIRCLEWKD}/scripts/update_sshconfig.sh ${TRANSLATIONREPO}
-#      - run:
-#          name: Checkout translation repo | XXX this repo could be replaced with a tar.gz file in the generated repo. Probably translationfiles are very good compressable. But we loose diffs.
-#          command: |
-#            rm -rf /tmp/workspace/autotranslation
-#            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
-#            export REPO=$(jq -r .translationrepository ${CIRCLEWKD}/config/config.json)
-#            ${CIRCLEWKD}/scripts/checkoutRepoGithub.sh "${REPO}" /tmp/workspace/autotranslation ${TOOLCHAIN_TOKEN}
-#      - run:
-#          name: clean the generated directory
-#          working_directory: /tmp/workspace/autotranslation
-#          command: |
-#            git fetch origin
-#            git checkout -b "${CIRCLE_BRANCH}" --track "origin/${CIRCLE_BRANCH}" || git checkout "${CIRCLE_BRANCH}"
       - run:
           name: Render metadata JSON from jsonld
           command: |
