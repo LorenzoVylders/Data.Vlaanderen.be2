@@ -293,11 +293,25 @@ autotranslatefiles() {
     for transi in ${FILESTOPROCESS} ; do 
 	    echo "process $transi" 
 	    J2FILE=${transi}_${GOALLANGUAGE}.j2
+	    MD5SUMFILE=${transi}.j2.md5sum
             if [ -f ${MEMORYLINE}/${J2FILE} ] ; then
 		echo "translation memory contains ${J2FILE}"
-		cp ${MEMORYLINE}/${J2FILE} ${TLINE}/autotranslation/${J2FILE}
+		if [ -f ${MEMORYLINE}/$MD5SUMFILE ] ; 
+		   CURSUM=$( md5sum ${transi}.j2 )
+		   MEMSUM=$( cat ${MEMORYLINE/${MD5SUMFILE} )
+		   if [ "${CURSUM}" = "${MEMSUM}" ] ; then
+		       cp ${MEMORYLINE}/${J2FILE} ${TLINE}/autotranslation/${J2FILE}
+		   else 
+		     md5sum ${transi}.j2 > ${TLINE}/autotranslation/${MD5SUMFILE}
+	    	     node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
+		   fi
+		else
+		  md5sum ${transi}.j2 > ${TLINE}/autotranslation/${MD5SUMFILE}
+	    	  node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
+		fi
 	    else
-	    	node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
+	      md5sum ${transi}.j2 > ${TLINE}/autotranslation/${MD5SUMFILE}
+	      node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
 	    fi
     done
     popd
