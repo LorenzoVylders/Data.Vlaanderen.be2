@@ -197,6 +197,8 @@ render_translationfiles() {
     # secure the case that the translation file is not mentioned
     if [ "${LANGUAGEINTHEMA}" == "" ] || [ "${LANGUAGEINTHEMA}" == "null" ]; then
         TRANSLATIONFILE=${GOALOUTPUTFILENAME}
+    else 
+        TRANSLATIONFILE=${GOALOUTPUTFILENAME}
     fi
 
     mkdir -p ${TLINE}/translation
@@ -245,6 +247,8 @@ autotranslatefiles() {
     LANGUAGEINTHEMA=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
     # secure the case that the translation file is not mentioned
     if [ "${LANGUAGEINTHEMA}" == "" ] || [ "${LANGUAGEINTHEMA}" == "null" ]; then
+        TRANSLATIONFILE=${GOALOUTPUTFILENAME}
+    else 
         TRANSLATIONFILE=${GOALOUTPUTFILENAME}
     fi
 
