@@ -287,6 +287,7 @@ autotranslatefiles() {
 
     # autotranslate the descriptions in the local templates
     # must add a md5sum check to ensure that if a text is changed in the primelangage the autotranslation is triggered
+    #
     pushd ${SLINE}/templates
     FILESTOPROCESS=$(find . -name "*.j2" -exec basename {} .j2 \; )
     for transi in ${FILESTOPROCESS} ; do 
