@@ -302,6 +302,9 @@ jobs:
   render-translation-4:
     docker:
       - image: informatievlaanderen/oslo-specification-generator:multilingual-dev4.0
+    parameters:
+      generatedRepoFingerprint:
+        type: string
     steps:
       - checkout
       - attach_workspace:
