@@ -17,6 +17,8 @@ HOSTNAME=$(jq -r .hostname ${CONFIGDIR}/config.json)
 CHECKOUTFILE=${TARGETDIR}/checkouts.txt
 export NODE_PATH=/app/node_modules
 
+AUTOTRANSLATIONDIR=${TARGETDIR}/autotranslation
+
 execution_strickness() {
     if [ "${STRICT}" != "lazy" ]; then
         exit -1
@@ -81,6 +83,15 @@ generate_for_language() {
 
 }
 
+REPORTLINEPREFIX='#||#'
+check_tool_output_for_non_emptiness() {
+	local REPORT=$1
+
+	sed  "/${REPORTLINEPREFIX}/d" $REPORT > /tmp/out
+
+}
+
+
 render_merged_files() {
     echo "Merge the translation file for language $2 with the source $3"
     local PRIMELANGUAGE=$1
@@ -115,6 +126,7 @@ render_merged_files() {
 
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "A translation file ${TRANSLATIONFILE} exists."
+	# This should be revisited with autotranslation persistence at the right moment
 	sed -i -e "s/${GOALLANGUAGE}-t-${PRIMELANGUAGE}/${GOALLANGUAGE}/g" ${INPUTTRANSLATIONFILE}
     fi
 
@@ -153,7 +165,7 @@ render_metadata() {
     local TLINE=$5
 
     FILENAME=$(jq -r ".name" ${JSONI})
-    METAOUTPUTFILENAME=meta_${FILENAME}.json
+    METAOUTPUTFILENAME=meta_${FILENAME}_${GOALLANGUAGE}.json
     mkdir -p ${TLINE}/html
     METAOUTPUT=${TLINE}/html/${METAOUTPUTFILENAME}
 
@@ -221,6 +233,7 @@ autotranslatefiles() {
     local JSONI=$3
     local SLINE=$4
     local TLINE=$5
+    local AUTOTLINE=$6
 
     FILENAME=$(jq -r ".name" ${JSONI})
     PRIMEOUTPUTFILENAME=${FILENAME}_${PRIMELANGUAGE}.json
@@ -257,6 +270,9 @@ autotranslatefiles() {
 	    node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${transi}_${GOALLANGUAGE}.j2 -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
     done
     popd
+
+    # copy the translation files to the auto translation repository for reuse in the future
+    cp -r ${TLINE}/autotranslation/*  ${AUTOTLINE}
 }
 
 render_rdf() { # SLINE TLINE JSON
@@ -415,7 +431,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
         ;;
     esac
 
-    METADATA=${RRLINE}/html/meta_${FILENAME}.json
+    METADATA=${RRLINE}/html/meta_${FILENAME}_${LANGUAGE}.json
     STAKEHOLDERS=${RRLINE}/stakeholders.json
 
     oslo-generator-html ${PARAMETERS} \
@@ -424,7 +440,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
         --stakeholders ${STAKEHOLDERS} \
         --metadata ${METADATA} \
         --specificationType ${SPECTYPE} \
-        --specificationName "Dummy Title" \
+        --specificationName ${TITLELANG} \
         --templates ${RRLINE}/templates \
         --rootTemplate ${TEMPLATELANG} \
         --silent false \
@@ -484,6 +500,9 @@ render_respec_html() { # SLINE TLINE JSON
     OUTPUT=${TLINE}/respec-index_${LANGUAGE}.html
     COMMANDTEMPLATELANG=$(echo '.translation | .[] | select(.language | contains("'${LANGUAGE}'")) | .template')
     TEMPLATELANG=$(jq -r "${COMMANDTEMPLATELANG}" ${JSONI})
+    # in case of autotranslate all translations should exists
+    COMMANDTITLELANG=$(echo '.translation | .[] | select(.title | contains("'${LANGUAGE}'")) | .template')
+    TITLELANG=$(jq -r "${COMMANDTITLELANG}" ${JSONI})
 
     REPORTFILE=${RLINE}/generator-respec.report
     generator_parameters htmlgenerator4 ${JSONI}
@@ -512,7 +531,7 @@ render_respec_html() { # SLINE TLINE JSON
         --input ${MERGEDFILE} \
         --output ${OUTPUT} \
         --specificationType ${SPECTYPE} \
-        --specificationName "Dummy Title" \
+        --specificationName ${TITLELANG} \
         --silent false \
         --language ${LANGUAGE} \
         &>>${REPORTFILE}
@@ -677,7 +696,7 @@ render_shacl_languageaware() {
     FILENAME=$(jq -r ".name" ${JSONI})
 
     MERGEDFILENAME=merged_${FILENAME}_${GOALLANGUAGE}.jsonld
-    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+    MERGEDFILE=${SLINE}/merged/${MERGEDFILENAME}
 
     if [ -f ${MERGEDFILE} ]; then
         echo "translations integrated file found"
@@ -832,6 +851,8 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             shacl)
+		   # the source for the shacl generator is solely the intermediate json
+                SLINE=${TARGETDIR}/report4/${line}
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/shacl/${line}
 		mkdir -p ${TLINE}
@@ -845,7 +866,7 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             context)
-		   # the source for the context generated is solely the intermediate json
+		   # the source for the context generator is solely the intermediate json
                 SLINE=${TARGETDIR}/report4/${line}
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/context/${line}
@@ -884,7 +905,7 @@ cat ${CHECKOUTFILE} | while read line; do
                 AUTOTRANSLATE=$(jq -r .toolchain.autotranslate ${CONFIGDIR}/config.json)
     		if [ ${AUTOTRANSLATE} == true ]; then
                 for g in ${GOALLANGUAGE}; do
-                    autotranslatefiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE}
+                    autotranslatefiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE} ${AUTOTRANSLATIONDIR}/${line}
                 done
 		fi
                 ;;

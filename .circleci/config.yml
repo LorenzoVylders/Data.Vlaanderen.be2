@@ -20,8 +20,9 @@ jobs:
           command: $PWD/scripts/findPublicationsToUpdate.sh /tmp/workspace $PWD/config/publication.json $PWD/
       - run:
           command: $PWD/scripts/checkoutRepositories.sh /tmp/workspace $PWD/config/publication.json $PWD/config
-      - run:
-          command: $PWD/scripts/upgrade_config-4.sh /tmp/workspace $PWD/config
+#      - run:
+#          command: $PWD/scripts/upgrade_config-4.sh /tmp/workspace $PWD/config 
+#          This is executed in next step
       - run: if [ -e /tmp/workspace/checkouts.txt ] ; then cat /tmp/workspace/checkouts.txt ; fi
       - run: if [ -e /tmp/workspace/rawcheckouts.txt ] ; then cat /tmp/workspace/rawcheckouts.txt ; fi
       - run: if [ -e /home/circleci/project/changes.txt ] ; then cat /home/circleci/project/changes.txt ; fi
@@ -71,7 +72,7 @@ jobs:
             - src/
   extract-jsonld-details-4:
     docker:
-      - image: cimg/node:20.15.0
+      - image: informatievlaanderen/oslo-specification-generator:multilingual-dev4.0
     steps:
       - checkout
       - attach_workspace:
@@ -301,10 +302,35 @@ jobs:
   render-translation-4:
     docker:
       - image: informatievlaanderen/oslo-specification-generator:multilingual-dev4.0
+    parameters:
+      generatedRepoFingerprint:
+        type: string
     steps:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
+      - add_ssh_keys:
+          fingerprints:
+            - << parameters.generatedRepoFingerprint >>
+      - run:
+          name: update and add extra statements of updating the ssh config for each private ssh key
+          command: |
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            export TRANSLATIONREPO=$(jq -r .translationrepository.repository ${CIRCLEWKD}/config/config.json)
+            ${CIRCLEWKD}/scripts/update_sshconfig.sh ${TRANSLATIONREPO}
+      - run:
+          name: Checkout translation repo
+          command: |
+            rm -rf /tmp/workspace/autotranslation
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            export REPO=$(jq -r .translationrepository ${CIRCLEWKD}/config/config.json)
+            ${CIRCLEWKD}/scripts/checkoutRepoGithub.sh "${REPO}" /tmp/workspace/autotranslation ${TOOLCHAIN_TOKEN}
+      - run:
+          name: clean the generated directory
+          working_directory: /tmp/workspace/autotranslation
+          command: |
+            git fetch origin
+            git checkout -b "${CIRCLE_BRANCH}" --track "origin/${CIRCLE_BRANCH}" || git checkout "${CIRCLE_BRANCH}"
       - run:
           name: Render metadata JSON from jsonld
           command: |
@@ -749,6 +775,7 @@ workflows:
       #     requires:
       #       - render-merged-jsonld
       - render-translation-4:
+          generatedRepoFingerprint: "5a:2a:cd:77:20:ea:62:ca:a3:83:f7:6c:fd:f4:e3:f0"
           requires:
             - extract-jsonld-details-4
       - render-rdf-details-4:
