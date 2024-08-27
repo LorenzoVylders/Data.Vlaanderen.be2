@@ -296,7 +296,7 @@ autotranslatefiles() {
 	    MD5SUMFILE=${transi}.j2.md5sum
             if [ -f ${MEMORYLINE}/${J2FILE} ] ; then
 		echo "translation memory contains ${J2FILE}"
-		if [ -f ${MEMORYLINE}/$MD5SUMFILE ] ; 
+		if [ -f ${MEMORYLINE}/$MD5SUMFILE ] ; then
 		   CURSUM=$( md5sum ${transi}.j2 )
 		   MEMSUM=$( cat ${MEMORYLINE/${MD5SUMFILE} )
 		   if [ "${CURSUM}" = "${MEMSUM}" ] ; then
