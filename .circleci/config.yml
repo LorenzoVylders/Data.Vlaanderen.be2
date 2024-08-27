@@ -319,7 +319,7 @@ jobs:
             export TRANSLATIONREPO=$(jq -r .translationrepository.repository ${CIRCLEWKD}/config/config.json)
             ${CIRCLEWKD}/scripts/update_sshconfig.sh ${TRANSLATIONREPO}
       - run:
-          name: Checkout translation repo
+          name: Checkout translation repo | XXX this repo could be replaced with a tar.gz file in the generated repo. Probably translationfiles are very good compressable. But we loose diffs.
           command: |
             rm -rf /tmp/workspace/autotranslation
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
