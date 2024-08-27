@@ -180,7 +180,7 @@ render_metadata() {
 }
 
 render_translationfiles() {
-    echo "create translations for primelanguage $1, goallanguage $2 and file $3 in the directory $4"
+    echo "create template translations for primelanguage $1 to goallanguage $2 and input $3 in the directory $4"
     local PRIMELANGUAGE=$1
     local GOALLANGUAGE=$2
     local JSONI=$3
@@ -191,10 +191,11 @@ render_translationfiles() {
     PRIMEOUTPUTFILENAME=${FILENAME}_${PRIMELANGUAGE}.json
     GOALOUTPUTFILENAME=${FILENAME}_${GOALLANGUAGE}.json
 
+    # XXX this block can be removed
     COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .translationjson')
-    TRANSLATIONFILE=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
+    LANGUAGEINTHEMA=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
     # secure the case that the translation file is not mentioned
-    if [ "${TRANSLATIONFILE}" == "" ] || [ "${TRANSLATIONFILE}" == "null" ]; then
+    if [ "${LANGUAGEINTHEMA}" == "" ] || [ "${LANGUAGEINTHEMA}" == "null" ]; then
         TRANSLATIONFILE=${GOALOUTPUTFILENAME}
     fi
 
@@ -227,30 +228,46 @@ render_translationfiles() {
 
 
 autotranslatefiles() {
-    echo "translate for primelanguage $1, goallanguage $2 and file $3 in the directory $4"
+    echo "autotranslate for primelanguage $1, goallanguage $2 and file $3 in the directory $4"
     local PRIMELANGUAGE=$1
     local GOALLANGUAGE=$2
     local JSONI=$3
     local SLINE=$4
     local TLINE=$5
-    local AUTOTLINE=$6
+    local MEMORYLINE=$6
 
     FILENAME=$(jq -r ".name" ${JSONI})
     PRIMEOUTPUTFILENAME=${FILENAME}_${PRIMELANGUAGE}.json
     GOALOUTPUTFILENAME=${FILENAME}_${GOALLANGUAGE}.json
 
+    # XXX this block can be removed
     COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .translationjson')
-    TRANSLATIONFILE=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
+    LANGUAGEINTHEMA=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
     # secure the case that the translation file is not mentioned
-    if [ "${TRANSLATIONFILE}" == "" ] || [ "${TRANSLATIONFILE}" == "null" ]; then
+    if [ "${LANGUAGEINTHEMA}" == "" ] || [ "${LANGUAGEINTHEMA}" == "null" ]; then
         TRANSLATIONFILE=${GOALOUTPUTFILENAME}
     fi
 
     mkdir -p ${TLINE}/autotranslation
-    INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
+    mkdir -p ${TLINE}/autotranslation_input
+    INPUTTRANSLATIONFILE=${TLINE}/translation_input/${TRANSLATIONFILE}
     OUTPUTTRANSLATIONFILE=${TLINE}/autotranslation/${TRANSLATIONFILE}
 
     REPORTFILE=${TLINE}/autotranslate.report
+
+    if [ -d ${MEMORYLINE} ] ; then
+	echo "translation memory exists on ${MEMORYLINE}."
+        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${MEMORYLINE}/${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${INPUTTRANSLATIONFILE}; then
+            echo "RENDER-DETAILS: failed"
+            execution_strickness
+        else
+            echo "RENDER-DETAILS: translation file succesfully updated"
+            pretty_print_json ${OUTPUTTRANSLATIONFILE}
+        fi
+    else
+	echo "use translation template as input for auto translation"
+	cp ${TLINE}/translation/${TRANSLATIONFILE} ${INPUTTRANSLATIONFILE}
+    fi
 
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "A translation file ${TRANSLATIONFILE} exists."
@@ -274,8 +291,8 @@ autotranslatefiles() {
     popd
 
     # copy the translation files to the auto translation repository for reuse in the future
-    mkdir -p ${AUTOTLINE}
-    cp -r ${TLINE}/autotranslation/*  ${AUTOTLINE}
+    mkdir -p ${MEMORYLINE}
+    cp -r ${TLINE}/autotranslation/*  ${MEMORYLINE}
 }
 
 render_rdf() { # SLINE TLINE JSON

@@ -368,6 +368,7 @@ jobs:
           root: /tmp/workspace
           paths:
             - report4/
+            - autotranslation
   render-rdf-details-4:
     docker:
       - image: cimg/node:20.15.0
