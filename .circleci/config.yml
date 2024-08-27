@@ -327,11 +327,10 @@ jobs:
             ${CIRCLEWKD}/scripts/checkoutRepoGithub.sh "${REPO}" /tmp/workspace/autotranslation ${TOOLCHAIN_TOKEN}
       - run:
           name: clean the generated directory
-          working_directory: /tmp/workspace/autotranslate
+          working_directory: /tmp/workspace/autotranslation
           command: |
             git fetch origin
             git checkout -b "${CIRCLE_BRANCH}" --track "origin/${CIRCLE_BRANCH}" || git checkout "${CIRCLE_BRANCH}"
-            if [ "`cat /tmp/workspace/haschangedpublications.json`" == "false" ] ; then git rm -r --force * ; fi
       - run:
           name: Render metadata JSON from jsonld
           command: |
