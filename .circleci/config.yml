@@ -722,7 +722,7 @@ jobs:
           working_directory: /tmp/workspace
           command: |
             ls -1
-            if [ -d autotranslation ] ; then tar -cfz autotranslation.tgz autotranslation ; cp autotranslation.tgz /tmp/generated/autotranslation.tgz ; fi
+            if [ -d autotranslation ] ; then tar -zcf autotranslation.tgz autotranslation ; cp autotranslation.tgz /tmp/generated/autotranslation.tgz ; fi
       - run:
           name: check if all publication points are generated
           working_directory: /tmp/generated
