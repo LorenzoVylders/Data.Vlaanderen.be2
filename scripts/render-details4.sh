@@ -17,6 +17,8 @@ HOSTNAME=$(jq -r .hostname ${CONFIGDIR}/config.json)
 CHECKOUTFILE=${TARGETDIR}/checkouts.txt
 export NODE_PATH=/app/node_modules
 
+AUTOTRANSLATIONDIR=${TARGETDIR}/autotranslation
+
 execution_strickness() {
     if [ "${STRICT}" != "lazy" ]; then
         exit -1
@@ -124,6 +126,7 @@ render_merged_files() {
 
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "A translation file ${TRANSLATIONFILE} exists."
+	# This should be revisited with autotranslation persistence at the right moment
 	sed -i -e "s/${GOALLANGUAGE}-t-${PRIMELANGUAGE}/${GOALLANGUAGE}/g" ${INPUTTRANSLATIONFILE}
     fi
 
@@ -230,6 +233,7 @@ autotranslatefiles() {
     local JSONI=$3
     local SLINE=$4
     local TLINE=$5
+    local AUTOTLINE=$6
 
     FILENAME=$(jq -r ".name" ${JSONI})
     PRIMEOUTPUTFILENAME=${FILENAME}_${PRIMELANGUAGE}.json
@@ -266,6 +270,9 @@ autotranslatefiles() {
 	    node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${transi}_${GOALLANGUAGE}.j2 -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
     done
     popd
+
+    # copy the translation files to the auto translation repository for reuse in the future
+    cp -r ${TLINE}/autotranslation/*  ${AUTOTLINE}
 }
 
 render_rdf() { # SLINE TLINE JSON
@@ -898,7 +905,7 @@ cat ${CHECKOUTFILE} | while read line; do
                 AUTOTRANSLATE=$(jq -r .toolchain.autotranslate ${CONFIGDIR}/config.json)
     		if [ ${AUTOTRANSLATE} == true ]; then
                 for g in ${GOALLANGUAGE}; do
-                    autotranslatefiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE}
+                    autotranslatefiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE} ${AUTOTRANSLATIONDIR}/${line}
                 done
 		fi
                 ;;

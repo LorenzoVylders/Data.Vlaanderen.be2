@@ -306,6 +306,30 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
+      - add_ssh_keys:
+          fingerprints:
+            - << parameters.generatedRepoFingerprint >>
+      - run:
+          name: update and add extra statements of updating the ssh config for each private ssh key
+          command: |
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            export TRANSLATIONREPO=$(jq -r .translationrepository.repository ${CIRCLEWKD}/config/config.json)
+            ${CIRCLEWKD}/scripts/update_sshconfig.sh ${TRANSLATIONREPO}
+      - run:
+          name: Checkout translation repo
+          command: |
+            rm -rf /tmp/workspace/autotranslate
+            echo ${CIRCLEWKD}
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            export REPO=$(jq -r .translationrepository ${CIRCLEWKD}/config/config.json)
+            ${CIRCLEWKD}/scripts/checkoutRepoGithub.sh "${REPO}" /tmp/workspace/autotranslate ${TOOLCHAIN_TOKEN}
+      - run:
+          name: clean the generated directory
+          working_directory: /tmp/workspace/autotranslate
+          command: |
+            git fetch origin
+            git checkout -b "${CIRCLE_BRANCH}" --track "origin/${CIRCLE_BRANCH}" || git checkout "${CIRCLE_BRANCH}"
+            if [ "`cat /tmp/workspace/haschangedpublications.json`" == "false" ] ; then git rm -r --force * ; fi
       - run:
           name: Render metadata JSON from jsonld
           command: |
