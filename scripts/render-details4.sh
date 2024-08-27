@@ -259,7 +259,7 @@ autotranslatefiles() {
 
     REPORTFILE=${TLINE}/autotranslate.report
 
-    if [ -d ${MEMORYLINE} -a -f ${MEMORYLINE}/${TRANSLATIONFILE}] ; then
+    if [ -f ${MEMORYLINE}/${TRANSLATIONFILE}] ; then
 	echo "translation memory exists on ${MEMORYLINE}."
         if ! node /app/translation-json-generator.js -i ${JSONI} -t ${MEMORYLINE}/${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${INPUTTRANSLATIONFILE}; then
             echo "RENDER-DETAILS: failed"
