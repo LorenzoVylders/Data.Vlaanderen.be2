@@ -286,11 +286,18 @@ autotranslatefiles() {
     fi
 
     # autotranslate the descriptions in the local templates
+    # must add a md5sum check to ensure that if a text is changed in the primelangage the autotranslation is triggered
     pushd ${SLINE}/templates
     FILESTOPROCESS=$(find . -name "*.j2" -exec basename {} .j2 \; )
     for transi in ${FILESTOPROCESS} ; do 
 	    echo "process $transi" 
-	    node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${transi}_${GOALLANGUAGE}.j2 -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
+	    J2FILE=${transi}_${GOALLANGUAGE}.j2
+            if [ -f ${MEMORYLINE}/${J2FILE} ] ; then
+		echo "translation memory contains ${J2FILE}"
+		cp ${MEMORYLINE}/${J2FILE} ${TLINE}/autotranslation/${J2FILE}
+	    else
+	    	node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
+	    fi
     done
     popd
 
