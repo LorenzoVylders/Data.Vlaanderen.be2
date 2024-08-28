@@ -116,9 +116,9 @@ render_report_line() {
     echo "| Specification | autotranslate |" > ${OVERVIEW}
     echo "| --- | --- |" >> ${OVERVIEW}
 
-    echo -n "| [${LINE}]($RLINE) " >> ${OVERVIEW}
+    echo -n "| [${LINE}](/report4/${LINE}) " >> ${OVERVIEW}
     check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report
-    echo -n "| [${REPORTSTATE}]($RLINE/autotranslate.report)" >> ${OVERVIEW}
+    echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${OVERVIEW}
 
 
     echo -n "| " >> ${OVERVIEW}
@@ -1001,7 +1001,7 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             report)
-                OVERVIEW=${TARGETDIR}/report4/overview.report
+                OVERVIEW=${TARGETDIR}/report4/overviewreport.md
                 render_report_line ${line} ${RLINE} ${OVERVIEW}
                 ;;
             example)
