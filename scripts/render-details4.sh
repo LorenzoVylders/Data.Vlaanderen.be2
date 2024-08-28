@@ -133,12 +133,12 @@ render_report_line() {
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${OVERVIEW}
 
 
-    echo -n "| " >> ${OVERVIEW}
+    echo  "|" >> ${OVERVIEW}
 }
 
 consolidate_reporting() {
     echo "consolidate reporting $1"
-    local RLINE=$2
+    local RLINE=$1
 
     # consolidate context generator
     cp -r ${RLINE}/context/* ${RLINE}
