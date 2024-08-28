@@ -112,8 +112,8 @@ render_report_header() {
 
     if [ ! -f ${OVERVIEW} ] ; then
 
-       echo "| Specification | autotranslate | context | " > ${OVERVIEW}
-       echo "| --- | --- | --- |" >> ${OVERVIEW}
+       echo "| Specification | autotranslate | context | rdf | " > ${OVERVIEW}
+       echo "| --- | --- | --- | --- |" >> ${OVERVIEW}
 
     fi
 }
@@ -129,9 +129,17 @@ render_report_line() {
     echo -n "| [${LINE}](/report4/${LINE}) " >> ${OVERVIEW}
     check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${OVERVIEW}
-    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
-    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${OVERVIEW}
-
+#    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
+#    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${OVERVIEW}
+    REPORTS="generator-jsonld-context.report generator-rdf.report"
+    for REPORTFILE in ${REPORTS} ; do
+	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
+	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}
+	      echo -n "| [${REPORTSTATE}](/report4/${LINE}/${REPORTFILE})" >> ${OVERVIEW}
+	    else 
+	      echo -n "| " >> ${OVERVIEW}
+	    fi
+    done
 
     echo  "|" >> ${OVERVIEW}
 }
@@ -142,6 +150,9 @@ consolidate_reporting() {
 
     # consolidate context generator
     cp -r ${RLINE}/context/* ${RLINE}
+    rm -rf ${RLINE}/context
+    cp -r ${RLINE}/rdf/* ${RLINE}
+
 }
 
 
@@ -438,8 +449,8 @@ render_rdf() { # SLINE TLINE JSON
             ;;
         esac
 
-        echo "oslo-generator-rdf for language ${LANGUAGE}" &>>${REPORTFILE}
-        echo "-------------------------------------" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}oslo-generator-rdf for language ${LANGUAGE}" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
         oslo-generator-rdf ${PARAMETERS} \
             --input ${MERGEDFILE} \
             --output ${OUTPUT} \
