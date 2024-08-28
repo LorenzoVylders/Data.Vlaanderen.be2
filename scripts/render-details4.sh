@@ -106,6 +106,7 @@ render_merged_files() {
 
     COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .autotranslate')
     USEAUTOTRANSLATION=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
+    TRANSLATIONFILE=${GOALFILENAME}
     # secure the case that the translation file is not mentioned
     if [ "${USEAUTOTRANSLATION}" == "" ] || [ "${USEAUTOTRANSLATION}" == "null" ]; then
     	INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
