@@ -83,12 +83,45 @@ generate_for_language() {
 
 }
 
-REPORTLINEPREFIX='#||#'
+REPORTLINEPREFIX='#||# '
 check_tool_output_for_non_emptiness() {
 	local REPORT=$1
 
 	sed  "/${REPORTLINEPREFIX}/d" $REPORT > /tmp/out
+	# if the report is empty then sun (no issues)
+	# if the report contains indications of errors (word Error, error) then thunderstorm
+	# otherwise cloud
+	SUN="&#9728;" 
+	CLOUD="&#9729;" 
+	THUNDERSTORM="&#9736;" 
 
+	if [ -s /tmp/out ] ; then
+		E=$( grep -c rror /tmp/out )
+		if [ $E -eq 0  ] ; then
+			REPORTSTATE=${THUNDERSTORM}
+		else
+			REPORTSTATE=${CLOUD}
+		fi
+	else
+		REPORTSTATE=${SUN}
+	fi	
+}
+
+render_report_line() {
+    echo "add report overview for $1"
+    local LINE=$1
+    local RLINE=$2
+    local OVERVIEW=$3
+
+    echo "| Specification | autotranslate |" > ${OVERVIEW}
+    echo "| --- | --- |" >> ${OVERVIEW}
+
+    echo "| [${LINE}]($RLINE) " >> ${OVERVIEW}
+    check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report
+    echo "| [${REPORTSTATE}]($RLINE/autotranslate.report)" >> ${OVERVIEW}
+
+
+    echo "| " >> ${OVERVIEW}
 }
 
 
@@ -484,6 +517,8 @@ render_nunjunks_html() { # SLINE TLINE JSON
     METADATA=${RRLINE}/html/meta_${FILENAME}_${LANGUAGE}.json
     STAKEHOLDERS=${RRLINE}/stakeholders.json
 
+    echo "oslo-generator-html for language ${LANGUAGE}" &>>${REPORTFILE}
+    echo "-------------------------------------" &>>${REPORTFILE}
     oslo-generator-html ${PARAMETERS} \
         --input ${INT_OUTPUT} \
         --output ${OUTPUT} \
@@ -964,6 +999,10 @@ cat ${CHECKOUTFILE} | while read line; do
                 for g in ${GOALLANGUAGE}; do
                     render_merged_files ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE} ${RLINE}
                 done
+                ;;
+            report)
+                OVERVIEW=${TARGETDIR}/report4/overview.report
+                render_report_line ${line} ${RLINE} ${OVERVIEW}
                 ;;
             example)
                 render_example_template $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report/${line} ${PRIMELANGUAGE}

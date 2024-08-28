@@ -569,7 +569,7 @@ jobs:
             - target/
   expand-links:
     docker:
-      - image: cimg/node:20.15.0
+      - image: informatievlaanderen/oslo-specification-generator:multilingual-dev4.0
     steps:
       - checkout
       - attach_workspace:
@@ -583,6 +583,11 @@ jobs:
           name: expand default links
           command: |
             $PWD/scripts/expand-links.sh /tmp/workspace $PWD/config
+      - run:
+          name: create overview report
+          command: |
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace report ${CIRCLEWKD}/config
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
