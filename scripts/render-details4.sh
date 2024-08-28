@@ -116,12 +116,12 @@ render_report_line() {
     echo "| Specification | autotranslate |" > ${OVERVIEW}
     echo "| --- | --- |" >> ${OVERVIEW}
 
-    echo "| [${LINE}]($RLINE) " >> ${OVERVIEW}
+    echo -n "| [${LINE}]($RLINE) " >> ${OVERVIEW}
     check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report
-    echo "| [${REPORTSTATE}]($RLINE/autotranslate.report)" >> ${OVERVIEW}
+    echo -n "| [${REPORTSTATE}]($RLINE/autotranslate.report)" >> ${OVERVIEW}
 
 
-    echo "| " >> ${OVERVIEW}
+    echo -n "| " >> ${OVERVIEW}
 }
 
 

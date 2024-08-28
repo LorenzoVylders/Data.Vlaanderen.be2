@@ -592,6 +592,7 @@ jobs:
           root: /tmp/workspace
           paths:
             - target/
+            - report4/
   render-voc-jsonld:
     docker:
       - image: informatievlaanderen/oslo-specification-generator:multilingual-dev-0.9
