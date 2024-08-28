@@ -98,9 +98,9 @@ check_tool_output_for_non_emptiness() {
 	if [ -s /tmp/out ] ; then
 		E=$( grep -c rror /tmp/out )
 		if [ $E -eq 0  ] ; then
-			REPORTSTATE=${THUNDERSTORM}
-		else
 			REPORTSTATE=${CLOUD}
+		else
+			REPORTSTATE=${THUNDERSTORM}
 		fi
 	else
 		REPORTSTATE=${SUN}
@@ -311,6 +311,8 @@ autotranslatefiles() {
     OUTPUTTRANSLATIONFILE=${TLINE}/autotranslation/${TRANSLATIONFILE}
 
     REPORTFILE=${TLINE}/autotranslate.report
+    echo "${REPORTLINEPREFIX}autotranslate for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
 
     #
     # XXX maybe also implement md5sum for the json file
@@ -765,8 +767,8 @@ render_context() { # SLINE TLINE JSON
         #        echo "RENDER-DETAILS(context): node /app/json-ld-generator.js -d -l label -i ${JSONI} -o ${TLINE}/context/${OUTFILELANGUAGE} "
         mkdir -p ${TLINE}/context
 
-        echo "oslo-jsonld-context-generator for language ${GOALLANGUAGE}" &>>${REPORTFILE}
-        echo "-------------------------------------" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}oslo-jsonld-context-generator for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
         oslo-jsonld-context-generator ${PARAMETERS} \
             --input ${MERGEDFILE} \
             --language ${GOALLANGUAGE} \
