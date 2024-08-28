@@ -261,6 +261,7 @@ autotranslatefiles() {
     #
     # XXX maybe also implement md5sum for the json file
     #
+    #
     if [ -f ${MEMORYLINE}/${TRANSLATIONFILE} ] ; then
 	echo "translation memory exists on ${MEMORYLINE}."
         if ! node /app/translation-json-generator.js -i ${JSONI} -t ${MEMORYLINE}/${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}-t-${PRIMELANGUAGE} -o ${INPUTTRANSLATIONFILE}; then
