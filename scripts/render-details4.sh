@@ -112,8 +112,8 @@ render_report_header() {
 
     if [ ! -f ${OVERVIEW} ] ; then
 
-       echo "| Specification | autotranslate |" > ${OVERVIEW}
-       echo "| --- | --- |" >> ${OVERVIEW}
+       echo "| Specification | autotranslate | context | " > ${OVERVIEW}
+       echo "| --- | --- | --- |" >> ${OVERVIEW}
 
     fi
 }
@@ -129,9 +129,19 @@ render_report_line() {
     echo -n "| [${LINE}](/report4/${LINE}) " >> ${OVERVIEW}
     check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${OVERVIEW}
+    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
+    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${OVERVIEW}
 
 
     echo -n "| " >> ${OVERVIEW}
+}
+
+consolidate_reporting() {
+    echo "consolidate reporting $1"
+    local RLINE=$2
+
+    # consolidate context generator
+    cp -r ${RLINE}/context/* ${RLINE}
 }
 
 
@@ -1011,6 +1021,7 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             report)
+		consolidate_reporting ${TARGETDIR}/report4
                 OVERVIEW=${TARGETDIR}/report4/overviewreport.md
                 render_report_line ${line} ${RLINE} ${OVERVIEW}
                 ;;
