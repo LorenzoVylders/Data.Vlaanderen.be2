@@ -98,7 +98,7 @@ render_merged_files() {
     local GOALLANGUAGE=$2
     local JSONI=$3
     local SLINE=$4
-    local TRLINE=$5
+    local TLINE=$5
     local RLINE=$6
 
     FILENAME=$(jq -r ".name" ${JSONI})
@@ -959,9 +959,9 @@ cat ${CHECKOUTFILE} | while read line; do
 		fi
                 ;;
             merge)
-                render_merged_files ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TRLINE} ${RLINE}
+                render_merged_files ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TLINE} ${RLINE}
                 for g in ${GOALLANGUAGE}; do
-                    render_merged_files ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TRLINE} ${RLINE}
+                    render_merged_files ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE} ${RLINE}
                 done
                 ;;
             example)
