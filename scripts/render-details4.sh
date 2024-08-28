@@ -107,14 +107,24 @@ check_tool_output_for_non_emptiness() {
 	fi	
 }
 
+render_report_header() {
+    local OVERVIEW=$1
+
+    if [ ! -f ${OVERVIEW} ] ; then
+
+       echo "| Specification | autotranslate |" > ${OVERVIEW}
+       echo "| --- | --- |" >> ${OVERVIEW}
+
+    fi
+}
+
 render_report_line() {
     echo "add report overview for $1"
     local LINE=$1
     local RLINE=$2
     local OVERVIEW=$3
 
-    echo "| Specification | autotranslate |" > ${OVERVIEW}
-    echo "| --- | --- |" >> ${OVERVIEW}
+    render_report_header ${OVERVIEW}
 
     echo -n "| [${LINE}](/report4/${LINE}) " >> ${OVERVIEW}
     check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report
