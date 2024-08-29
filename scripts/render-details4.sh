@@ -112,8 +112,8 @@ render_report_header() {
 
     if [ ! -f ${OVERVIEW} ] ; then
 
-       echo "| Specification | autotranslate | context | rdf | html | respec | webuniversum | uml-extractor | stakeholders |" > ${OVERVIEW}
-       echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
+       echo "| Specification | autotranslate | context | rdf | html | respec | shacl | webuniversum | uml-extractor | stakeholders |" > ${OVERVIEW}
+       echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
 
     fi
 }
@@ -131,7 +131,7 @@ render_report_line() {
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${OVERVIEW}
 #    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
 #    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${OVERVIEW}
-    REPORTS="generator-jsonld-context.report generator-rdf.report generator-html.report generator-respec.report generator-webuniversum-json.report oslo-converter-ea.report oslo-stakeholders-converter.report"
+    REPORTS="generator-jsonld-context.report generator-rdf.report generator-html.report generator-respec.report generator-shacl.report generator-webuniversum-json.report oslo-converter-ea.report oslo-stakeholders-converter.report"
     for REPORTFILE in ${REPORTS} ; do
 	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
 	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}
@@ -150,17 +150,37 @@ consolidate_reporting() {
     echo "consolidate reporting $1"
     local RLINE=$1
 
-    # consolidate context generator
-    cp -r ${RLINE}/context/* ${RLINE}
-    rm -rvf ${RLINE}/context
-    cp -r ${RLINE}/rdf/* ${RLINE}
-    rm -rvf ${RLINE}/rdf
-    cp -r ${RLINE}/html/* ${RLINE}
-    rm -rf ${RLINE}/html
-    cp -r ${RLINE}/respec/* ${RLINE}
-    rm -rf ${RLINE}/respec
-    cp -r ${RLINE}/shacl/* ${RLINE}
-    rm -rf ${RLINE}/shacl
+    # Check if the directories exist
+    if [ -d "${RLINE}/context" ]; then
+        cp -r ${RLINE}/context/* ${RLINE}
+        rm -rvf ${RLINE}/context
+    else
+        echo "No context directory found"
+    fi
+    if [ -d "${RLINE}/rdf" ]; then
+        cp -r ${RLINE}/rdf/* ${RLINE}
+        rm -rvf ${RLINE}/rdf
+    else
+        echo "No rdf directory found"
+    fi
+    if [ -d "${RLINE}/html" ]; then
+        cp -r ${RLINE}/html/* ${RLINE}
+        rm -rf ${RLINE}/html
+    else
+        echo "No html directory found"
+    fi
+    if [ -d "${RLINE}/respec" ]; then
+        cp -r ${RLINE}/respec/* ${RLINE}
+        rm -rf ${RLINE}/respec
+    else
+        echo "No respec directory found"
+    fi
+    if [ -d "${RLINE}/shacl" ]; then
+        cp -r ${RLINE}/shacl/* ${RLINE}
+        rm -rf ${RLINE}/shacl
+    else
+        echo "No shacl directory found"
+    fi
 }
 
 
