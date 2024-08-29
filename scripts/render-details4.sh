@@ -409,7 +409,7 @@ render_rdf() { # SLINE TLINE JSON
 
     FILENAME=$(jq -r ".name" ${JSONI})
     MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
-    MERGEDFILE=${RLINE}/merged/${MERGEDFILENAME}
+    MERGEDFILE=${SLINE}/merged/${MERGEDFILENAME}
 
     if [ -f ${MERGEDFILE} ]; then
         echo "translations integrated file found"
@@ -958,6 +958,8 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             rdf)
+		   # the source for the shacl generator is solely the intermediate json
+                SLINE=${TARGETDIR}/report4/${line}
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/rdf/${line}
 		mkdir -p ${TLINE}
