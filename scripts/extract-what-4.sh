@@ -75,6 +75,8 @@ extract_json() {
 	       SPECTYPE="ApplicationProfile"	    
     esac
 
+    echo "${REPORTLINEPREFIX}oslo-converter-ea for diagram ${DIAGRAM}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
     oslo-converter-ea --umlFile ${UMLFILE} --diagramName ${DIAGRAM} --outputFile ${OUTPUTFILE} \
                  --specificationType ${SPECTYPE} --versionId ${URLREF} --baseUri https://${DOMAIN} \
                  --publicationEnvironment ${HOSTNAME} \
