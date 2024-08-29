@@ -112,8 +112,8 @@ render_report_header() {
 
     if [ ! -f ${OVERVIEW} ] ; then
 
-       echo "| Specification | autotranslate | context | rdf | " > ${OVERVIEW}
-       echo "| --- | --- | --- | --- |" >> ${OVERVIEW}
+       echo "| Specification | autotranslate | context | rdf | uml-extractor | " > ${OVERVIEW}
+       echo "| --- | --- | --- | --- | --- |" >> ${OVERVIEW}
 
     fi
 }
@@ -131,7 +131,7 @@ render_report_line() {
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${OVERVIEW}
 #    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
 #    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${OVERVIEW}
-    REPORTS="generator-jsonld-context.report generator-rdf.report"
+    REPORTS="generator-jsonld-context.report generator-rdf.report oslo-converter-ea.report"
     for REPORTFILE in ${REPORTS} ; do
 	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
 	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}
