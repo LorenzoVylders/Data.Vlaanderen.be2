@@ -589,42 +589,42 @@ jobs:
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
             ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace report ${CIRCLEWKD}/config
       - run:
-        name: Consolidate reporting
-        command: |
-          echo "consolidate reporting /tmp/workspace/report4"
-          local RLINE=/tmp/workspace/report4
+          name: Consolidate reporting
+          command: |
+            echo "consolidate reporting /tmp/workspace/report4"
+            local RLINE=/tmp/workspace/report4
 
-          # Check if the directories exist
-          if [ -d "${RLINE}/context" ]; then
-            cp -r ${RLINE}/context/* ${RLINE}
-            rm -rvf ${RLINE}/context
-          else
-            echo "No context directory found"
-          fi
-          if [ -d "${RLINE}/rdf" ]; then
-            cp -r ${RLINE}/rdf/* ${RLINE}
-            rm -rvf ${RLINE}/rdf
-          else
-            echo "No rdf directory found"
-          fi
-          if [ -d "${RLINE}/html" ]; then
-            cp -r ${RLINE}/html/* ${RLINE}
-            rm -rf ${RLINE}/html
-          else
-            echo "No html directory found"
-          fi
-          if [ -d "${RLINE}/respec" ]; then
-            cp -r ${RLINE}/respec/* ${RLINE}
-            rm -rf ${RLINE}/respec
-          else
-            echo "No respec directory found"
-          fi
-          if [ -d "${RLINE}/shacl" ]; then
-            cp -r ${RLINE}/shacl/* ${RLINE}
-            rm -rf ${RLINE}/shacl
-          else
-            echo "No shacl directory found"
-          fi
+            # Check if the directories exist
+            if [ -d "${RLINE}/context" ]; then
+              cp -r ${RLINE}/context/* ${RLINE}
+              rm -rvf ${RLINE}/context
+            else
+              echo "No context directory found"
+            fi
+            if [ -d "${RLINE}/rdf" ]; then
+              cp -r ${RLINE}/rdf/* ${RLINE}
+              rm -rvf ${RLINE}/rdf
+            else
+              echo "No rdf directory found"
+            fi
+            if [ -d "${RLINE}/html" ]; then
+              cp -r ${RLINE}/html/* ${RLINE}
+              rm -rf ${RLINE}/html
+            else
+              echo "No html directory found"
+            fi
+            if [ -d "${RLINE}/respec" ]; then
+              cp -r ${RLINE}/respec/* ${RLINE}
+              rm -rf ${RLINE}/respec
+            else
+              echo "No respec directory found"
+            fi
+            if [ -d "${RLINE}/shacl" ]; then
+              cp -r ${RLINE}/shacl/* ${RLINE}
+              rm -rf ${RLINE}/shacl
+            else
+              echo "No shacl directory found"
+            fi
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
