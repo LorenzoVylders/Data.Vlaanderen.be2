@@ -144,6 +144,8 @@ render_report_line() {
     echo  "|" >> ${OVERVIEW}
 }
 
+#
+# need to be called once instead for each
 consolidate_reporting() {
     echo "consolidate reporting $1"
     local RLINE=$1

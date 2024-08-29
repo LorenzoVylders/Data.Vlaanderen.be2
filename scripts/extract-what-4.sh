@@ -10,6 +10,8 @@ CONFIGDIR_DEFAULT=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
 CONFIGDIR=${2:-$CONFIGDIR_DEFAULT/config}
 
 
+REPORTLINEPREFIX='#||# '
+
 #############################################################################################
 # extraction command functions
 
@@ -57,7 +59,8 @@ extract_json() {
     local URLREF=$( jq -r .urlref .publication-point.json )
     local HOSTNAME=$( jq -r .hostname  ${CONFIGDIR}/config.json )
     local DOMAIN=$( jq -r .domain  ${CONFIGDIR}/config.json )
-    local REPORTFILE=${TTDIR}/$(cat .names.txt).report
+#    local REPORTFILE=${TTDIR}/$(cat .names.txt).report
+    local REPORTFILE=${TTDIR}/oslo-converter-ea.report
 
     touch ${REPORTFILE}
 
@@ -78,7 +81,11 @@ extract_json() {
                  &> ${REPORTFILE}
 
     # XXX use one export for reporting one for processing
-    oslo-stakeholders-converter --input stakeholders.csv --outputFormat application/json --output ${TTDIR}/stakeholders.json
+
+    SK_REPORTFILE=${TTDIR}/oslo-stakeholders-converter.report
+    echo "${REPORTLINEPREFIX}oslo-stakeholders-converter" &>>${SK_REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${SK_REPORTFILE}
+    oslo-stakeholders-converter --input stakeholders.csv --outputFormat application/json --output ${TTDIR}/stakeholders.json &>>${SK_REPORTFILE}
     oslo-stakeholders-converter --input stakeholders.csv --outputFormat application/json --output stakeholders.json
 
 #   exit code of java program is not reliable for detecting processing error
@@ -109,7 +116,6 @@ extract_json() {
     cp ${OUTPUTFILE} ${TTDIR}
     ## overwrite the content with the aggregated version
     cp ${TTDIR}/all-$(cat .names.txt).jsonld  $(cat .names.txt).jsonld 
-    cp ${REPORTFILE} ${RDIR}
     ( echo "\n########################\n" ) >> ${RDIR}/ALL.report
     ( echo $PWD ; cat ${REPORTFILE} ) >> ${RDIR}/ALL.report
 }
