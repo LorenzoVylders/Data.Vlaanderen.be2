@@ -1064,7 +1064,7 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             report)
-		# consolidate_reporting ${TARGETDIR}/report4
+		consolidate_reporting ${TARGETDIR}/report4
                 OVERVIEW=${TARGETDIR}/report4/overviewreport.md
                 render_report_line ${line} ${RLINE} ${OVERVIEW}
                 ;;
@@ -1080,9 +1080,6 @@ cat ${CHECKOUTFILE} | while read line; do
             *) echo "RENDER-DETAILS: ${DETAILS} not handled yet" ;;
             esac
         done
-        if ${DETAILS} == "report"; then
-            consolidate_reporting ${TARGETDIR}/report4
-        fi
     else
         echo "Error: ${SLINE}"
     fi
