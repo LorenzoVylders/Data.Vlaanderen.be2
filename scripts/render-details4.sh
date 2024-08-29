@@ -112,8 +112,8 @@ render_report_header() {
 
     if [ ! -f ${OVERVIEW} ] ; then
 
-       echo "| Specification | autotranslate | context | rdf | uml-extractor | stakeholders |" > ${OVERVIEW}
-       echo "| --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
+       echo "| Specification | autotranslate | context | rdf | html | respec | webuniversum | uml-extractor | stakeholders |" > ${OVERVIEW}
+       echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
 
     fi
 }
@@ -131,7 +131,7 @@ render_report_line() {
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${OVERVIEW}
 #    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
 #    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${OVERVIEW}
-    REPORTS="generator-jsonld-context.report generator-rdf.report oslo-converter-ea.report oslo-stakeholders-converter.report"
+    REPORTS="generator-jsonld-context.report generator-rdf.report generator-html.report generator-respec.report generator-webuniversum-json.report oslo-converter-ea.report oslo-stakeholders-converter.report"
     for REPORTFILE in ${REPORTS} ; do
 	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
 	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}
@@ -156,11 +156,11 @@ consolidate_reporting() {
     cp -r ${RLINE}/rdf/* ${RLINE}
     rm -rvf ${RLINE}/rdf
     cp -r ${RLINE}/html/* ${RLINE}
-    rm -rvf ${RLINE}/html
+    rm -rf ${RLINE}/html
     cp -r ${RLINE}/respec/* ${RLINE}
-    rm -rvf ${RLINE}/respec
+    rm -rf ${RLINE}/respec
     cp -r ${RLINE}/shacl/* ${RLINE}
-    rm -rvf ${RLINE}/shacl
+    rm -rf ${RLINE}/shacl
 }
 
 
