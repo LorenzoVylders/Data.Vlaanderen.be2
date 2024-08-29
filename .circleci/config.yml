@@ -592,7 +592,7 @@ jobs:
           name: Consolidate reporting
           command: |
             echo "consolidate reporting /tmp/workspace/report4"
-            local RLINE=/tmp/workspace/report4
+            RLINE=/tmp/workspace/report4
 
             # Check if the directories exist
             if [ -d "${RLINE}/context" ]; then
