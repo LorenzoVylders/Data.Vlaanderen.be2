@@ -584,11 +584,6 @@ jobs:
           command: |
             $PWD/scripts/expand-links.sh /tmp/workspace $PWD/config
       - run:
-          name: create overview report
-          command: |
-            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
-            ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace report ${CIRCLEWKD}/config
-      - run:
           name: Consolidate reporting
           command: |
             echo "consolidate reporting /tmp/workspace/report4"
@@ -625,6 +620,11 @@ jobs:
             else
               echo "No shacl directory found"
             fi
+      - run:
+          name: create overview report
+          command: |
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace report ${CIRCLEWKD}/config
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
