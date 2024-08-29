@@ -152,9 +152,15 @@ consolidate_reporting() {
 
     # consolidate context generator
     cp -r ${RLINE}/context/* ${RLINE}
-    # rm -rf ${RLINE}/context
+    rm -rvf ${RLINE}/context
     cp -r ${RLINE}/rdf/* ${RLINE}
-
+    rm -rvf ${RLINE}/rdf
+    cp -r ${RLINE}/html/* ${RLINE}
+    rm -rvf ${RLINE}/html
+    cp -r ${RLINE}/respec/* ${RLINE}
+    rm -rvf ${RLINE}/respec
+    cp -r ${RLINE}/shacl/* ${RLINE}
+    rm -rvf ${RLINE}/shacl
 }
 
 
