@@ -13,6 +13,9 @@
   <head>
     {% set name = data.metadata.title|lower|replace(' ', '-') %}
     <title>{{ data.metadata.title }}</title>
+    {% if data.metadata.autotranslate %}
+      <p>Dit document is een vertaling van {{ data.metadata.primaryLanguage }} naar Nederlands</p>
+    {% endif %}
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
