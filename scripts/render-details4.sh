@@ -261,7 +261,11 @@ render_metadata() {
     mkdir -p ${TLINE}/html
     METAOUTPUT=${TLINE}/html/${METAOUTPUTFILENAME}
 
-        if ! node /app/html-metadata-generator.js -i ${JSONI} -m ${GOALLANGUAGE} -h ${HOSTNAME} -r /${DROOT} -o ${METAOUTPUT}; then
+    REPORTFILE=${TLINE}/metadata.report
+    echo "${REPORTLINEPREFIX}metadata for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+
+        if ! node /app/html-metadata-generator.js -i ${JSONI} -m ${GOALLANGUAGE} -h ${HOSTNAME} -r /${DROOT} -o ${METAOUTPUT} &>> ${REPORTFILE} ; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
