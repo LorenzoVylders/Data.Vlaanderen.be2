@@ -112,7 +112,7 @@ render_report_header() {
 
     if [ ! -f ${OVERVIEW} ] ; then
 
-       echo "| Specification | auto | ctx | rdf | html | rspc | shcl | web | uml | mer | trans | meta | stake |" > ${OVERVIEW}
+       echo "| Specification | aut | ctx | rdf | html | rspc | shcl | web | uml | mrg | trns | meta | stake |" > ${OVERVIEW}
        echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
 
     fi
@@ -127,7 +127,8 @@ render_report_line() {
     render_report_header ${OVERVIEW}
     local FIRSTPARTLINE=$(echo $LINE | cut -d'/' -f1-3)
     local SECONDPARTLINE=$(echo $LINE | cut -d'/' -f4-)
-    echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/${LINE}) " >> ${OVERVIEW}
+    local VISUALIZATIONLINE = $(echo $LINE | cut -d'/' -f1-)
+    echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/doc/${VISUALIZATIONLINE}) " >> ${OVERVIEW}
     check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${OVERVIEW}
 #    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
