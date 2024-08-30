@@ -125,10 +125,9 @@ render_report_line() {
     local OVERVIEW=$3
 
     render_report_header ${OVERVIEW}
-    local FIRSTPARTLINE=$(echo $LINE | cut -d'/' -f1-3)
+    local FIRSTPARTLINE=$(echo $LINE | cut -d'/' -f2-3)
     local SECONDPARTLINE=$(echo $LINE | cut -d'/' -f4-)
-    local VISUALIZATIONLINE = $(echo $LINE | cut -d'/' -f1-)
-    echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/doc/${VISUALIZATIONLINE}) " >> ${OVERVIEW}
+    echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/doc/${LINE}) " >> ${OVERVIEW}
     check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${OVERVIEW}
 #    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
