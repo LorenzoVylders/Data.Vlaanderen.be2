@@ -111,6 +111,30 @@ render_report_header() {
     local OVERVIEW=$1
 
     if [ ! -f ${OVERVIEW} ] ; then
+       echo "Legende:" >> ${OVERVIEW}
+       echo "" >> ${OVERVIEW}
+       echo "| Term | Betekenis |" >> ${OVERVIEW}
+       echo "| --- | --- |" >> ${OVERVIEW}
+       declare -A terms
+       terms=(
+            ["aut"]="Autotranslate"
+            ["ctx"]="Context"
+            ["rdf"]="RDF"
+            ["html"]="HTML"
+            ["rspc"]="Respec"
+            ["shcl"]="SHACL"
+            ["web"]="Webuniversum"
+            ["uml"]="UML extractor"
+            ["mrg"]="Merge"
+            ["trns"]="Translate"
+            ["meta"]="Metadata"
+            ["stake"]="Stakeholders"
+       )
+
+       # Voeg elke term en betekenis toe aan de Markdown-tabel
+       for term in "${!terms[@]}"; do
+           echo "| $term | ${terms[$term]} |" >> ${OVERVIEW}
+       done
 
        echo "| Specification | aut | ctx | rdf | html | rspc | shcl | web | uml | mrg | trns | meta | stake |" > ${OVERVIEW}
        echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
