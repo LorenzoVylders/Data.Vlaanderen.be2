@@ -112,8 +112,8 @@ render_report_header() {
 
     if [ ! -f ${OVERVIEW} ] ; then
 
-       echo "| Specification | autotranslate | context | rdf | html | respec | shacl | webuniversum | uml-extractor | stakeholders |" > ${OVERVIEW}
-       echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
+       echo "| Specification | autotranslate | context | rdf | html | respec | shacl | webuniversum | uml-extractor | merge | translate | metadata | stakeholders |" > ${OVERVIEW}
+       echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
 
     fi
 }
@@ -131,7 +131,7 @@ render_report_line() {
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${OVERVIEW}
 #    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
 #    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${OVERVIEW}
-    REPORTS="generator-jsonld-context.report generator-rdf.report generator-html.report generator-respec.report generator-shacl.report generator-webuniversum-json.report oslo-converter-ea.report oslo-stakeholders-converter.report"
+    REPORTS="generator-jsonld-context.report generator-rdf.report generator-html.report generator-respec.report generator-shacl.report generator-webuniversum-json.report oslo-converter-ea.report merge.report translate.report metadata.report oslo-stakeholders-converter.report"
     for REPORTFILE in ${REPORTS} ; do
 	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
 	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}
@@ -199,6 +199,11 @@ render_merged_files() {
     COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .autotranslate')
     USEAUTOTRANSLATION=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
     TRANSLATIONFILE=${GOALFILENAME}
+
+    REPORTFILE=${TLINE}/merge.report
+    echo "${REPORTLINEPREFIX}merge for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+
     # secure the case that the translation file is not mentioned
     if [ "${USEAUTOTRANSLATION}" == "" ] || [ "${USEAUTOTRANSLATION}" == "null" ]; then
     	INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
@@ -234,7 +239,7 @@ render_merged_files() {
         if [ -f "${INPUTTRANSLATIONFILE}" ]; then
             echo "${INPUTTRANSLATIONFILE} exists, the files will be merged."
             echo "RENDER-DETAILS(mergefile): node /app/translation-json-update.js -i ${JSONI} -f ${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE}"
-            if ! node /app/translation-json-update.js -i ${JSONI} -f ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE}; then
+            if ! node /app/translation-json-update.js -i ${JSONI} -f ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE} &>> ${REPORTFILE} ; then
                 echo "RENDER-DETAILS: failed"
                 execution_strickness
             else
@@ -301,10 +306,14 @@ render_translationfiles() {
     INPUTTRANSLATIONFILE=${SLINE}/translation/${TRANSLATIONFILE}
     OUTPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
 
+    REPORTFILE=${TLINE}/translate.report
+    echo "${REPORTLINEPREFIX}translate for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "A translation file ${TRANSLATIONFILE} exists."
         echo "UPDATE the translation file: node /app/translation-json-generator.js -i ${FILE} -f ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTFILE}"
-        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}; then
+        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE} &>> ${REPORTFILE} ; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
@@ -314,7 +323,7 @@ render_translationfiles() {
     else
         echo "NO translation file ${TRANSLATIONFILE} exists"
         echo "CREATE a translation file: node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}"
-        if ! node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}; then
+        if ! node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}  &>> ${REPORTFILE} ; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
