@@ -13,8 +13,10 @@
   <head>
     {% set name = data.metadata.title|lower|replace(' ', '-') %}
     <title>{{ data.metadata.title }}</title>
-    {% if data.metadata.autotranslate %}
-      <p>Dit document is een vertaling van {{ data.metadata.primaryLanguage }} naar Nederlands</p>
+    {% if not data.metadata.autotranslate %}
+      {% for item in data %}
+        <p>{{ item }}</p>
+      {% endfor %}
     {% endif %}
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
