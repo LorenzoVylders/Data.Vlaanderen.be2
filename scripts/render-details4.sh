@@ -131,10 +131,12 @@ render_report_header() {
             ["stake"]="Stakeholders"
        )
 
-       # Voeg elke term en betekenis toe aan de Markdown-tabel
        for term in "${!terms[@]}"; do
            echo "| $term | ${terms[$term]} |" >> ${OVERVIEW}
        done
+
+       # End of legende
+       echo "" >> ${OVERVIEW}
 
        echo "| Specification | aut | ctx | rdf | html | rspc | shcl | web | uml | mrg | trns | meta | stake |" >> ${OVERVIEW}
        echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
