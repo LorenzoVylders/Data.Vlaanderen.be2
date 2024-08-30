@@ -526,8 +526,8 @@ render_nunjunks_html() { # SLINE TLINE JSON
 
     generator_parameters webuniversumgenerator4 ${JSONI}
 
-    echo "oslo-webuniversum-json-generator for language ${LANGUAGE}" &>>${INT_REPORTFILE}
-    echo "-------------------------------------" &>>${INT_REPORTFILE}
+    echo "${REPORTLINEPREFIX}oslo-webuniversum-json-generator for language ${LANGUAGE}" &>>${INT_REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${INT_REPORTFILE}
     oslo-webuniversum-json-generator ${PARAMETERS} \
         --input ${MERGEDFILE} \
         --output ${INT_OUTPUT} \
@@ -578,8 +578,8 @@ render_nunjunks_html() { # SLINE TLINE JSON
     METADATA=${RRLINE}/html/meta_${FILENAME}_${LANGUAGE}.json
     STAKEHOLDERS=${RRLINE}/stakeholders.json
 
-    echo "oslo-generator-html for language ${LANGUAGE}" &>>${REPORTFILE}
-    echo "-------------------------------------" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}oslo-generator-html for language ${LANGUAGE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
     oslo-generator-html ${PARAMETERS} \
         --input ${INT_OUTPUT} \
         --output ${OUTPUT} \
@@ -671,8 +671,8 @@ render_respec_html() { # SLINE TLINE JSON
         ;;
     esac
 
-    echo "oslo-generator-respec for language ${LANGUAGE}" &>>${REPORTFILE}
-    echo "-------------------------------------" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}oslo-generator-respec for language ${LANGUAGE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
     oslo-generator-respec ${PARAMETERS} \
         --input ${MERGEDFILE} \
         --output ${OUTPUT} \
@@ -867,8 +867,8 @@ render_shacl_languageaware() {
         mkdir -p ${TLINE}/shacl
         mkdir -p ${RLINE}/shacl
 
-        echo "oslo-shacl-template-generator for language ${GOALLANGUAGE}" &>>${REPORTFILE}
-        echo "-------------------------------------" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}oslo-shacl-template-generator for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
         oslo-shacl-template-generator ${PARAMETERS} \
             --input ${MERGEDFILE} \
             --language ${GOALLANGUAGE} \
