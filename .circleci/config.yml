@@ -621,6 +621,13 @@ jobs:
               echo "No shacl directory found"
             fi
       - run:
+          name: download global overview memory
+          working_directory: /tmp/workspace
+          command: |
+            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+            GENERATEDREPO=$(jq --arg bt "${CIRCLE_BRANCH}" -r '.generatedrepository + {"filepath":"report4/README.md", "branchtag":"\($bt)"}' ${CIRCLEWKD}/config/config.json)
+            if  ${CIRCLEWKD}/scripts/downloadFileGithub.sh "${GENERATEDREPO}" README.md ${TOOLCHAIN_TOKEN} ; then echo "global report downloaded" ; fi
+      - run:
           name: create overview report
           command: |
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
