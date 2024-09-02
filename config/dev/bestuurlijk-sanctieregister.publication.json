@@ -6,7 +6,7 @@
     "name": "bestuurlijk-sanctieregister-ap",
     "filename": "config/bestuurlijk-sanctieregister-ap.json",
     "disabled": false,
-    "dummy": "001",
+    "dummy": "002",
     "navigation": {
       "prev": "/doc/applicatieprofiel/bestuurlijk-sanctieregister/ontwerpstandaard/2021-02-28"
     }

@@ -1116,7 +1116,7 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             report)
-                OLD_OVERVIEW=${TARGETDIR}/report4/README.md
+                OLD_OVERVIEW=${TARGETDIR}/README.md
                 OVERVIEW=${TARGETDIR}/report4/overviewreport.md
                 render_report_line ${line} ${RLINE} ${OVERVIEW} ${OLD_OVERVIEW}
                 ;;
