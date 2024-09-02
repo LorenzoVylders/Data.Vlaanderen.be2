@@ -72,6 +72,11 @@
             <div class="grid u-hr">
               <div class="col--9-12 col--1-1--s">
                 <h1 class="h1">{{ data.metadata.title }}</h1>
+                {% if data.metadata.autotranslate %}
+                  <div class="disclaimer">
+                    <p>Dieses Dokument ist eine Übersetzung von {{data.metadata.primaryLanguage}} ins Deutsche. </p>
+                  </div>
+                {% endif %}
                 <div class="head" role="contentinfo" id="respecHeader">
                   <h1 class="h1 title p-name" property="dcterms:title" id="title">{{ metadata.title }}</h1>
                   {% if metadata.prefix %}
@@ -243,7 +248,12 @@
               </div>
               <div class="region region--no-space-top" id="overview">
                 <h2 class="h2">Überblick</h2>
-                <div class="grid">
+                {% if data.metadata.autotranslate %}
+                  <div class="disclaimer">
+                    <p>Dieses Dokument ist eine Übersetzung von {{data.metadata.primaryLanguage}} ins Deutsche. </p>
+                  </div>
+                {% endif %}
+                <div class="grid"></div>
                   <div class="col--9-12 col--1-1--s typography">
                     {% if ( ( data.entities | length > 0)   ) %}
                       <div class="region region--no-space-top">

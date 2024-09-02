@@ -74,6 +74,11 @@
                 <h1 class="h1">{{ data.metadata.title }}</h1>
                 <div class="head" role="contentinfo" id="respecHeader">
                   <h1 class="h1 title p-name" property="dcterms:title" id="title">{{ metadata.title }}</h1>
+                  {% if data.metadata.autotranslate %}
+                    <div class="disclaimer">
+                      <p>Ce document est une traduction de {{data.metadata.primaryLanguage}} vers le français. </p>
+                    </div>
+                  {% endif %}
                   {% if metadata.prefix %}
                     <h2 class="h2" id="subtitle" property="bibo:subtitle">Spécification de
                       <em>{{ metadata.prefix }}</em>
@@ -243,6 +248,11 @@
               </div>
               <div class="region region--no-space-top" id="overview">
                 <h2 class="h2">Aperçu</h2>
+                  {% if data.metadata.autotranslate %}
+                    <div class="disclaimer">
+                      <p>Ce document est une traduction de {{data.metadata.primaryLanguage}} vers le français. </p>
+                    </div>
+                  {% endif %}
                 <div class="grid">
                   <div class="col--9-12 col--1-1--s typography">
                     {% if ( ( data.entities | length > 0)   ) %}
