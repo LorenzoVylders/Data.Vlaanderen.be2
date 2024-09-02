@@ -111,9 +111,35 @@ render_report_header() {
     local OVERVIEW=$1
 
     if [ ! -f ${OVERVIEW} ] ; then
+       echo "Legende:" > ${OVERVIEW}
+       echo "" >> ${OVERVIEW}
+       echo "| Term | Betekenis |" >> ${OVERVIEW}
+       echo "| --- | --- |" >> ${OVERVIEW}
+       declare -A terms
+       terms=(
+            ["aut"]="Autotranslate"
+            ["ctx"]="Context"
+            ["rdf"]="RDF"
+            ["html"]="HTML"
+            ["rspc"]="Respec"
+            ["shcl"]="SHACL"
+            ["web"]="Webuniversum"
+            ["uml"]="UML extractor"
+            ["mrg"]="Merge"
+            ["trns"]="Translate"
+            ["meta"]="Metadata"
+            ["stake"]="Stakeholders"
+       )
 
-       echo "| Specification | autotranslate | context | rdf | html | respec | shacl | webuniversum | uml-extractor | stakeholders |" > ${OVERVIEW}
-       echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
+       for term in "${!terms[@]}"; do
+           echo "| $term | ${terms[$term]} |" >> ${OVERVIEW}
+       done
+
+       # End of legende
+       echo "" >> ${OVERVIEW}
+
+       echo "| Specification | aut | ctx | rdf | html | rspc | shcl | web | uml | mrg | trns | meta | stake |" >> ${OVERVIEW}
+       echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
 
     fi
 }
@@ -125,13 +151,14 @@ render_report_line() {
     local OVERVIEW=$3
 
     render_report_header ${OVERVIEW}
-
-    echo -n "| [${LINE}](/report4/${LINE}) " >> ${OVERVIEW}
+    local FIRSTPARTLINE=$(echo $LINE | cut -d'/' -f2-3)
+    local SECONDPARTLINE=$(echo $LINE | cut -d'/' -f4-)
+    echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/${LINE}) " >> ${OVERVIEW}
     check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${OVERVIEW}
 #    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
 #    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${OVERVIEW}
-    REPORTS="generator-jsonld-context.report generator-rdf.report generator-html.report generator-respec.report generator-shacl.report generator-webuniversum-json.report oslo-converter-ea.report oslo-stakeholders-converter.report"
+    REPORTS="generator-jsonld-context.report generator-rdf.report generator-html.report generator-respec.report generator-shacl.report generator-webuniversum-json.report oslo-converter-ea.report merge.report translate.report metadata.report oslo-stakeholders-converter.report"
     for REPORTFILE in ${REPORTS} ; do
 	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
 	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}
@@ -199,6 +226,11 @@ render_merged_files() {
     COMMANDLANGJSON=$(echo '.translation | .[] | select(.language | contains("'${GOALLANGUAGE}'")) | .autotranslate')
     USEAUTOTRANSLATION=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
     TRANSLATIONFILE=${GOALFILENAME}
+
+    REPORTFILE=${TLINE}/merge.report
+    echo "${REPORTLINEPREFIX}merge for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+
     # secure the case that the translation file is not mentioned
     if [ "${USEAUTOTRANSLATION}" == "" ] || [ "${USEAUTOTRANSLATION}" == "null" ]; then
     	INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
@@ -234,7 +266,7 @@ render_merged_files() {
         if [ -f "${INPUTTRANSLATIONFILE}" ]; then
             echo "${INPUTTRANSLATIONFILE} exists, the files will be merged."
             echo "RENDER-DETAILS(mergefile): node /app/translation-json-update.js -i ${JSONI} -f ${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE}"
-            if ! node /app/translation-json-update.js -i ${JSONI} -f ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE}; then
+            if ! node /app/translation-json-update.js -i ${JSONI} -f ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE} &>> ${REPORTFILE} ; then
                 echo "RENDER-DETAILS: failed"
                 execution_strickness
             else
@@ -261,7 +293,11 @@ render_metadata() {
     mkdir -p ${TLINE}/html
     METAOUTPUT=${TLINE}/html/${METAOUTPUTFILENAME}
 
-        if ! node /app/html-metadata-generator.js -i ${JSONI} -m ${GOALLANGUAGE} -h ${HOSTNAME} -r /${DROOT} -o ${METAOUTPUT}; then
+    REPORTFILE=${TLINE}/metadata.report
+    echo "${REPORTLINEPREFIX}metadata for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+
+        if ! node /app/html-metadata-generator.js -i ${JSONI} -m ${GOALLANGUAGE} -h ${HOSTNAME} -r /${DROOT} -o ${METAOUTPUT} &>> ${REPORTFILE} ; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
@@ -297,10 +333,14 @@ render_translationfiles() {
     INPUTTRANSLATIONFILE=${SLINE}/translation/${TRANSLATIONFILE}
     OUTPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
 
+    REPORTFILE=${TLINE}/translate.report
+    echo "${REPORTLINEPREFIX}translate for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "A translation file ${TRANSLATIONFILE} exists."
         echo "UPDATE the translation file: node /app/translation-json-generator.js -i ${FILE} -f ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTFILE}"
-        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}; then
+        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE} &>> ${REPORTFILE} ; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
@@ -310,7 +350,7 @@ render_translationfiles() {
     else
         echo "NO translation file ${TRANSLATIONFILE} exists"
         echo "CREATE a translation file: node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}"
-        if ! node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}; then
+        if ! node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE}  &>> ${REPORTFILE} ; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
@@ -526,8 +566,8 @@ render_nunjunks_html() { # SLINE TLINE JSON
 
     generator_parameters webuniversumgenerator4 ${JSONI}
 
-    echo "oslo-webuniversum-json-generator for language ${LANGUAGE}" &>>${INT_REPORTFILE}
-    echo "-------------------------------------" &>>${INT_REPORTFILE}
+    echo "${REPORTLINEPREFIX}oslo-webuniversum-json-generator for language ${LANGUAGE}" &>>${INT_REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${INT_REPORTFILE}
     oslo-webuniversum-json-generator ${PARAMETERS} \
         --input ${MERGEDFILE} \
         --output ${INT_OUTPUT} \
@@ -578,8 +618,8 @@ render_nunjunks_html() { # SLINE TLINE JSON
     METADATA=${RRLINE}/html/meta_${FILENAME}_${LANGUAGE}.json
     STAKEHOLDERS=${RRLINE}/stakeholders.json
 
-    echo "oslo-generator-html for language ${LANGUAGE}" &>>${REPORTFILE}
-    echo "-------------------------------------" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}oslo-generator-html for language ${LANGUAGE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
     oslo-generator-html ${PARAMETERS} \
         --input ${INT_OUTPUT} \
         --output ${OUTPUT} \
@@ -671,8 +711,8 @@ render_respec_html() { # SLINE TLINE JSON
         ;;
     esac
 
-    echo "oslo-generator-respec for language ${LANGUAGE}" &>>${REPORTFILE}
-    echo "-------------------------------------" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}oslo-generator-respec for language ${LANGUAGE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
     oslo-generator-respec ${PARAMETERS} \
         --input ${MERGEDFILE} \
         --output ${OUTPUT} \
@@ -867,8 +907,8 @@ render_shacl_languageaware() {
         mkdir -p ${TLINE}/shacl
         mkdir -p ${RLINE}/shacl
 
-        echo "oslo-shacl-template-generator for language ${GOALLANGUAGE}" &>>${REPORTFILE}
-        echo "-------------------------------------" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}oslo-shacl-template-generator for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
         oslo-shacl-template-generator ${PARAMETERS} \
             --input ${MERGEDFILE} \
             --language ${GOALLANGUAGE} \
