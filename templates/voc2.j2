@@ -57,6 +57,12 @@
           <div class="col--9-12 col--1-1--s">
             <div class="head" role="contentinfo" id="respecHeader">
               <h1 class="h1 title p-name" property="dcterms:title" id="title">{{ data.metadata.title }}</h1>
+              {% if data.metadata.autotranslate %}
+                  <div class="disclaimer">
+                    <p>Dit document is een vertaling van het {{data.metadata.primaryLanguage}} naar het Nederlands.</p>
+                    <br>
+                  </div>
+                {% endif %}
               {% if data.metadata.prefix %}
                 <h2 class="h2" id="subtitle" property="bibo:subtitle">Specificatie van
                   <em>{{ data.metadata.prefix }}</em>
@@ -286,6 +292,12 @@
                   <h2 class="h2" id="overview" aria-level="1" role="heading">
                     <span class="secno">3.
                     </span>Overzicht</h2>
+                    {% if data.metadata.autotranslate %}
+                  <div class="disclaimer">
+                    <p>Dit document is een vertaling van het {{data.metadata.primaryLanguage}} naar het Nederlands.</p>
+                    <br>
+                  </div>
+                {% endif %}
                   <div class="region region--no-space-top">
                     <p>Deze sectie somt alle klassen en eigenschappen van het vocabularium op.</p>
                     <p>
