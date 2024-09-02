@@ -152,6 +152,7 @@ render_report_line() {
     local RLINE=$2
     local OVERVIEW=$3
     local OLD_OVERVIEW=$4
+    local OUTPUT=$5
 
     render_report_header ${OVERVIEW}
     local FIRSTPARTLINE=$(echo $LINE | cut -d'/' -f2-3)
@@ -174,7 +175,7 @@ render_report_line() {
     echo  "|" >> ${OVERVIEW}
 
     # Merge old and new overview
-    if ! node /app/merge-overviewreport.js -p ${OLD_OVERVIEW} -c ${OVERVIEW} -o ${OLD_OVERVIEW}; then
+    if ! node /app/merge-overviewreport.js -p ${OLD_OVERVIEW} -c ${OVERVIEW} -o ${OUTPUT}; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
@@ -1118,7 +1119,8 @@ cat ${CHECKOUTFILE} | while read line; do
             report)
                 OLD_OVERVIEW=${TARGETDIR}/README.md
                 OVERVIEW=${TARGETDIR}/report4/overviewreport.md
-                render_report_line ${line} ${RLINE} ${OVERVIEW} ${OLD_OVERVIEW}
+                OUTPUT=${TARGETDIR}/report4/README.md
+                render_report_line ${line} ${RLINE} ${OVERVIEW} ${OLD_OVERVIEW} ${OUTPUT}
                 ;;
             example)
                 render_example_template $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report/${line} ${PRIMELANGUAGE}
