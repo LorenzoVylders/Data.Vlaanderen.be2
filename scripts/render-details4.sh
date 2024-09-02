@@ -279,7 +279,7 @@ render_merged_files() {
         if [ -f "${INPUTTRANSLATIONFILE}" ]; then
             echo "${INPUTTRANSLATIONFILE} exists, the files will be merged."
             echo "RENDER-DETAILS(mergefile): node /app/translation-json-update.js -i ${JSONI} -f ${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE} -p ${REPORTLINEPREFIX}"
-            if ! node /app/translation-json-update.js -i ${JSONI} -f ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE} -p ${REPORTLINEPREFIX} &>> ${REPORTFILE} ; then
+            if ! node /app/translation-json-update.js -i ${JSONI} -f ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
                 echo "RENDER-DETAILS: failed"
                 execution_strickness
             else
