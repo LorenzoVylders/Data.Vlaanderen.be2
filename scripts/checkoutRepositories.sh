@@ -4,6 +4,8 @@ PUBCONFIG=$2
 ROOTDIR=$1
 CONFIGDIR=$3
 
+PROJECTDIR_DEFAULT=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+
 # some test calls
 #jq -r '.[] | @sh "echo \(.urlref)"' publication.config | bash -e
 #jq -r '.[] | @sh "./checkout-one.sh \(.)"' publication.config | bash -e
@@ -97,12 +99,15 @@ then
 
       echo "start processing (repository): $(_jq '.repository') $(_jq '.urlref') $MAIN"
 
+
       DIR=$(_jq '.urlref')
       NAME=$(_jq '.name')
       RDIR=${DIR#'/'}
       mkdir -p $ROOTDIR/$MAIN/$RDIR
       mkdir -p $ROOTDIR/target/$RDIR
       mkdir -p $ROOTDIR/report/$RDIR
+      
+
 
       git_download $ROOTDIR/$MAIN/$RDIR
 #      git clone $(_jq '.repository') $ROOTDIR/$MAIN/$RDIR
@@ -114,7 +119,16 @@ then
 #        echo "failed: $ROOTDIR/$MAIN/$RDIR $(_jq '.branchtag')" >>$ROOTDIR/failed.txt
 #      fi
 
+      # branchtag check: if the processing is strict then the checkout of a branch is forbidden (e.g. production)
+      #
+      BRANCHTAG=$(_jq '.branchtag')
+      ${PROJECTDIR_DEFAULT}/scripts/validateBranchtagGithub.sh $ROOTDIR/$MAIN/$RDIR ${BRANCHTAG} &> /tmp/validationBranchtag
+      echo "The provided branchtag ${BRANCHTAG} is a branch: " 
+      cat /tmp/validationBranchtag
+      echo "  "
+
       pushd $ROOTDIR/$MAIN/$RDIR
+      
 
       # Save the Name points to be processed
       if [[ ! -z "$NAME" && "$NAME" != "null" ]]

@@ -4,7 +4,6 @@
 # validate if a branchtag is a branch or not
 #
 
-
 # DIR = directory in which a github repository is checked out
 # BRANCHTAG = the branchtag value to be checked
 DIR=$1
