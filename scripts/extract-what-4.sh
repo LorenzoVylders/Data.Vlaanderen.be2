@@ -12,6 +12,13 @@ CONFIGDIR=${2:-$CONFIGDIR_DEFAULT/config}
 
 REPORTLINEPREFIX='#||# '
 
+STRICT=$(jq -r .toolchain.strickness ${CONFIGDIR}/config.json)
+execution_strickness() {
+    if [ "${STRICT}" != "lazy" ]; then
+        exit -1
+    fi
+}
+
 #############################################################################################
 # extraction command functions
 
@@ -82,6 +89,11 @@ extract_json() {
                  --publicationEnvironment ${HOSTNAME} \
                  &> ${REPORTFILE}
 
+        if [ $? -gt 0 ] ; then
+            echo "UML extraction failed"
+            execution_strickness
+        fi
+
     # XXX use one export for reporting one for processing
 
     SK_REPORTFILE=${TTDIR}/oslo-stakeholders-converter.report
@@ -110,6 +122,7 @@ extract_json() {
     if [ ! $? -eq 0 ] || [ ! -s  $(cat .names.txt).jsonld ]; then
         echo "extract_json: ERROR UML extractor ended in an error"
         cat ${REPORTFILE}
+	execution_strickness
         # exit -1 ;
     fi
 
