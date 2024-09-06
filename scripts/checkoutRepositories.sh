@@ -125,6 +125,7 @@ then
       # branchtag check: if the processing is strict then the checkout of a branch is forbidden (e.g. production)
       #
       BRANCHTAG=$(_jq '.branchtag')
+      echo ${BRANCHTAG}
       ${PROJECTDIR_DEFAULT}/scripts/validateBranchtagGithub.sh ${BRANCHTAG} &> /tmp/validationBranchtag
       echo "The Branchtag is a branch:" 
       cat /tmp/validationBranchtag
