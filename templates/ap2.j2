@@ -103,13 +103,6 @@
                             <span class="p-org org h-org h-card">
                               {{ author.affiliation.affiliationName }}</span>
                           {% endif %}
-                          {% if author.email %}
-                            -
-                            <span class="ed_mailto">
-                              <a href="mailto:{{ author.email }}" rel="foaf:mbox" class="u-email email">
-                                {{ author.email }}</a>
-                            </span>
-                          {% endif %}
                         </span>
                       </dd>
                     {% endfor %}
