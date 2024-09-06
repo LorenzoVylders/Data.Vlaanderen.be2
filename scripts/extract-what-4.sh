@@ -116,6 +116,7 @@ extract_json() {
         echo "extract_json: ${OUTPUTFILE} was not created"
         cat  ${REPORTFILE}
 	echo "{}" > ${OUTPUTFILE}
+	execution_strickness
         # exit -1;
     fi
     jq . ${OUTPUTFILE} &> /dev/null

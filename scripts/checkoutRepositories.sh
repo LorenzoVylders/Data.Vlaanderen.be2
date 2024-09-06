@@ -4,6 +4,8 @@ PUBCONFIG=$2
 ROOTDIR=$1
 CONFIGDIR=$3
 
+PROJECTDIR_DEFAULT=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+
 # some test calls
 #jq -r '.[] | @sh "echo \(.urlref)"' publication.config | bash -e
 #jq -r '.[] | @sh "./checkout-one.sh \(.)"' publication.config | bash -e
@@ -123,7 +125,7 @@ then
       # branchtag check: if the processing is strict then the checkout of a branch is forbidden (e.g. production)
       #
       BRANCHTAG=$(_jq '.branchtag')
-      validateBranchtagGithub.sh ${BRANCHTAG} &> /tmp/validationBranchtag
+      ${PROJECTDIR_DEFAULT}/scripts/validateBranchtagGithub.sh ${BRANCHTAG} &> /tmp/validationBranchtag
       echo "The Branchtag is a branch:" 
       cat /tmp/validationBranchtag
 
