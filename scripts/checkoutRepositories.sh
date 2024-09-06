@@ -119,16 +119,16 @@ then
 #        echo "failed: $ROOTDIR/$MAIN/$RDIR $(_jq '.branchtag')" >>$ROOTDIR/failed.txt
 #      fi
 
-      pushd $ROOTDIR/$MAIN/$RDIR
-      
-      #
       # branchtag check: if the processing is strict then the checkout of a branch is forbidden (e.g. production)
       #
       BRANCHTAG=$(_jq '.branchtag')
-      echo ${BRANCHTAG}
-      ${PROJECTDIR_DEFAULT}/scripts/validateBranchtagGithub.sh ${BRANCHTAG} &> /tmp/validationBranchtag
-      echo "The Branchtag is a branch:" 
+      ${PROJECTDIR_DEFAULT}/scripts/validateBranchtagGithub.sh $ROOTDIR/$MAIN/$RDIR ${BRANCHTAG} &> /tmp/validationBranchtag
+      echo "The provided branchtag ${BRANCHTAG} is a branch: " 
       cat /tmp/validationBranchtag
+      echo "  "
+
+      pushd $ROOTDIR/$MAIN/$RDIR
+      
 
       # Save the Name points to be processed
       if [[ ! -z "$NAME" && "$NAME" != "null" ]]
