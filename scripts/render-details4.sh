@@ -183,6 +183,12 @@ render_report_line() {
             echo "RENDER-DETAILS: overview merged succesfully"
             pretty_print_json ${OUTPUTTRANSLATIONFILE}
         fi
+
+    for REPORTFILE in ${REPORTS} ; do
+	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
+                node /app/update-shacl-report.js -i ${RLINE}/${REPORTFILE} -o ${RLINE}/${REPORTFILE} -l ${JSONI} -a ${JSONI} 
+            fi
+    done
 }
 
 #
