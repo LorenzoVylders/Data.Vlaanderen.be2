@@ -186,7 +186,7 @@ render_report_line() {
 
     for REPORTFILE in ${REPORTS} ; do
 	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
-                LINK=$(echo ${JSONI} | cut -d'/' -f2-)
+                LINK=$(echo $JSONI | cut -d'/' -f4-)
                 echo "link: ${LINK}"
                 echo "jsoni: ${JSONI}"
                 node /app/update-shacl-report.js -i ${RLINE}/${REPORTFILE} -o ${RLINE}/${REPORTFILE} -l ${LINK} -a ${JSONI} 
