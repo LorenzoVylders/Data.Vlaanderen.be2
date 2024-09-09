@@ -159,11 +159,11 @@ render_report_line() {
     local FIRSTPARTLINE=$(echo $LINE | cut -d'/' -f2-3)
     local SECONDPARTLINE=$(echo $LINE | cut -d'/' -f4-)
     echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/${LINE}) " >> ${EXECUTIONVIEW}
-    check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report
-    echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${EXECUTIONVIEW}
-#    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
-#    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${EXECUTIONVIEW}
-    REPORTS="generator-jsonld-context.report generator-rdf.report generator-html.report generator-respec.report generator-shacl.report generator-webuniversum-json.report oslo-converter-ea.report merge.report translate.report metadata.report oslo-stakeholders-converter.report"
+    check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report.md
+    echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report.md)" >> ${EXECUTIONVIEW}
+#    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report.md
+#    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report.md)" >> ${EXECUTIONVIEW}
+    REPORTS="generator-jsonld-context.report.md generator-rdf.report.md generator-html.report.md generator-respec.report.md generator-shacl.report.md generator-webuniversum-json.report.md oslo-converter-ea.report.md merge.report.md translate.report.md metadata.report.md oslo-stakeholders-converter.report.md"
     for REPORTFILE in ${REPORTS} ; do
 	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
 	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}
@@ -247,7 +247,7 @@ render_merged_files() {
     USEAUTOTRANSLATION=$(jq -r "${COMMANDLANGJSON}" ${JSONI})
     TRANSLATIONFILE=${GOALFILENAME}
 
-    REPORTFILE=${TLINE}/merge.report
+    REPORTFILE=${TLINE}/merge.report.md
     echo "${REPORTLINEPREFIX}merge for language ${GOALLANGUAGE}" &>>${REPORTFILE}
     echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
 
@@ -313,7 +313,7 @@ render_metadata() {
     mkdir -p ${TLINE}/html
     METAOUTPUT=${TLINE}/html/${METAOUTPUTFILENAME}
 
-    REPORTFILE=${TLINE}/metadata.report
+    REPORTFILE=${TLINE}/metadata.report.md
     echo "${REPORTLINEPREFIX}metadata for language ${GOALLANGUAGE}" &>>${REPORTFILE}
     echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
 
@@ -353,7 +353,7 @@ render_translationfiles() {
     INPUTTRANSLATIONFILE=${SLINE}/translation/${TRANSLATIONFILE}
     OUTPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
 
-    REPORTFILE=${TLINE}/translate.report
+    REPORTFILE=${TLINE}/translate.report.md
     echo "${REPORTLINEPREFIX}translate for language ${GOALLANGUAGE}" &>>${REPORTFILE}
     echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
 
@@ -409,7 +409,7 @@ autotranslatefiles() {
     INPUTTRANSLATIONFILE=${TLINE}/translation_input/${TRANSLATIONFILE}
     OUTPUTTRANSLATIONFILE=${TLINE}/autotranslation/${TRANSLATIONFILE}
 
-    REPORTFILE=${TLINE}/autotranslate.report
+    REPORTFILE=${TLINE}/autotranslate.report.md
     echo "${REPORTLINEPREFIX}autotranslate for language ${GOALLANGUAGE}" &>>${REPORTFILE}
     echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
 
@@ -510,7 +510,7 @@ render_rdf() { # SLINE TLINE JSON
     COMMANDtype=$(echo '.type')
     TYPE=$(jq -r "${COMMANDtype}" ${MERGEDFILE})
 
-    REPORTFILE=${RLINE}/generator-rdf.report
+    REPORTFILE=${RLINE}/generator-rdf.report.md
 
     # XXX TODO create an iterator for each format
     OUTPUT=${OUTPUTDIR}/${VOCNAME}_${LANGUAGE}.ttl
@@ -582,7 +582,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
 
     mkdir -p ${RLINE}/html
     INT_OUTPUT=${RLINE}/html/int_${FILENAME}_${LANGUAGE}.json
-    INT_REPORTFILE=${RLINE}/generator-webuniversum-json.report
+    INT_REPORTFILE=${RLINE}/generator-webuniversum-json.report.md
 
     generator_parameters webuniversumgenerator4 ${JSONI}
 
@@ -618,7 +618,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
     COMMANDTITLELANG=$(echo '.translation | .[] | select(.title | contains("'${LANGUAGE}'")) | .template')
     TITLELANG=$(jq -r "${COMMANDTITLELANG}" ${JSONI})
 
-    REPORTFILE=${RLINE}/generator-html.report
+    REPORTFILE=${RLINE}/generator-html.report.md
     case $TYPE in
     ap)
         SPECTYPE="ApplicationProfile"
@@ -710,7 +710,7 @@ render_respec_html() { # SLINE TLINE JSON
     COMMANDTITLELANG=$(echo '.translation | .[] | select(.title | contains("'${LANGUAGE}'")) | .template')
     TITLELANG=$(jq -r "${COMMANDTITLELANG}" ${JSONI})
 
-    REPORTFILE=${RLINE}/generator-respec.report
+    REPORTFILE=${RLINE}/generator-respec.report.md
     generator_parameters htmlgenerator4 ${JSONI}
 
     echo "RENDER-DETAILS(language html): node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RLINE}"
@@ -854,7 +854,7 @@ render_context() { # SLINE TLINE JSON
         MERGEDFILE=${JSONI}
     fi
 
-    REPORTFILE=${RLINE}/generator-jsonld-context.report
+    REPORTFILE=${RLINE}/generator-jsonld-context.report.md
     mkdir -p ${RLINE}
 
     COMMAND=$(echo '.type')
@@ -912,9 +912,9 @@ render_shacl_languageaware() {
     fi
 
     OUTFILE=${TLINE}/shacl/${FILENAME}-SHACL_${GOALLANGUAGE}.jsonld
-    OUTREPORT=${RLINE}/shacl/${FILENAME}-SHACL_${GOALLANGUAGE}.report
+    OUTREPORT=${RLINE}/shacl/${FILENAME}-SHACL_${GOALLANGUAGE}.report.md
 
-    REPORTFILE=${RLINE}/generator-shacl.report
+    REPORTFILE=${RLINE}/generator-shacl.report.md
 
     COMMAND=$(echo '.type')
     TYPE=$(jq -r "${COMMAND}" ${JSONI})
@@ -1073,8 +1073,8 @@ cat ${CHECKOUTFILE} | while read line; do
                     fi
                 done
                 NAMESPEC=FIRST_PART=$(echo "$MY_PATH" | cut -d'/' -f3)
-                #node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report -o ${RLINE}/generator-shacl.report -l https://github.com/Informatievlaanderen/data.vlaanderen.be2-generated/blob/dev4.0/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld -a ${TARGETDIR}/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld 
-#                node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report -o ${RLINE}/generator-shacl.report -l $i -a $i 
+                #node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report.md -o ${RLINE}/generator-shacl.report.md -l https://github.com/Informatievlaanderen/data.vlaanderen.be2-generated/blob/dev4.0/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld -a ${TARGETDIR}/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld 
+#                node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report.md -o ${RLINE}/generator-shacl.report.md -l $i -a $i 
 #                move this in the report handling
                 ;;
             context)
