@@ -371,7 +371,7 @@ jobs:
             - autotranslation
   render-rdf-details-4:
     docker:
-      - image: cimg/node:20.15.0
+      - image: informatievlaanderen/oslo-specification-generator:multilingual-dev4.0
     steps:
       - checkout
       - attach_workspace:
@@ -400,7 +400,7 @@ jobs:
             - report4/rdf
   render-shacl-details-4:
     docker:
-      - image: cimg/node:20.15.0
+      - image: informatievlaanderen/oslo-specification-generator:multilingual-dev4.0
     steps:
       - checkout
       - attach_workspace:
