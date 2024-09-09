@@ -123,7 +123,7 @@ then
       #
       BRANCHTAG=$(_jq '.branchtag')
       ${PROJECTDIR_DEFAULT}/scripts/validateBranchtagGithub.sh $ROOTDIR/$MAIN/$RDIR ${BRANCHTAG} &> /tmp/validationBranchtag
-      echo "The provided branchtag ${BRANCHTAG} is a branch: " 
+      echo "The provided branchtag ${BRANCHTAG} is a real commit, not a branch: " 
       cat /tmp/validationBranchtag
       echo "  "
 

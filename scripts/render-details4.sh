@@ -150,32 +150,33 @@ render_report_line() {
     echo "add report overview for $1"
     local LINE=$1
     local RLINE=$2
-    local OVERVIEW=$3
-    local OLD_OVERVIEW=$4
-    local OUTPUT=$5
+    local JSONI=$3
+    local EXECUTIONVIEW=$4
+    local OLD_GLOBAL_OVERVIEW=$5
+    local GLOBAL_OVERVIEW=$6
 
-    render_report_header ${OVERVIEW}
+    render_report_header ${EXECUTIONVIEW}
     local FIRSTPARTLINE=$(echo $LINE | cut -d'/' -f2-3)
     local SECONDPARTLINE=$(echo $LINE | cut -d'/' -f4-)
-    echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/${LINE}) " >> ${OVERVIEW}
+    echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/${LINE}) " >> ${EXECUTIONVIEW}
     check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report
-    echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${OVERVIEW}
+    echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report)" >> ${EXECUTIONVIEW}
 #    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report
-#    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${OVERVIEW}
+#    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report)" >> ${EXECUTIONVIEW}
     REPORTS="generator-jsonld-context.report generator-rdf.report generator-html.report generator-respec.report generator-shacl.report generator-webuniversum-json.report oslo-converter-ea.report merge.report translate.report metadata.report oslo-stakeholders-converter.report"
     for REPORTFILE in ${REPORTS} ; do
 	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
 	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}
-	      echo -n "| [${REPORTSTATE}](/report4/${LINE}/${REPORTFILE})" >> ${OVERVIEW}
+	      echo -n "| [${REPORTSTATE}](/report4/${LINE}/${REPORTFILE})" >> ${EXECUTIONVIEW}
 	    else 
-	      echo -n "| " >> ${OVERVIEW}
+	      echo -n "| " >> ${EXECUTIONVIEW}
 	    fi
     done
 
-    echo  "|" >> ${OVERVIEW}
+    echo  "|" >> ${EXECUTIONVIEW}
 
     # Merge old and new overview
-    if ! node /app/merge-overviewreport.js -p ${OLD_OVERVIEW} -c ${OVERVIEW} -o ${OUTPUT}; then
+    if ! node /app/merge-overviewreport.js -p ${OLD_GLOBAL_OVERVIEW} -c ${EXECUTIONVIEW} -o ${GLOBAL_OVERVIEW}; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
@@ -1067,7 +1068,8 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 NAMESPEC=FIRST_PART=$(echo "$MY_PATH" | cut -d'/' -f3)
                 #node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report -o ${RLINE}/generator-shacl.report -l https://github.com/Informatievlaanderen/data.vlaanderen.be2-generated/blob/dev4.0/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld -a ${TARGETDIR}/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld 
-                node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report -o ${RLINE}/generator-shacl.report -l $i -a $i 
+#                node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report -o ${RLINE}/generator-shacl.report -l $i -a $i 
+#                move this in the report handling
                 ;;
             context)
 		   # the source for the context generator is solely the intermediate json
@@ -1120,10 +1122,10 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             report)
-                OLD_OVERVIEW=${TARGETDIR}/README.md
-                OVERVIEW=${TARGETDIR}/report4/overviewreport.md
-                OUTPUT=${TARGETDIR}/report4/README.md
-                render_report_line ${line} ${RLINE} ${OVERVIEW} ${OLD_OVERVIEW} ${OUTPUT}
+                EXECUTIONVIEW=${TARGETDIR}/report4/overviewreport.md
+                OLD_GLOBAL_OVERVIEW=${TARGETDIR}/README.md
+                GLOBAL_OVERVIEW=${TARGETDIR}/report4/README.md
+                render_report_line ${line} ${RLINE} $i ${EXECUTIONVIEW} ${OLD_GLOBAL_OVERVIEW} ${GLOBAL_OVERVIEW}
                 ;;
             example)
                 render_example_template $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report/${line} ${PRIMELANGUAGE}
