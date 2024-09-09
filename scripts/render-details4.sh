@@ -1066,7 +1066,8 @@ cat ${CHECKOUTFILE} | while read line; do
                     fi
                 done
                 NAMESPEC=FIRST_PART=$(echo "$MY_PATH" | cut -d'/' -f3)
-                node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report -o ${RLINE}/generator-shacl.report -l https://github.com/Informatievlaanderen/data.vlaanderen.be2-generated/blob/dev4.0/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld -a ${TARGETDIR}/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld 
+                #node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report -o ${RLINE}/generator-shacl.report -l https://github.com/Informatievlaanderen/data.vlaanderen.be2-generated/blob/dev4.0/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld -a ${TARGETDIR}/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld 
+                node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report -o ${RLINE}/generator-shacl.report -l $i -a $i 
                 ;;
             context)
 		   # the source for the context generator is solely the intermediate json
