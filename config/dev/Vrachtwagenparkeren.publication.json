@@ -15,7 +15,7 @@
     "name": "vrachtwagenParkeren-ap",
     "filename": "config/vrachtwagenParkeren-ap.json",
     "disabled": false,
-    "dummy": "03"
+    "dummy": "04"
   },
   {
     "urlref": "/doc/applicatieprofiel/vrachtwagenparkeren",
