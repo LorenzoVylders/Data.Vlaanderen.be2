@@ -1,23 +1,23 @@
 [
   {
     "urlref": "/doc/applicatieprofiel/vrachtwagenparkeren/ontwerpstandaard/2023-11-30",
-    "repository": "https://github.com/Informatievlaanderen/OSLOthema-vrachtwagenParkeren",
+    "repository": "https://github.com/bertvannuffelen/OSLOthema-vrachtwagenParkeren",
     "branchtag": "master-node-toolchain",
     "name": "vrachtwagenParkeren-ap",
     "filename": "config/vrachtwagenParkeren-ap.json",
     "disabled": false,
-    "dummy": "036"
+    "dummy": "03"
   },
   {
     "urlref": "/doc/applicatieprofiel/vrachtwagenparkeren",
     "seealso": "/doc/applicatieprofiel/vrachtwagenparkeren/2023-11-30",
     "type": "ap",
     "disabled": false,
-    "dummy": "026"
+    "dummy": "025"
   }, 
  {
     "urlref": "/doc/vocabularium/vrachtwagenparkeren/ontwerpstandaard/2023-11-30",
-    "repository": "https://github.com/Informatievlaanderen/OSLOthema-vrachtwagenParkeren",
+    "repository": "https://github.com/bertvannuffelen/OSLOthema-vrachtwagenParkeren",
     "branchtag": "master-node-toolchain",
     "name": "Vrachtwagenparkeren",
     "filename": "config/Vrachtwagenparkeren-voc.json",
@@ -29,6 +29,6 @@
     "seealso": "/doc/vocabularium/vrachtwagenparkeren/ontwerpstandaard/2023-11-30",
     "type": "voc",
     "disabled": false,
-    "dummy": "020"
+    "dummy": "021"
   }
 ]
