@@ -1,8 +1,17 @@
 [
   {
     "urlref": "/doc/applicatieprofiel/vrachtwagenparkeren/ontwerpstandaard/2023-11-30",
-    "repository": "https://github.com/bertvannuffelen/OSLOthema-vrachtwagenParkeren",
+    "repository": "https://github.com/informatievlaanderen/OSLOthema-vrachtwagenParkeren",
     "branchtag": "master-node-toolchain",
+    "name": "vrachtwagenParkeren-ap",
+    "filename": "config/vrachtwagenParkeren-ap.json",
+    "disabled": false,
+    "dummy": "03"
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/vrachtwagenparkeren/ontwerpstandaard/test",
+    "repository": "https://github.com/bertvannuffelen/OSLOthema-vrachtwagenParkeren",
+    "branchtag": "main",
     "name": "vrachtwagenParkeren-ap",
     "filename": "config/vrachtwagenParkeren-ap.json",
     "disabled": false,
@@ -17,8 +26,17 @@
   }, 
  {
     "urlref": "/doc/vocabularium/vrachtwagenparkeren/ontwerpstandaard/2023-11-30",
-    "repository": "https://github.com/bertvannuffelen/OSLOthema-vrachtwagenParkeren",
+    "repository": "https://github.com/informatievlaanderen/OSLOthema-vrachtwagenParkeren",
     "branchtag": "master-node-toolchain",
+    "name": "Vrachtwagenparkeren",
+    "filename": "config/Vrachtwagenparkeren-voc.json",
+    "disabled": false,
+    "dummy": "021"
+  },
+ {
+    "urlref": "/doc/vocabularium/vrachtwagenparkeren/ontwerpstandaard/test",
+    "repository": "https://github.com/bertvannuffelen/OSLOthema-vrachtwagenParkeren",
+    "branchtag": "main",
     "name": "Vrachtwagenparkeren",
     "filename": "config/Vrachtwagenparkeren-voc.json",
     "disabled": false,
