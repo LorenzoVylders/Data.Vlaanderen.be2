@@ -1,8 +1,8 @@
 [
   {
     "urlref": "/doc/applicatieprofiel/vrachtwagenparkeren/ontwerpstandaard/2023-11-30",
-    "repository": "https://github.com/bertvannuffelen/OSLOthema-vrachtwagenParkeren",
-    "branchtag": "main",
+    "repository": "https://github.com/informatievlaanderen/OSLOthema-vrachtwagenParkeren",
+    "branchtag": "master-node-toolchain",
     "name": "vrachtwagenParkeren-ap",
     "filename": "config/vrachtwagenParkeren-ap.json",
     "disabled": false,
@@ -10,8 +10,8 @@
   },
   {
     "urlref": "/doc/applicatieprofiel/vrachtwagenparkeren/ontwerpstandaard/test",
-    "repository": "https://github.com/informatievlaanderen/OSLOthema-vrachtwagenParkeren",
-    "branchtag": "master-node-toolchain",
+    "repository": "https://github.com/bertvannuffelen/OSLOthema-vrachtwagenParkeren",
+    "branchtag": "main",
     "name": "vrachtwagenParkeren-ap",
     "filename": "config/vrachtwagenParkeren-ap.json",
     "disabled": false,
