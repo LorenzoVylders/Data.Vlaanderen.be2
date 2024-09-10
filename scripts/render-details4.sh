@@ -20,6 +20,7 @@ export NODE_PATH=/app/node_modules
 AUTOTRANSLATIONDIR=${TARGETDIR}/autotranslation
 
 REPORTLINEPREFIX='#||# '
+REPORTLINENEWLINE='  '
 
 execution_strickness() {
     if [ "${STRICT}" != "lazy" ]; then
@@ -249,8 +250,8 @@ render_merged_files() {
     TRANSLATIONFILE=${GOALFILENAME}
 
     REPORTFILE=${TLINE}/merge.report.md
-    echo "${REPORTLINEPREFIX}merge for language ${GOALLANGUAGE}" &>>${REPORTFILE}
-    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}merge for language ${GOALLANGUAGE} ${REPORTLINENEWLINE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${REPORTFILE}
 
     # secure the case that the translation file is not mentioned
     if [ "${USEAUTOTRANSLATION}" == "" ] || [ "${USEAUTOTRANSLATION}" == "null" ]; then
@@ -315,8 +316,8 @@ render_metadata() {
     METAOUTPUT=${TLINE}/html/${METAOUTPUTFILENAME}
 
     REPORTFILE=${TLINE}/metadata.report.md
-    echo "${REPORTLINEPREFIX}metadata for language ${GOALLANGUAGE}" &>>${REPORTFILE}
-    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}metadata for language ${GOALLANGUAGE} ${REPORTLINENEWLINE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${REPORTFILE}
 
         if ! node /app/html-metadata-generator.js -i ${JSONI} -g ${PRIMELANGUAGE} -m ${GOALLANGUAGE} -h ${HOSTNAME} -r /${DROOT} -o ${METAOUTPUT} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
             echo "RENDER-DETAILS: failed"
@@ -355,8 +356,8 @@ render_translationfiles() {
     OUTPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
 
     REPORTFILE=${TLINE}/translate.report.md
-    echo "${REPORTLINEPREFIX}translate for language ${GOALLANGUAGE}" &>>${REPORTFILE}
-    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}translate for language ${GOALLANGUAGE}${REPORTLINENEWLINE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${REPORTFILE}
 
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "A translation file ${TRANSLATIONFILE} exists."
@@ -411,8 +412,8 @@ autotranslatefiles() {
     OUTPUTTRANSLATIONFILE=${TLINE}/autotranslation/${TRANSLATIONFILE}
 
     REPORTFILE=${TLINE}/autotranslate.report.md
-    echo "${REPORTLINEPREFIX}autotranslate for language ${GOALLANGUAGE}" &>>${REPORTFILE}
-    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}autotranslate for language ${GOALLANGUAGE}${REPORTLINENEWLINE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${REPORTFILE}
 
     #
     # XXX maybe also implement md5sum for the json file
@@ -544,8 +545,8 @@ render_rdf() { # SLINE TLINE JSON
             ;;
         esac
 
-        echo "${REPORTLINEPREFIX}oslo-generator-rdf for language ${LANGUAGE}" &>>${REPORTFILE}
-        echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}oslo-generator-rdf for language ${LANGUAGE}${REPORTLINENEWLINE}" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${REPORTFILE}
         oslo-generator-rdf ${PARAMETERS} \
             --input ${MERGEDFILE} \
             --output ${OUTPUT} \
@@ -593,8 +594,8 @@ render_nunjunks_html() { # SLINE TLINE JSON
 
     generator_parameters webuniversumgenerator4 ${JSONI}
 
-    echo "${REPORTLINEPREFIX}oslo-webuniversum-json-generator for language ${LANGUAGE}" &>>${INT_REPORTFILE}
-    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${INT_REPORTFILE}
+    echo "${REPORTLINEPREFIX}oslo-webuniversum-json-generator for language ${LANGUAGE}${REPORTLINENEWLINE}" &>>${INT_REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${INT_REPORTFILE}
     oslo-webuniversum-json-generator ${PARAMETERS} \
         --input ${MERGEDFILE} \
         --output ${INT_OUTPUT} \
@@ -645,8 +646,8 @@ render_nunjunks_html() { # SLINE TLINE JSON
     METADATA=${RRLINE}/html/meta_${FILENAME}_${LANGUAGE}.json
     STAKEHOLDERS=${RRLINE}/stakeholders.json
 
-    echo "${REPORTLINEPREFIX}oslo-generator-html for language ${LANGUAGE}" &>>${REPORTFILE}
-    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}oslo-generator-html for language ${LANGUAGE}${REPORTLINENEWLINE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${REPORTFILE}
     oslo-generator-html ${PARAMETERS} \
         --input ${INT_OUTPUT} \
         --output ${OUTPUT} \
@@ -738,8 +739,8 @@ render_respec_html() { # SLINE TLINE JSON
         ;;
     esac
 
-    echo "${REPORTLINEPREFIX}oslo-generator-respec for language ${LANGUAGE}" &>>${REPORTFILE}
-    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}oslo-generator-respec for language ${LANGUAGE}${REPORTLINENEWLINE}" &>>${REPORTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${REPORTFILE}
     oslo-generator-respec ${PARAMETERS} \
         --input ${MERGEDFILE} \
         --output ${OUTPUT} \
@@ -873,8 +874,8 @@ render_context() { # SLINE TLINE JSON
         #        echo "RENDER-DETAILS(context): node /app/json-ld-generator.js -d -l label -i ${JSONI} -o ${TLINE}/context/${OUTFILELANGUAGE} "
         mkdir -p ${TLINE}/context
 
-        echo "${REPORTLINEPREFIX}oslo-jsonld-context-generator for language ${GOALLANGUAGE}" &>>${REPORTFILE}
-        echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}oslo-jsonld-context-generator for language ${GOALLANGUAGE}${REPORTLINENEWLINE}" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${REPORTFILE}
         oslo-jsonld-context-generator ${PARAMETERS} \
             --input ${MERGEDFILE} \
             --language ${GOALLANGUAGE} \
@@ -934,8 +935,8 @@ render_shacl_languageaware() {
         mkdir -p ${TLINE}/shacl
         mkdir -p ${RLINE}/shacl
 
-        echo "${REPORTLINEPREFIX}oslo-shacl-template-generator for language ${GOALLANGUAGE}" &>>${REPORTFILE}
-        echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}oslo-shacl-template-generator for language ${GOALLANGUAGE}${REPORTLINENEWLINE}" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${REPORTFILE}
         oslo-shacl-template-generator ${PARAMETERS} \
             --input ${MERGEDFILE} \
             --language ${GOALLANGUAGE} \
