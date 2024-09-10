@@ -67,7 +67,7 @@ extract_json() {
     local HOSTNAME=$( jq -r .hostname  ${CONFIGDIR}/config.json )
     local DOMAIN=$( jq -r .domain  ${CONFIGDIR}/config.json )
 #    local REPORTFILE=${TTDIR}/$(cat .names.txt).report
-    local REPORTFILE=${TTDIR}/oslo-converter-ea.report
+    local REPORTFILE=${TTDIR}/oslo-converter-ea.report.md
 
     touch ${REPORTFILE}
 
@@ -96,7 +96,7 @@ extract_json() {
 
     # XXX use one export for reporting one for processing
 
-    SK_REPORTFILE=${TTDIR}/oslo-stakeholders-converter.report
+    SK_REPORTFILE=${TTDIR}/oslo-stakeholders-converter.report.md
     echo "${REPORTLINEPREFIX}oslo-stakeholders-converter" &>>${SK_REPORTFILE}
     echo "${REPORTLINEPREFIX}-------------------------------------" &>>${SK_REPORTFILE}
     oslo-stakeholders-converter --input stakeholders.csv --outputFormat application/json --output ${TTDIR}/stakeholders.json &>>${SK_REPORTFILE}
