@@ -1,7 +1,7 @@
 [
     {
         "urlref": "https://belgif.github.io/thematic/models/hydrants",
-        "repository": "https://github.com/belgif/ICEGthema-hydrant",
+        "repository": "https://github.com/bertvannuffelen/ICEGthema-hydrant",
         "branchtag": "main",
         "name": "hydrant",
         "filename": "config/hydrant.json",
