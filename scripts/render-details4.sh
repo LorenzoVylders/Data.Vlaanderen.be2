@@ -162,8 +162,6 @@ render_report_line() {
     echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/${LINE}) " >> ${EXECUTIONVIEW}
     check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report.md
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report.md)" >> ${EXECUTIONVIEW}
-#    check_tool_output_for_non_emptiness ${RLINE}/generator-jsonld-context.report.md
-#    echo -n "| [${REPORTSTATE}](/report4/${LINE}/generator-jsonld-context.report.md)" >> ${EXECUTIONVIEW}
     REPORTS="generator-jsonld-context.report.md generator-rdf.report.md generator-html.report.md generator-respec.report.md generator-shacl.report.md generator-webuniversum-json.report.md oslo-converter-ea.report.md merge.report.md translate.report.md metadata.report.md oslo-stakeholders-converter.report.md"
     for REPORTFILE in ${REPORTS} ; do
 	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 

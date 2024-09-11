@@ -126,6 +126,10 @@ then
       echo "The provided branchtag ${BRANCHTAG} is a real commit, not a branch: " 
       cat /tmp/validationBranchtag
       echo "  "
+      VALIDBRANCHTAG=$( cat /tmp/validationBranchtag )
+      if [ "${VALIDBRANCHTAG}" != "true" ] ; then
+	      echo "ERROR: the branchtag ${BRANCHTAG} is a branch. It should be a real commit or tag" > branchtag.report.md
+      fi
 
       pushd $ROOTDIR/$MAIN/$RDIR
       
