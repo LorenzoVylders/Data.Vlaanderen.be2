@@ -756,6 +756,15 @@ jobs:
           command: |
             cp -R site-skeleton/* /tmp/generated/
       - run:
+          name: clean report directory
+          working_directory: /tmp/workspace/report4
+          command: |
+            rm -rf context
+            rm -rf html
+            rm -rf rdf
+            rm -rf respec
+            rm -rf shacl
+      - run:
           name: Copy generated assets
           working_directory: /tmp/workspace
           command: |
