@@ -189,7 +189,7 @@ render_report_line() {
 	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
                 LINK=$(basename $JSONI)
 #                node /app/update-shacl-report.js -i ${RLINE}/${REPORTFILE} -o ${RLINE}/${REPORTFILE} -l ${LINK} -a ${JSONI} 
-		node /app/report-lines-links.js -i ${JSONI} -o /tmp/reportlines
+		node /app/report_lines_links.js -i ${JSONI} -o /tmp/reportlines
 		REF=$(basename ${JSONI})
 		sed  -E "s|(urn:.*) = (.*)|s \1 [\1](${REF}#L\2) g|g "  /tmp/reportlines > /tmp/markdown_report_lines
 		cat /tmp/markdown_report_lines | while read line; do
