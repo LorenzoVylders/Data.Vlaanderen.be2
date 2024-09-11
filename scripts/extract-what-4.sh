@@ -70,6 +70,9 @@ extract_json() {
     local REPORTFILE=${TTDIR}/oslo-converter-ea.report.md
 
     touch ${REPORTFILE}
+    if [ -f branchtag.report.md ] ; then 
+	    cp branchtag.report.md ${TTDIR}/branchtag.report.md 
+    fi
 
     case $SPECTYPE in
 	    ap) SPECTYPE="ApplicationProfile"
