@@ -193,6 +193,7 @@ render_report_line() {
 		cat /tmp/markdown_report_lines | while read line; do
   			sed -i -E "$line" ${RLINE}/${REPORTFILE}
 		done
+		sed -i "s/$/\n/" ${RLINE}/${REPORTFILE}
             fi
     done
 }
