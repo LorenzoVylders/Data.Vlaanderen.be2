@@ -120,18 +120,19 @@ render_report_header() {
        echo "| --- | --- |" >> ${OVERVIEW}
        declare -A terms
        terms=(
-            ["aut"]="Autotranslate"
-            ["ctx"]="Context"
-            ["rdf"]="RDF"
-            ["html"]="HTML"
-            ["rspc"]="Respec"
-            ["shcl"]="SHACL"
-            ["web"]="Webuniversum"
-            ["uml"]="UML extractor"
-            ["mrg"]="Merge"
-            ["trns"]="Translate"
-            ["meta"]="Metadata"
-            ["stake"]="Stakeholders"
+            ["tag"]="Branchtag check"
+            ["uml"]="Extraction of the data out of the UML"
+            ["stake"]="Validate and convert the stakeholders"
+            ["trns"]="Translation files generation, based on existing translation files"
+            ["aut"]="Autotranslate the translation files, if active"
+            ["mrg"]="Merge translations to create for each language a single source of truth"
+            ["web"]="Extract all data model for html rendering "
+            ["meta"]="Extract metadata for html rendering"
+            ["html"]="Render html using generic nunjuncks"
+            ["rspc"]="Render html using specific RESPEC integration "
+            ["ctx"]="JSON-LD Context file generation"
+            ["rdf"]="RDF file generation"
+            ["shcl"]="SHACL file generation"
        )
 
        for term in "${!terms[@]}"; do
@@ -141,8 +142,8 @@ render_report_header() {
        # End of legende
        echo "" >> ${OVERVIEW}
 
-       echo "| Specification | aut | ctx | rdf | html | rspc | shcl | web | uml | mrg | trns | meta | stake |" >> ${OVERVIEW}
-       echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
+       echo "| Specification | tag | uml | stake | trns | aut  | mrg | web | meta | html | rspc| ctx | rdf | shcl |" >> ${OVERVIEW}
+       echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
 
     fi
 }
@@ -162,11 +163,13 @@ render_report_line() {
     echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/${LINE}) " >> ${EXECUTIONVIEW}
     check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report.md
     echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report.md)" >> ${EXECUTIONVIEW}
-    REPORTS="generator-jsonld-context.report.md generator-rdf.report.md generator-html.report.md generator-respec.report.md generator-shacl.report.md generator-webuniversum-json.report.md oslo-converter-ea.report.md merge.report.md translate.report.md metadata.report.md oslo-stakeholders-converter.report.md"
+
+    REPORTS="branchtag oslo-converter-ea oslo-stakeholders-converter translate autotranslate merge generator-webuniversum-json metadata generator-html generator-respec generator-jsonld-context generator-rdf generator-shacl"
+
     for REPORTFILE in ${REPORTS} ; do
-	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
-	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}
-	      echo -n "| [${REPORTSTATE}](/report4/${LINE}/${REPORTFILE})" >> ${EXECUTIONVIEW}
+	    if [ -f ${RLINE}/${REPORTFILE}.report.md ] ; then 
+	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}.report.md
+	      echo -n "| [${REPORTSTATE}](/report4/${LINE}/${REPORTFILE}.report.md)" >> ${EXECUTIONVIEW}
 	    else 
 	      echo -n "| " >> ${EXECUTIONVIEW}
 	    fi
@@ -184,16 +187,16 @@ render_report_line() {
         fi
 
     for REPORTFILE in ${REPORTS} ; do
-	    if [ -f ${RLINE}/${REPORTFILE} ] ; then 
+	    if [ -f ${RLINE}/${REPORTFILE}.report.md ] ; then 
                 LINK=$(basename $JSONI)
-#                node /app/update-shacl-report.js -i ${RLINE}/${REPORTFILE} -o ${RLINE}/${REPORTFILE} -l ${LINK} -a ${JSONI} 
 		node /app/report_lines_links.js -i ${JSONI} -o /tmp/reportlines
 		REF=$(basename ${JSONI})
 		sed  -E "s|(urn:.*) = (.*)|s \1 [\1](${REF}#L\2) g|g "  /tmp/reportlines > /tmp/markdown_report_lines
 		cat /tmp/markdown_report_lines | while read line; do
-  			sed -i -E "$line" ${RLINE}/${REPORTFILE}
+  			sed -i -E "$line" ${RLINE}/${REPORTFILE}.report.md
 		done
-		sed -i "s/$/\n/" ${RLINE}/${REPORTFILE}
+		#markdown friendly
+		sed -i "s/$/\n/" ${RLINE}/${REPORTFILE}.report.md
             fi
     done
 }
