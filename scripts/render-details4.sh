@@ -161,8 +161,6 @@ render_report_line() {
     local FIRSTPARTLINE=$(echo $LINE | cut -d'/' -f2-3)
     local SECONDPARTLINE=$(echo $LINE | cut -d'/' -f4-)
     echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/${LINE}) " >> ${EXECUTIONVIEW}
-    check_tool_output_for_non_emptiness ${RLINE}/autotranslate.report.md
-    echo -n "| [${REPORTSTATE}](/report4/${LINE}/autotranslate.report.md)" >> ${EXECUTIONVIEW}
 
     REPORTS="branchtag oslo-converter-ea oslo-stakeholders-converter translate autotranslate merge generator-webuniversum-json metadata generator-html generator-respec generator-jsonld-context generator-rdf generator-shacl"
 
