@@ -6,7 +6,7 @@
     "name": "omgevingsvergunning-ap",
     "filename": "config/omgevingsvergunning-ap.json",
     "navigation": {},
-    "dummy": "009"
+    "dummy": "010"
   },
   {
     "urlref": "/doc/vocabularium/omgevingsvergunning/kandidaatstandaard/2024-06-20",
@@ -15,7 +15,7 @@
     "name": "omgevingsvergunning",
     "filename": "config/omgevingsvergunning-voc.json",
     "navigation": {},
-    "dummy": "008"
+    "dummy": "010"
   },
   {
     "urlref": "/doc/applicatieprofiel/omgevingsvergunning/kandidaatstandaard/2024-09-12",
