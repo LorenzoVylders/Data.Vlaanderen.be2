@@ -3,6 +3,14 @@
 TARGETDIR=/tmp/workspace
 CHECKOUTFILE=${TARGETDIR}/checkouts.txt
 
+CONFIGDIR_DEFAULT=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+CONFIGDIR=${2:-$CONFIGDIR_DEFAULT/config}
+STRICT=$(jq -r .toolchain.strickness ${CONFIGDIR}/config.json)
+execution_strickness() {
+    if [ "${STRICT}" != "lazy" ]; then
+        exit -1
+    fi
+}
 #############################################################################################
 # extraction command functions
 
@@ -65,8 +73,8 @@ do
        if [ -f .names.json ] ; then
            MAPPINGFILE=".names.json"
        else
-           echo "no mapping file available"
-           exit 1
+           echo "Error: no mapping file available. No skeleton data is copied."
+           execution_strickness
        fi
        TDIR=${TARGETDIR}/target/${line}/html
        copy_details $MAPPINGFILE $SLINE $TDIR
