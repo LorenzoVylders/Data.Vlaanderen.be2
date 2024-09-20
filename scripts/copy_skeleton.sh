@@ -72,12 +72,12 @@ do
       pushd ${SLINE}
        if [ -f .names.json ] ; then
            MAPPINGFILE=".names.json"
+           TDIR=${TARGETDIR}/target/${line}/html
+           copy_details $MAPPINGFILE $SLINE $TDIR
        else
            echo "Error: no mapping file available. No skeleton data is copied."
            execution_strickness
        fi
-       TDIR=${TARGETDIR}/target/${line}/html
-       copy_details $MAPPINGFILE $SLINE $TDIR
       popd
     else
       echo "Error: ${SLINE}" 
