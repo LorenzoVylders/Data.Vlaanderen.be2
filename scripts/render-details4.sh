@@ -606,6 +606,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
         --input ${MERGEDFILE} \
         --output ${INT_OUTPUT} \
         --language ${LANGUAGE} \
+	--publicationEnvironment ${HOSTNAME} \
         &>>${INT_REPORTFILE}
 
     # step 2: create the html
