@@ -15,6 +15,10 @@ get_mapping_file() {
    fi
 }
 
+# MAPPINGFILE=$(get_mapping_file)   
+#  The usage of the above function would result in erroneous case that MAPPINGFILE="no mapping file available" 
+#  But that leads to problems in further processing
+
 #get_mapping_file() {
 #    local MAPPINGFILE="config/eap-mapping.json"
 #    if [ -f ".names.txt" ]
@@ -58,7 +62,12 @@ do
     if [ -d "${SLINE}" ]
     then
       pushd ${SLINE}
-       MAPPINGFILE=$(get_mapping_file)   
+       if [ -f .names.json ] ; then
+           MAPPINGFILE=".names.json"
+       else
+           echo "no mapping file available"
+           exit 1
+       fi
        TDIR=${TARGETDIR}/target/${line}/html
        copy_details $MAPPINGFILE $SLINE $TDIR
       popd
