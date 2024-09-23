@@ -240,7 +240,7 @@
                       <div class="region region--no-space-top">
                         <p>In dit document wordt correct gebruik van de volgende entiteiten toegelicht: <br/> |
                           {%- for entity in data.entities %}
-                            <a href="#{{ entity.applicationProfileLabel[language] }}">
+                            <a href="#{{ entity.applicationProfileLabel[language] | replace(' ', '') }}">
                               {{ entity.applicationProfileLabel[language] }}</a>
                             |
                           {%- endfor %}
@@ -275,7 +275,7 @@
               {% for entity in data.entities %}
                 <div class="region region--no-space-top">
                   <h3 class="h3" id="{{ entity.id }}">
-                    <a href="{{ entity.id }}" data-toggle="tooltip" data-content="{{ entity.id }}" id="{{ entity.applicationProfileLabel[language] }}" data-placement="right">
+                    <a href="{{ entity.id }}" data-toggle="tooltip" data-content="{{ entity.id }}" id="{{ entity.applicationProfileLabel[language] | replace(' ', '') }}" data-placement="right">
                       {{ entity.applicationProfileLabel[language] }}</a>
                   </h3>
                   <div class="region region--no-space-top">
@@ -306,7 +306,7 @@
                           {% if ((entity.properties | length) > 0 ) %}
                             <dd>Voor deze entiteit zijn de volgende eigenschappen gedefinieerd:
                               {%- for prop in entity['properties'] %}
-                                <a href="#{{ (entity.applicationProfileLabel[language] ~ ':' ~ prop.applicationProfileLabel[language]) | urlencode }}">{{ prop.applicationProfileLabel[language] }}</a>
+                                <a href="#{{ (entity.applicationProfileLabel[language] ~ ':' ~ prop.applicationProfileLabel[language]) | replace(' ', '') | urlencode }}">{{ prop.applicationProfileLabel[language] }}</a>
                                 {% if not loop.last %},
                                 {% endif %}
                               {%- endfor %}.
@@ -331,7 +331,7 @@
                             </thead>
                             <tbody class="supertype">
                               {% for prop in entity['properties'] %}
-                                <tr id="{{ (entity.applicationProfileLabel[language] ~ ':' ~ prop.applicationProfileLabel[language]) | urlencode }}" typeof="rdfs:Property" resource="{{ prop.uri }}">
+                                <tr id="{{ (entity.applicationProfileLabel[language] ~ ':' ~ prop.applicationProfileLabel[language]) | replace(' ', '') |  urlencode }}" typeof="rdfs:Property" resource="{{ prop.uri }}">
                                   <td>
                                     <code property="rdfs:label">
                                       <a href="{{ prop.id }}" data-toggle="tooltip" data-content="{{ prop.id }}" data-placement="right">
@@ -496,6 +496,37 @@
                           </p>
                         {% endblock %}
                       </div>
+                      <div class="region region--no-space-top" id="mappingext" >
+                           <h2 class="h2" aria-level="1" role="heading" id="h2_sotd">Mapping on external terms</h2>
+                           
+                           <p>Deze sectie geeft een overzicht van hoe terminologie uit andere vocabularia is gebruikt in dit applicatieprofiel</p>
+                           <p>Deze mapping is een keuze geldig voor dit applicatieprofiel. 
+                           Het vormt een sterke suggestie om deze mapping ook toe te passen in andere, aansluitende domeinen.
+                           Een wijziging aan de mapping heeft mogelijks een grote implementatieimpact, echter de impact is duidelijk en eenduidig uit te voeren.
+                           Aangezien zulke aanpassing geen semantische wijziging inhoudt wordt dit als een technische wijziging beschouwd.
+                           </p>
+                           <p>Merk echter op, dat de nood om een mapping wijziging door te voeren ook dikwijls ook semantische aanpassingen met zich mee brengt. 
+                           Deze zijn dus wel subject tot het normale veranderingsbeheer van de standaard.
+                           </p>
+
+                        <table class="definition">
+                        <tbody>
+                           {% for entity in data.entities %} 
+                           {% if entity.scope == "https://data.vlaanderen.be/id/concept/scope/External"   %}
+                           <tr> <td><a href="#{{ entity.applicationProfileLabel[language] | replace(' ', '') | urlencode }}">{{ entity.applicationProfileLabel[language] }}</a> </td> 
+                                <td> <code>{{ entity.id }}</code> </td> </tr>
+                           {% endif %}
+                           {% for prop in entity.properties %}
+                           {% if prop.scope == "https://data.vlaanderen.be/id/concept/scope/External"   %}
+                           <tr> <td><a href="#{{ (entity.applicationProfileLabel[language] ~ ':' ~ prop.applicationProfileLabel[language]) | replace(' ', '') | urlencode }}">{{ entity.applicationProfileLabel[language] }}.{{prop.applicationProfileLabel[language] }}</a> </td>
+                                     <td> <code>{{ property.id }}</code> </td> </tr>
+                           {% endif %}
+                           {% endfor %}
+                           {% endfor %}
+                        </tbody>
+                        </table>
+                      </div>
+           </div>
                     </div>
                     <div class="col--3-12 col--12-12--s col--4-12--m push--1-12 push--reset--m" id="sideNav">
                       <nav class="side-navigation js-sticky region" id="sideNav">
