@@ -484,6 +484,7 @@
                       {% endif %}
                     </section>
                   </div>
+
                   <div class="region region--no-space-top">
                     <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="external">
                       <h2 class="h2" id="externals" aria-level="1" role="heading">
@@ -530,6 +531,70 @@
                       {% endif %}
                     </section>
                   </div>
+
+    {% macro renderentity(entity) %}
+
+                                <tr>
+                                  <td>
+                                    <code>{{ entity.applicationProfileLabel }}</code>
+                                  </td>
+                                  <td>
+                                    <code>{{ entity.id }}</code>
+                                  </td>
+                                </tr>
+    {% endmacro %}
+    {% macro renderproperty(entity, property) %}
+
+                                <tr>
+                                  <td>
+				  <code>{{ entity.applicationProfileLabel }}.{{property.applicationProfileLabel}}</code>
+                                  </td>
+                                  <td>
+                                    <code>{{ property.id }}</code>
+                                  </td>
+                                </tr>
+    {% endmacro %}
+
+                  <div class="region region--no-space-top">
+                    <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="external">
+                      <h2 class="h2" id="externals" aria-level="1" role="heading">
+                        <span class="secno">6.
+                        </span>Externe terminologie 2 </h2>
+                      <div class="region region--no-space-top">
+                        <p>Deze sectie geeft een overzicht van terminologie uit andere vocabularia die relevant is voor dit domeinmodel samen
+                          met hun Nederlandstalige labels en definities.</p>
+                      </div>
+                            <table class="definition">
+                              <tbody>
+			{% for entity in data.entities %} 
+			        <tr>{{ entity.scope }} </tr>
+				{% if entity.scope == "https://data.vlaanderen.be/id/concept/scope/External"   %}
+                                <tr>
+                                  <td>
+                                    <code>{{ entity.applicationProfileLabel[language] }}</code>
+                                  </td>
+                                  <td>
+                                    <code>{{ entity.id }}</code>
+                                  </td>
+                                </tr>
+				{% endif %}
+				{% for prop in entity.properties %}
+				{% if prop.scope == "https://data.vlaanderen.be/id/concept/scope/External"   %}
+                                <tr>
+                                  <td>
+				  <code>{{ entity.applicationProfileLabel[language] }}.{{property.applicationProfileLabel[language] }}</code>
+                                  </td>
+                                  <td>
+                                    <code>{{ property.id }}</code>
+                                  </td>
+                                </tr>
+				{% endif %}
+				{% endfor %}
+			{% endfor %}
+                              </tbody>
+                            </table>
+		  </div>
+
                 </div>
                 <div class="col--3-12 col--12-12--s col--4-12--m push--1-12 push--reset--m" id="sideNav">
                   <nav class="side-navigation js-sticky" id="sideNav">
