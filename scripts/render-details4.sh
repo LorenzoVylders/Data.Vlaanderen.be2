@@ -13,6 +13,7 @@ GOALLANGUAGE=${5-${GOALLANGUAGECONFIG}}
 
 STRICT=$(jq -r .toolchain.strickness ${CONFIGDIR}/config.json)
 HOSTNAME=$(jq -r .hostname ${CONFIGDIR}/config.json)
+URIDOMAIN=$(jq -r .domain ${CONFIGDIR}/config.json)
 
 CHECKOUTFILE=${TARGETDIR}/checkouts.txt
 export NODE_PATH=/app/node_modules
@@ -606,7 +607,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
         --input ${MERGEDFILE} \
         --output ${INT_OUTPUT} \
         --language ${LANGUAGE} \
-	--publicationEnvironment ${HOSTNAME} \
+	--publicationEnvironment https://${URIDOMAIN} \
         &>>${INT_REPORTFILE}
 
     # step 2: create the html
