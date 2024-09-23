@@ -40,7 +40,7 @@
     "repository": "git@github.com:bertvannuffelen/OSLOthema-omgevingsvergunning.git",
     "branchtag": "main",
     "name": "omgevingsvergunning",
-    "filename": "config/omgevingsvergunning-voc.json",
+    "filename": "config/eap-mapping.json",
     "navigation": {},
     "dummy": "011"
   }
