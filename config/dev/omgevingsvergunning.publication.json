@@ -6,7 +6,7 @@
     "name": "omgevingsvergunning-ap",
     "filename": "config/omgevingsvergunning-ap.json",
     "navigation": {},
-    "dummy": "011"
+    "dummy": "013"
   },
   {
     "urlref": "/doc/vocabularium/omgevingsvergunning/kandidaatstandaard/2024-06-20",
@@ -24,7 +24,7 @@
     "name": "omgevingsvergunning-ap",
     "filename": "config/omgevingsvergunning-ap.json",
     "navigation": {},
-    "dummy": "002"
+    "dummy": "003"
   },
   {
     "urlref": "/doc/vocabularium/omgevingsvergunning/kandidaatstandaard/2024-09-12",
@@ -42,6 +42,6 @@
     "name": "omgevingsvergunning",
     "filename": "config/eap-mapping.json",
     "navigation": {},
-    "dummy": "015"
+    "dummy": "016"
   }
 ]
