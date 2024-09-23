@@ -526,6 +526,18 @@
                            {% endif %}
                            {% endfor %}
                            {% endfor %}
+                           {% for entity in data.scopedDataTypes %} 
+                           {% if entity.scope == "https://data.vlaanderen.be/id/concept/scope/External"   %}
+                           <tr> <td><a href="#{{ entity.applicationProfileLabel[language] | replace(' ', '') | urlencode }}">{{ entity.applicationProfileLabel[language] }}</a> </td> 
+                                <td> <code>{{ entity.id }}</code> </td> </tr>
+                           {% endif %}
+                           {% for prop in entity.properties %}
+                           {% if prop.scope == "https://data.vlaanderen.be/id/concept/scope/External"   %}
+                           <tr> <td><a href="#{{ (entity.applicationProfileLabel[language] ~ ':' ~ prop.applicationProfileLabel[language]) | replace(' ', '') | urlencode }}">{{ entity.applicationProfileLabel[language] }}.{{prop.applicationProfileLabel[language] }}</a> </td>
+                                     <td> <code>{{ prop.id }}</code> </td> </tr>
+                           {% endif %}
+                           {% endfor %}
+                           {% endfor %}
                         </tbody>
                         </table>
                       </div>
