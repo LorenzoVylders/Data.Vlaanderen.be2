@@ -193,7 +193,7 @@
                     resource="#ref"
                     rel="bibo:Chapter">
                     <h2 class="h2" aria-level="1" role="heading" id="h2_abstract">Résumé</h2>
-                    <div class="region region--no-space-top typography" id="summary">
+                    <div class="typography" id="summary">
                       {{ block.super }}
                       {% block summary %}
                         <p>
@@ -210,7 +210,7 @@
                 <div class="region region--no-space-top">
                   <section class="introductory" id="sotd" typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter">
                     <h2 class="h2" aria-level="1" role="heading" id="h2_sotd">État d’avancement du présent document</h2>
-                    <div class="region region--no-space-top typography" id="status">
+                    <div class="typography" id="status">
                       {% block status %}
                         <p>
                           <em>Cette section décrit l’état d’avancement de ce document au moment de sa publication. Il est possible que de
