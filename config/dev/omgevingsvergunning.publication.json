@@ -24,7 +24,7 @@
     "name": "omgevingsvergunning-ap",
     "filename": "config/omgevingsvergunning-ap.json",
     "navigation": {},
-    "dummy": "003"
+    "dummy": "004"
   },
   {
     "urlref": "/doc/vocabularium/omgevingsvergunning/kandidaatstandaard/2024-09-12",
@@ -33,7 +33,7 @@
     "name": "omgevingsvergunning",
     "filename": "config/omgevingsvergunning-voc.json",
     "navigation": {},
-    "dummy": "003"
+    "dummy": "004"
   },
   {
     "urlref": "/doc/vocabularium/omgevingsvergunning/kandidaatstandaard/bert",
