@@ -21,12 +21,12 @@
       "name":"fietsinfrastructuur-voc",
       "filename":"config/fietsinfrastructuur-voc.json",
       "navigation":{},
-      "dummy":"32"
+      "dummy":"33"
    },
     {
         "urlref": "/ns/fiets",
         "seealso": "/doc/vocabularium/fietsinfrastructuur/kandidaatstandaard/2021-12-17",
         "type": "voc",
-        "dummy": "32"
+        "dummy": "33"
     }
 ]
