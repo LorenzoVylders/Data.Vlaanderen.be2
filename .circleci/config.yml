@@ -253,7 +253,7 @@ jobs:
           command: |
             mkdir -p /tmp/workspace/target /tmp/workspace/reporthtml
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
-            ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace html $PWD/config
+            ${CIRCLEWKD}/scripts/render-details4.sh /tmp/workspace html ${CIRCLEWKD}/config
       - run:
           name: copy the site-skeleton for the html
           command: $PWD/scripts/copy_skeleton.sh
@@ -755,6 +755,13 @@ jobs:
           name: Copy static assets
           command: |
             cp -R site-skeleton/* /tmp/generated/
+      - run:
+          name: deploy statistics 
+          command: |
+           export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
+           pushd ${CIRCLEWKD}/statistics
+           ./deploy.sh /tmp/generated
+           popd
       - run:
           name: clean report directory
           working_directory: /tmp/workspace/report4

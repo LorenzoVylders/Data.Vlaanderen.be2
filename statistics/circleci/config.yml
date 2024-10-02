@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-stats:
     docker:
-      - image: cimg/node:18.18
+      - image: informatievlaanderen/oslo-specification-generator:multilingual-dev4.0
     steps:
       - checkout
       - attach_workspace:
@@ -38,7 +38,7 @@ jobs:
       repository:
         type: string
     docker:
-      - image: cimg/node:18.18
+      - image: cimg/node:20.15.0
     steps:
       - checkout
       - attach_workspace:
