@@ -18,7 +18,7 @@ aggr.organisations: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > aggr.organisations
 	 for file in $^ ; \
 		do \
-		jq -s '.[0] + .[1]  ' aggr.organisations "$${file}.org4" >> aggr.organisations.0 ;\
+		jq -s '.[0] + .[1]  ' aggr.values.organisations "$${file}.org" >> aggr.organisations.0 ;\
 		mv aggr.organisations.0 aggr.organisations ;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
@@ -27,7 +27,7 @@ aggr.authors: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
 	 for file in $^ ; \
 		do \
-		jq -s '.[0] + .[1]  ' $@ "$${file}.authors" >> $@.0 ;\
+		jq -s '.[0] + .[1]  ' $@ "$${file}.values.authors" >> $@.0 ;\
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
@@ -36,7 +36,7 @@ aggr.editors: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
 	 for file in $^ ; \
 		do \
-		jq -s '.[0] + .[1]  ' $@ "$${file}.editors" >> $@.0 ;\
+		jq -s '.[0] + .[1]  ' $@ "$${file}.values.editors" >> $@.0 ;\
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
@@ -45,7 +45,7 @@ aggr.contributors: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
 	 for file in $^ ; \
 		do \
-		jq -s '.[0] + .[1]  ' $@ "$${file}.contributors" >> $@.0 ;\
+		jq -s '.[0] + .[1]  ' $@ "$${file}.values.contributors" >> $@.0 ;\
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
@@ -54,7 +54,7 @@ aggr.class: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
 	 for file in $^ ; \
 		do \
-		jq -s '.[0] + .[1]  ' $@ "$${file}.class" >> $@.0 ;\
+		jq -s '.[0] + .[1]  ' $@ "$${file}.values.classes" >> $@.0 ;\
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
@@ -63,7 +63,7 @@ aggr.props: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
 	 for file in $^ ; \
 		do \
-		jq -s '.[0] + .[1]  ' $@ "$${file}.props" >> $@.0 ;\
+		jq -s '.[0] + .[1]  ' $@ "$${file}.values.properties" >> $@.0 ;\
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
@@ -72,7 +72,7 @@ aggr.extclass: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
 	 for file in $^ ; \
 		do \
-		jq -s '.[0] + .[1]  ' $@ "$${file}.extclass" >> $@.0 ;\
+		jq -s '.[0] + .[1]  ' $@ "$${file}.values.externalclasses" >> $@.0 ;\
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
@@ -81,7 +81,7 @@ aggr.extprops: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
 	 for file in $^ ; \
 		do \
-		jq -s '.[0] + .[1]  ' $@ "$${file}.extprops" >> $@.0 ;\
+		jq -s '.[0] + .[1]  ' $@ "$${file}.externalproperties" >> $@.0 ;\
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@

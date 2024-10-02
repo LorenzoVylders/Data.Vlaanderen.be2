@@ -15,19 +15,19 @@ jobs:
           name: build the statistics per specifications
           command: |
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
-            pushd ${CIRCLEWKD}/report
+            pushd ${CIRCLEWKD}/report4
             make allstats
       - run:
           name: build the statistics
           command: |
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
-            pushd ${CIRCLEWKD}/report
+            pushd ${CIRCLEWKD}/report4
             make aggr.stat
       - run:
           name: clean up
           command: |
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
-            pushd ${CIRCLEWKD}/report
+            pushd ${CIRCLEWKD}/report4
             make finalize
       - persist_to_workspace:
           root: /tmp/workspace

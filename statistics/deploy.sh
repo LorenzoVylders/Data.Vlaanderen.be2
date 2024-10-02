@@ -10,5 +10,5 @@ TARGET=$1
 
 mkdir -p ${TARGET}/.circleci
 cp -r circleci/* ${TARGET}/.circleci
-mkdir -p ${TARGET}/report
-cp -r report/* ${TARGET}/report
+mkdir -p ${TARGET}/report4
+cp -r report/* ${TARGET}/report4
