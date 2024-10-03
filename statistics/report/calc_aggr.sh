@@ -30,16 +30,13 @@ NBTOTALTERMS=`jq -s '.[0] + .[1] + .[2] + .[3]  | unique | length' ${INPUT2} ${I
 
 # calculate the organisations
 
-#jq . ${INPUT1} > ${OUTPUT}.input
-
-#jq ' group_by(.affiliation) ' ${INPUT1} > ${OUTPUT}.org.1
-
-#jq ' [ .[] | { "affiliation" : .[0].affiliation , "participants": length } ] ' ${OUTPUT}.org.1 > ${OUTPUT}.org.2 
-#NBTOTALORGANISATIONS=`jq 'length' ${OUTPUT}.org.2`
 #
-#jq '[.[].names] | flatten' ${INPUT1} > ${OUTPUT}.org.1
+jq '[.[].names ]| flatten | unique '  ${INPUT1} > ${OUTPUT}.org.1
+jq 'group_by(.affiliation)' ${OUTPUT}.org.1 > ${OUTPUT}.org.2
+jq '[.[] | {"aff": .[0].affiliation, participants : .| length }]' ${OUTPUT}.org.2 > ${OUTPUT}.org.3
 
-#rm ${OUTPUT}.org.1
+NBTOTALORGANISATIONS=`jq 'length' ${OUTPUT}.org.3`
+
 
 
 # calculate the specs
@@ -77,13 +74,13 @@ jq ".externalclasses = $NBEXTCLASSES"  ${RESULT}.5 > ${RESULT}.6
 jq ".properties = $NBPROPERTIES"       ${RESULT}.6 > ${RESULT}.7
 jq ".externalproperties = $NBEXTPROPERTIES" ${RESULT}.7 > ${RESULT}.8
 jq ".totalterms = $NBTOTALTERMS "      ${RESULT}.8 > ${RESULT}.9
-#jq ".totalorganisations = $NBTOTALORGANISATIONS"      ${RESULT}.9 > ${RESULT}.10
-#jq -s ".[0].organisations = .[1] | .[0] " ${RESULT}.10  ${OUTPUT}.org.2 > ${RESULT}.11
-jq -s ".[0].specifications= .[1] | .[0] " ${RESULT}.9  ${INPUT}.specstats > ${RESULT}.12
+jq ".totalorganisations = $NBTOTALORGANISATIONS"      ${RESULT}.9 > ${RESULT}.10
+jq -s ".[0].organisations = .[1] | .[0] " ${RESULT}.10  ${OUTPUT}.org.3 > ${RESULT}.11
+jq -s ".[0].specifications= .[1] | .[0] " ${RESULT}.11  ${INPUT}.specstats > ${RESULT}.12
 
 cp ${RESULT}.12 ${OUTPUT}
 rm ${RESULT}.*
 rm ${INPUT}.specstats
-#rm ${OUTPUT}.org.2
+rm ${OUTPUT}.org.*
 
 
