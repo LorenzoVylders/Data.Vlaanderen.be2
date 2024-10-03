@@ -45,7 +45,7 @@ jobs:
           at: /tmp/workspace
       - add_ssh_keys:
           fingerprints:
-            - "9c:16:8f:4a:b7:2c:b4:c1:ec:b8:68:03:99:10:17:a8"
+            - "SHA256:0CS5iA9PxgCLEApmaNBHAQEXFnNmOu5W6UePx2o5uH4"
       - run:
           name: Checkout target repo
           workdir: /tmp
@@ -74,7 +74,7 @@ jobs:
           name: Push results to github
           workdir: /tmp/statistics
           command: |
-            git config user.email "oslo@kb.vlaanderen.be"
+            git config user.email "oslo@vlaanderen.be"
             git config user.name "Circle CI Builder"
             git add .
             git status

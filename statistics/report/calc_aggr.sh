@@ -36,6 +36,8 @@ NBTOTALTERMS=`jq -s '.[0] + .[1] + .[2] + .[3]  | unique | length' ${INPUT2} ${I
 
 #jq ' [ .[] | { "affiliation" : .[0].affiliation , "participants": length } ] ' ${OUTPUT}.org.1 > ${OUTPUT}.org.2 
 #NBTOTALORGANISATIONS=`jq 'length' ${OUTPUT}.org.2`
+#
+#jq '[.[].names] | flatten' ${INPUT1} > ${OUTPUT}.org.1
 
 #rm ${OUTPUT}.org.1
 
