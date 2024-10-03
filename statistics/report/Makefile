@@ -15,11 +15,11 @@ ${TARGETDIR}/%.stat : %.jsonld
 
 .PHONY: aggr.organisations
 aggr.organisations: ${STATSPERSPECIFICATIONS}
-	 echo "[]" > aggr.organisations
+	 echo "[]" > $@
 	 for file in $^ ; \
 		do \
-		jq -s '.[0] + .[1].values.organisations  ' aggr "$${file}" >> aggr.organisations.0 ;\
-		mv aggr.organisations.0 aggr.organisations ;\
+		jq -s '.[0] + .[1].values.organisations  ' $@ "$${file}" >> $@.0 ;\
+		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 .PHONY: aggr.authors

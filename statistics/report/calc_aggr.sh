@@ -82,6 +82,6 @@ jq -s ".[0].specifications= .[1] | .[0] " ${RESULT}.9  ${INPUT}.specstats > ${RE
 cp ${RESULT}.12 ${OUTPUT}
 rm ${RESULT}.*
 rm ${INPUT}.specstats
-rm ${OUTPUT}.org.2
+#rm ${OUTPUT}.org.2
 
 
