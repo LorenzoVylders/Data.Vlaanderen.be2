@@ -26,9 +26,9 @@
     "autotranslate": true
   },
   "shaclgenerator" : {
-	  "parameters": "-m individual -c 'uniqueLanguages' -c 'nodeKind'"
+	  "parameters-old": "-m individual -c 'uniqueLanguages' -c 'nodeKind'"
   },
   "contextgenerator" : {
-	  "parameters" : "-c -l label"
+	  "parameters-old" : "-c -l label"
   }
 }
