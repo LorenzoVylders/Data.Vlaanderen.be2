@@ -882,9 +882,9 @@ workflows:
       # - render-shacl-details:
       #     requires:
       #       - render-merged-jsonld
-      # - convert-json-to-ttl:
-      #     requires:
-      #       - render-shacl-details
+      - convert-json-to-ttl:
+          requires:
+            - render-shacl-details-4
       # - render-context-details:
       #     requires:
       #       - render-merged-jsonld
@@ -903,7 +903,7 @@ workflows:
       - expand-links:
           requires:
             - render-context-details-4
-            - render-shacl-details-4
+            - convert-json-to-ttl
             - render-rdf-details-4
             - render-html-details-4
             - render-respec-html-details-4
