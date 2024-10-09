@@ -78,10 +78,10 @@
                         </div>
                         {% endif %}
                         <div class="head" role="contentinfo" id="respecHeader">
-                           <h1 class="h1 title p-name" property="dcterms:title" id="title">{{ metadata.title }}</h1>
-                           {% if metadata.prefix %}
+                           <h1 class="h1 title p-name" property="dcterms:title" id="title">{{ data.metadata.title }}</h1>
+                           {% if data.metadata.prefix %}
                            <h2 class="h2" id="subtitle" property="bibo:subtitle">Specificatie van
-                              <em>{{ metadata.prefix }}</em>
+                              <em>{{ data.metadata.prefix }}</em>
                            </h2>
                            {% endif %}
                            <dl>
@@ -268,8 +268,8 @@
                      </div>
                      <div class="region region--no-space-top">
                         {% block images %}
-                        <a href="{{ metadata.documentroot }}/html/overview.jpg" target="_blank">
-                        <img src="{{ metadata.documentroot }}/html/overview.jpg"/>
+                        <a href="{{ data.metadata.documentroot }}/html/overview.jpg" target="_blank">
+                        <img src="{{ data.metadata.documentroot }}/html/overview.jpg"/>
                         </a>
                         {% endblock %}
                      </div>
@@ -484,8 +484,8 @@
                         (niet normatief)
                         {% block jsonld %}
                         <p>Een herbruikbare JSON-LD context definitie voor dit applicatieprofiel is terug te vinden op:
-                           <a href="{{ metadata.documentroot }}/context/{{ data.metadata.filename }}.jsonld" target="_blank">
-                           {{ metadata.documentroot }}/context/ {{ data.metadata.filename }}.jsonld</a>
+                           <a href="{{ data.metadata.documentroot }}/context/{{ data.metadata.filename }}.jsonld" target="_blank">
+                           {{ data.metadata.documentroot }}/context/ {{ data.metadata.filename }}.jsonld</a>
                         </p>
                         {% endblock %}
                      </div>
@@ -494,8 +494,8 @@
                         (niet normatief)
                         {% block shacl %}
                         <p>Een herbruikbare SHACL template definitie voor dit applicatieprofiel is terug te vinden op:
-                           <a href="{{ metadata.documentroot }}/shacl/{{ data.metadata.filename }}-SHACL.ttl" target="_blank">
-                           {{ metadata.documentroot }}/shacl/ {{ data.metadata.filename }}-SHACL.ttl</a>
+                           <a href="{{ data.metadata.documentroot }}/shacl/{{ data.metadata.filename }}-SHACL.ttl" target="_blank">
+                           {{ data.metadata.documentroot }}/shacl/ {{ data.metadata.filename }}-SHACL.ttl</a>
                         </p>
                         {% endblock %}
                      </div>
