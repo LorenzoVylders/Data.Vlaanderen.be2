@@ -938,7 +938,12 @@ render_shacl_languageaware() {
     generator_parameters shaclgenerator4 ${JSONI}
 
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
-        DOMAIN="${HOSTNAME}/${LINE}"
+	
+        HH=$(echo ${HOSTNAME} | sed -e "s|/$||g" )
+	LL=$(echo ${LINE} | sed -e "s|^/||g" )
+
+	SHAPEBASEURI="${HH}/${LL}/"
+        DOCUMENTURL="${HH}/${LL}"
         #        echo "RENDER-DETAILS(shacl-languageaware): node /app/shacl-generator.js -i ${MERGEDJSONLD} ${PARAMETERS} -d ${DOMAIN} -p ${DOMAIN} -o ${OUTFILE} -l ${GOALLANGUAGE}"
         mkdir -p ${TLINE}/shacl
         mkdir -p ${RLINE}/shacl
@@ -949,8 +954,8 @@ render_shacl_languageaware() {
             --input ${MERGEDFILE} \
             --language ${GOALLANGUAGE} \
             --output ${OUTFILE} \
-            --shapeBaseURI ${DOMAIN} \
-            --applicationProfileURL ${DOMAIN} \
+            --shapeBaseURI ${SHAPEBASEURI} \
+            --applicationProfileURL ${DOCUMENTURL} \
             &>>${REPORTFILE}
 
         #        if ! node /app/shacl-generator2.js -i ${MERGEDJSONLD} ${PARAMETERS} -d ${DOMAIN} -p ${DOMAIN} -o ${OUTFILE} -l ${GOALLANGUAGE} 2>&1 | tee ${OUTREPORT}; then
@@ -1081,11 +1086,11 @@ cat ${CHECKOUTFILE} | while read line; do
                 RLINE=${TARGETDIR}/report4/shacl/${line}
 		mkdir -p ${TLINE}
 		mkdir -p ${RLINE}
-                render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
+                render_shacl_languageaware $SLINE $TLINE $i $RLINE ${line} ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}
                     if [ ${GENERATEDARTEFACT} == true ]; then
-                        render_shacl_languageaware $SLINE $TLINE $i $RLINE ${TARGETDIR}/report4/${line} ${g}
+                        render_shacl_languageaware $SLINE $TLINE $i $RLINE ${line} ${g}
                     fi
                 done
                 NAMESPEC=FIRST_PART=$(echo "$MY_PATH" | cut -d'/' -f3)
