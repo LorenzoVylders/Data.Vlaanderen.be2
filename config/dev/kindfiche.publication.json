@@ -7,6 +7,9 @@
     "disabled": false,
     "filename": "config/kindfiche-ap.json",
     "navigation": {},
+    "shaclgenerator" : {
+	  "parameters": "--mode individual --constraint uniqueLanguages --constraint nodeKind --useUniqueURIs true --addCodelistRules true --addConstraintMessages true --addConstraintRuleNumbers true"
+  },
     "dummy": "017"
   },
   {
