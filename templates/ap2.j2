@@ -71,7 +71,6 @@
                <div class="layout layout--wide">
                   <div class="grid u-hr">
                      <div class="col--9-12 col--1-1--s">
-                        <h1 class="h1">{{ data.metadata.title }}</h1>
                         {% if data.metadata.autotranslate %}
                         <div class="disclaimer">
                            <p>Dit document is een vertaling van het {{data.metadata.primaryLanguage}} naar het Nederlands.</p>
@@ -149,6 +148,21 @@
                               </dd>
                               {% endfor %}
                            </dl>
+						   <div class="head" role="metainfo" id="metainfo">
+							<dl>
+								<dt>Brondata</dt><dd><a href="{{data.metadata.repositoryurl}}">{{metadata.repositoryurl}}</a></dd>
+								<dt>Changelog</dt><dd><a href="{{data.metadata.changelogurl}}">{{data.metadata.changelogurl}}</a></dd>
+								<dt>Opmerkingen en feedback</dt><dd><a href="{{data.metadata.feedbackurl}}">{{data.metadata.feedbackurl}}</a></dd>
+								<dt>Standaardenregister</dt><dd><a href="{{data.metadata.standaardregisterurl}}">{{data.metadata.standaardregisterurl}}</a></dd>
+								{% if data.metadata.dependencies %}
+								<dt>Afhankelijkheden</dt><dd>
+								  {% for dep in metadata.dependencies %}
+								  <a href="{{ dep.packageurl }}">{{ dep.packagelabel }}</a>
+								  {% endfor %}
+								</dd>
+								{% endif %}
+							</dl>
+						   </div>
                         </div>
                      </div>
                   </div>
