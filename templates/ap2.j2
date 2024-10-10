@@ -531,12 +531,18 @@
                         {% endblock %}
                      </div>
                      <div class="region region--no-space-top" id="mappingext" >
-                        <h2 class="h2" aria-level="1" role="heading" id="h2_sotd">Gebruikte externe terminologie</h2>
+                        <h2 class="h2" aria-level="1" role="heading" id="h2_sotd">Gebruikte (externe) terminologie</h2>
                         <p>Deze sectie geeft een overzicht hoe terminologie uit andere vocabularia is gebruikt in dit applicatieprofiel.
                            Dit neemt de vorm aan van een mapping: voor de opgesomde termen in deze sectie is er 
                            gekozen om een term identifier (de URI) te gebruiken uit vocabularia die niet onder het beheer van 
                            Data.vlaanderen.be vallen. 
                         </p>
+			{% set regExp = r/.*{{ data.metadata.uridomain }}.*/g %}
+                        {% for ns in data.metadata.namespaces %} 
+			   {% if regExp.test(ns) %}
+			   {{ ns }}
+			   {% endif %}
+			{% endfor %}
                         <p>Deze vorm van hergebruik is het zich akkoord verklaren met de achterliggende definitie, labels en beperkingen 
                            geassocieerd met de URI in de context van dit applicatieprofiel. Dat betekent dat men de bovenstaande definities, labels en gebruiksnotas 
                            niet in tegenspraak zouden moeten zijn met deze van de URI.
