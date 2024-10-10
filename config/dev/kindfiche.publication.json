@@ -10,6 +10,9 @@
     "shaclgenerator" : {
 	  "parameters": "--mode individual --constraint uniqueLanguages --constraint nodeKind  --constraint codelist --useUniqueURIs true --addConstraintMessages true --addRuleNumbers true"
   },
+    "contextgenerator" : {
+	    "parameters" : "--scopedContext true"
+    },
     "dummy": "017"
   },
   {
