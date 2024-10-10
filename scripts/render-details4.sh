@@ -531,7 +531,7 @@ render_rdf() { # SLINE TLINE JSON
     OUTPUT=${OUTPUTDIR}/${VOCNAME}_${LANGUAGE}.ttl
     OUTPUTFORMAT="text/turtle"
 
-    generator_parameters rdfgenerator4 ${JSONI}
+    generator_parameters rdfgenerator ${JSONI}
 
     if [ ${TYPE} == "voc" ]; then
         echo "RENDER-DETAILS(rdf): oslo-generator-rdf -s ${TYPE} -i ${MERGEDFILE} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}"
@@ -599,7 +599,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
     INT_OUTPUT=${RLINE}/html/int_${FILENAME}_${LANGUAGE}.json
     INT_REPORTFILE=${RLINE}/generator-webuniversum-json.report.md
 
-    generator_parameters webuniversumgenerator4 ${JSONI}
+    generator_parameters webuniversumgenerator ${JSONI}
 
     echo "${REPORTLINEPREFIX}oslo-webuniversum-json-generator for language ${LANGUAGE}${REPORTLINENEWLINE}" &>>${INT_REPORTFILE}
     echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${INT_REPORTFILE}
@@ -612,7 +612,7 @@ render_nunjunks_html() { # SLINE TLINE JSON
 
     # step 2: create the html
 
-    generator_parameters htmlgenerator4 ${JSONI}
+    generator_parameters htmlgenerator ${JSONI}
 
     COMMAND=$(echo '.type')
     TYPE=$(jq -r "${COMMAND}" ${JSONI})
@@ -727,7 +727,7 @@ render_respec_html() { # SLINE TLINE JSON
     TITLELANG=$(jq -r "${COMMANDTITLELANG}" ${JSONI})
 
     REPORTFILE=${RLINE}/generator-respec.report.md
-    generator_parameters htmlgenerator4 ${JSONI}
+    generator_parameters htmlgenerator ${JSONI}
 
     echo "RENDER-DETAILS(language html): node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RLINE}"
 
@@ -876,7 +876,7 @@ render_context() { # SLINE TLINE JSON
     COMMAND=$(echo '.type')
     TYPE=$(jq -r "${COMMAND}" ${JSONI})
 
-    generator_parameters contextgenerator4 ${JSONI}
+    generator_parameters contextgenerator ${JSONI}
 
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
         #        echo "RENDER-DETAILS(context): node /app/json-ld-generator.js -d -l label -i ${JSONI} -o ${TLINE}/context/${OUTFILELANGUAGE} "
@@ -935,7 +935,7 @@ render_shacl_languageaware() {
     COMMAND=$(echo '.type')
     TYPE=$(jq -r "${COMMAND}" ${JSONI})
 
-    generator_parameters shaclgenerator4 ${JSONI}
+    generator_parameters shaclgenerator ${JSONI}
 
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
 	
