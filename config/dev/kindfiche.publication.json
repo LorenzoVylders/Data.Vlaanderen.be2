@@ -8,7 +8,7 @@
     "filename": "config/kindfiche-ap.json",
     "navigation": {},
     "shaclgenerator" : {
-	  "parameters": "--mode individual --constraint uniqueLanguages --constraint nodeKind --useUniqueURIs true --addCodelistRules true --addConstraintMessages true --addConstraintRuleNumbers true"
+	  "parameters": "--mode individual --constraint uniqueLanguages --constraint nodeKind  --constraint codelist --useUniqueURIs true --addConstraintMessages true --addRuleNumbers true"
   },
     "dummy": "017"
   },
