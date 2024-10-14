@@ -85,11 +85,16 @@ extract_json() {
 	       SPECTYPE="ApplicationProfile"	    
     esac
 
+
+    HOSTNAME2=$(echo ${HOSTNAME} | sed -e "s|/$||g" )
+    URLREF2=$(echo ${URLREF} | sed -e "s|^/||g" )
+
+
     echo "${REPORTLINEPREFIX}oslo-converter-ea for diagram ${DIAGRAM}" &>>${REPORTFILE}
     echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
     oslo-converter-ea --umlFile ${UMLFILE} --diagramName ${DIAGRAM} --outputFile ${OUTPUTFILE} \
-                 --specificationType ${SPECTYPE} --versionId ${URLREF} --baseUri https://${DOMAIN} \
-                 --publicationEnvironment ${HOSTNAME} \
+                 --specificationType ${SPECTYPE} --versionId ${URLREF2} --baseUri https://${DOMAIN} \
+                 --publicationEnvironment ${HOSTNAME2}/ \
                  &> ${REPORTFILE}
 
         if [ $? -gt 0 ] ; then
