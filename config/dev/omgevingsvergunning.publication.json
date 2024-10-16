@@ -22,7 +22,7 @@
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-omgevingsvergunning",
     "branchtag": "292b043",
     "name": "omgevingsvergunning-ap",
-    "filename": "config/omgevingsvergunning-ap.json",
+    "filename": "config/eap-mapping.json",
     "navigation": {},
     "dummy": "005"
   },
