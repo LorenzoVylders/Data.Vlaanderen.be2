@@ -6,7 +6,16 @@
     "name": "omgevingsvergunning",
     "filename": "config/omgevingsvergunning-voc.json",
     "navigation": {},
-    "dummy": "013"
+    "dummy": "014"
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/omgevingsvergunning/kandidaatstandaard/latestbert",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-omgevingsvergunning",
+    "branchtag": "master-node-toolchain",
+    "name": "omgevingsvergunning-ap",
+    "filename": "config/eap-mapping.json",
+    "navigation": {},
+    "dummy": "005"
   },
   {
     "urlref": "/doc/applicatieprofiel/omgevingsvergunning/kandidaatstandaard/latest",
@@ -42,6 +51,6 @@
     "name": "omgevingsvergunning",
     "filename": "config/omgevingsvergunning-voc.json",
     "navigation": {},
-    "dummy": "026"
+    "dummy": "027"
   }
 ]
