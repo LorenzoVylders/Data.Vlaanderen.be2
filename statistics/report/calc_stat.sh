@@ -11,7 +11,7 @@ RESULT=stat.template
 mkdir -p ${OUTPUTDIR}
 IBASE=$(dirname ${INPUT})
 
-node /app/statistics-base.j2 -p "#||#" -i ${INPUT} -s ${IBASE}/stakeholders.json -o ${OUTPUT}.1
+node /app/statistics-base.js -p "#||#" -i ${INPUT} -s ${IBASE}/stakeholders.json -o ${OUTPUT}.1
 jq . ${OUTPUT}.1 > ${OUTPUT}
 rm ${OUTPUT}.1
 
