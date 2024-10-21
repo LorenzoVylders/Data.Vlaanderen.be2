@@ -41,10 +41,14 @@ sed -i "/template.$/d" /tmp/existingdirs
 sed -i "/template$/d" /tmp/existingdirs
 sed -i "/.*html.*/d" /tmp/existingdirs
 
+
 #
 # remove the directories that do not contain a index.html 
 # These directories are not published as specification
 #
+# remove also the next special case
+sed -i "/^\/tmp\/generated\/ns$/d" /tmp/existingdirs
+
 cat /tmp/existingdirs | while read line
 do
    if [ -f "${line}/index.html" ] ; then
