@@ -401,6 +401,7 @@
                                     </tr>
                                     {% endif %}
                                     <tr>
+<<<<<<< HEAD
                                        <th>Status</th>
                                       {% if class.status %}
                                        <td>
@@ -413,6 +414,21 @@
                                       {% endif %}
 				    
                                     </tr>
+=======
+                                       <th>
+                                         <p>Status</p>
+                                       </th>
+                                       {% if class.status %}
+                                         <td>
+                                           <code>{{ class.status }}</code>
+                                         </td>
+                                       {% else %}
+                                         <td>
+                                           <code>{{ data.metadata.status }}</code>
+                                         </td>
+                                       {% endif %}
+                                     </tr>
+>>>>>>> fea3f286 (Added `status` to voc-templates)
                                  </tbody>
                               </table>
                            </div>

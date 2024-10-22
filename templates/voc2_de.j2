@@ -394,6 +394,20 @@
                                     <td>{{ class.vocabularyUsageNote[language] }}</td>
                                   </tr>
                                 {% endif %}
+                                <tr>
+                                  <th>
+                                    <p>Status</p>
+                                  </th>
+                                  {% if class.status %}
+                                    <td>
+                                      <code>{{ class.status }}</code>
+                                    </td>
+                                  {% else %}
+                                    <td>
+                                      <code>{{ data.metadata.status }}</code>
+                                    </td>
+                                  {% endif %}
+                                </tr>
                               </tbody>
                             </table>
                           </div>
