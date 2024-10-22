@@ -4,6 +4,9 @@
 # Arg1 = the file to which the status is reported
 EXECUTIONVIEW=$1
 
+# global setting
+REPORTLINEPREFIX='#||# '
+
 RLINE=/tmp/generated/report4
 
 # This must be aligned with the same function in render_details
@@ -46,7 +49,7 @@ REPORTS="existence_publicationpoints support_publicationpoints"
 for REPORTFILE in ${REPORTS} ; do
 	    if [ -f ${RLINE}/${REPORTFILE}.report.md ] ; then 
 	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}.report.md
-	      echo -n "| [${REPORTSTATE}](${RLINE}/${REPORTFILE}.report.md)" >> ${EXECUTIONVIEW}
+	      echo -n "| [${REPORTSTATE}](/report4/${REPORTFILE}.report.md)" >> ${EXECUTIONVIEW}
 	    else 
 	      echo -n "| " >> ${EXECUTIONVIEW}
 	    fi
