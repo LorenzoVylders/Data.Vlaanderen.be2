@@ -16,14 +16,14 @@
     "webuniversumgenerator" : {
 	    "parameters-old" : "--applyFiltering false "
     },
-    "dummy": "017"
+    "dummy": "018"
   },
   {
     "urlref": "/doc/applicatieprofiel/kindfiche",
     "seealso": "/doc/applicatieprofiel/kindfiche/ontwerpstandaard/2024-06-03",
     "disabled": false,
     "type": "ap",
-    "dummy": "017"
+    "dummy": "018"
   },
   {
     "urlref": "/doc/vocabularium/kindfiche/ontwerpstandaard/2024-06-03",
@@ -32,12 +32,12 @@
     "name": "kindfiche-voc",
     "filename": "config/kindfiche-voc.json",
     "navigation": {},
-    "dummy": "014"
+    "dummy": "015"
   },
   {
     "urlref": "/ns/kindfiche",
     "seealso": "/doc/vocabularium/kindfiche/ontwerpstandaard/2024-06-03",
     "type": "voc",
-    "dummy": "014"
+    "dummy": "015"
   }
 ]
