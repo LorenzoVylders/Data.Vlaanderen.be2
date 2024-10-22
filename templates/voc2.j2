@@ -400,6 +400,19 @@
                                        <td>{{ class.vocabularyUsageNote[language] }}</td>
                                     </tr>
                                     {% endif %}
+                                    <tr>
+                                       <th>Status</th>
+                                      {% if class.status %}
+                                       <td>
+                                          <code>{{ class.status }}</code>
+                                       </td>
+				       {% elseif %}
+                                       <td>
+                                          <code>{{ data.metadata.status }}</code>
+                                       </td>
+                                      {% endif %}
+				    
+                                    </tr>
                                  </tbody>
                               </table>
                            </div>
