@@ -789,22 +789,26 @@ jobs:
           command: |
             ls -1
             if [ -d autotranslation ] ; then tar -zcf autotranslation.tgz autotranslation ; cp autotranslation.tgz /tmp/generated/autotranslation.tgz ; fi
-      - run:
-          name: check if all publication points are generated
-          working_directory: /tmp/generated
-          command: |
-            ls -al *
-            if [ -d report ] ; then ls -al report/* || ls -al report ; fi
-            find report
+#      - run:
+#          name: check if all publication points are generated
+#          working_directory: /tmp/generated
+#          command: |
+#            ls -al *
+#            if [ -d report ] ; then ls -al report/* || ls -al report ; fi
+#            find report
       - run:
           name: check the existence of all publication points
           command: |
-            $PWD/scripts/validate_publicationpoints.sh $PWD/config /tmp/generated false
+            $PWD/scripts/validate_publicationpoints.sh $PWD/config /tmp/generated false > /tmp/generated/report4/existence_publicationpoints.report.md
             #$PWD/scripts/validate_publicationpoints.sh $PWD/config /tmp/generated true # enable this line to make the test blocking
       - run:
           name: check the support of paths by a publication points
           command: |
-            $PWD/scripts/remove_obsolete_publicationpoints.sh $PWD/config /tmp/generated false
+            $PWD/scripts/remove_obsolete_publicationpoints.sh $PWD/config /tmp/generated false > /tmp/generated/report4/support_publicationpoints.report.md
+      - run:
+          name: make summary 
+          command: |
+            $PWD/scripts/render_publicationpointsstatus.sh /tmp/generated/publicationpoint.report.md
       - run:
           name: insert the commit
           working_directory: /tmp/generated
