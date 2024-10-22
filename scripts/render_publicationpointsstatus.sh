@@ -13,7 +13,7 @@ check_tool_output_for_non_emptiness() {
 
 	sed  "/${REPORTLINEPREFIX}/d" $REPORT > /tmp/out
 	# if the report is empty then sun (no issues)
-	# if the report contains indications of errors (word Error, error) then thunderstorm
+	# if the report contains indications of errors (word Error, error, ERROR) then thunderstorm
 	# otherwise cloud
 	SUN="&#9728;" 
 	CLOUD="&#9729;" 
@@ -22,7 +22,12 @@ check_tool_output_for_non_emptiness() {
 	if [ -s /tmp/out ] ; then
 		E=$( grep -c rror /tmp/out )
 		if [ $E -eq 0  ] ; then
-			REPORTSTATE=${CLOUD}
+			E=$( grep -c RROR /tmp/out )
+			if [ $E -eq 0  ] ; then
+				REPORTSTATE=${CLOUD}
+			else
+				REPORTSTATE=${THUNDERSTORM}
+			fi
 		else
 			REPORTSTATE=${THUNDERSTORM}
 		fi
@@ -41,7 +46,7 @@ REPORTS="existence_publicationpoints support_publicationpoints"
 for REPORTFILE in ${REPORTS} ; do
 	    if [ -f ${RLINE}/${REPORTFILE}.report.md ] ; then 
 	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}.report.md
-	      echo -n "| [${REPORTSTATE}](/report4/${LINE}/${REPORTFILE}.report.md)" >> ${EXECUTIONVIEW}
+	      echo -n "| [${REPORTSTATE}](${RLINE}/${REPORTFILE}.report.md)" >> ${EXECUTIONVIEW}
 	    else 
 	      echo -n "| " >> ${EXECUTIONVIEW}
 	    fi

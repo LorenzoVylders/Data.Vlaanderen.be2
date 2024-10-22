@@ -808,7 +808,7 @@ jobs:
       - run:
           name: make summary 
           command: |
-            $PWD/scripts/render_publicationpointsstatus.sh /tmp/generated/publicationpoint.report.md
+            $PWD/scripts/render_publicationpointsstatus.sh /tmp/generated/report4/publicationpoint.report.md
       - run:
           name: insert the commit
           working_directory: /tmp/generated
