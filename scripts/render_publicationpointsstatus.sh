@@ -42,7 +42,7 @@ check_tool_output_for_non_emptiness() {
 
 echo "| Execution | Existence | Support |" >> ${EXECUTIONVIEW}
 echo "| --- | --- | --- |"       >> ${EXECUTIONVIEW}
-echo -n "| [commit ${CIRCLE_SHA1}](https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/commit/${CIRCLE_SHA1})  |"    >> ${EXECUTIONVIEW}
+echo -n "| [commit ${CIRCLE_SHA1}](https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/commit/${CIRCLE_SHA1}) "    >> ${EXECUTIONVIEW}
 
 REPORTS="existence_publicationpoints support_publicationpoints"
 
