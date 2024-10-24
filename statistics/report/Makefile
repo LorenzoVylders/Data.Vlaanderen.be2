@@ -1,8 +1,18 @@
 TARGETDIR:=/tmp/workspace/stats
 
-SPECIFICATIONS=$(shell find . -name *.jsonld  | grep all- )
-STATSPERSPECIFICATIONS=$(patsubst %.jsonld,${TARGETDIR}/%.stat,${SPECIFICATIONS})
-CLEANSTATSPERSPECIFICATIONS=$(patsubst %.jsonld,${TARGETDIR}/%.stat.*,${SPECIFICATIONS})
+
+ALLSPECIFICATIONS=$(shell find . -name *.jsonld  | grep all- )
+STATSPERSPECIFICATIONS=$(patsubst %.jsonld,${TARGETDIR}/%.stat,${ALLSPECIFICATIONS})
+CLEANSTATSPERSPECIFICATIONS=$(patsubst %.jsonld,${TARGETDIR}/%.stat.*,${ALLSPECIFICATIONS})
+
+rootspecifications: publication.json
+	node /app/publicationpoints.js -p "#||#" -i $< -o navigation.json
+	node /app/publicationpoints.js -p "#||#" -i $< -o /tmp/rootpublicationpoints.json --rootsonly
+	jq '.[]' /tmp/rootpublicationpoints.json > /tmp/rootpublicationpoints.1.json
+	sed -i '/"//g' /tmp/rootpublicationpoints.1.json
+	cp /tmp/rootpublicationpoints.1.json $@
+
+ROOTSPECIFICATIONS=$(shell cat rootspecifications)
 
 
 .PHONY: allstats
