@@ -760,7 +760,7 @@ jobs:
           command: |
            export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
            pushd ${CIRCLEWKD}/statistics
-           ./deploy.sh /tmp/generated
+           ./deploy.sh ${CIRCLEWKD}/config /tmp/generated
            popd
       - run:
           name: clean report directory
