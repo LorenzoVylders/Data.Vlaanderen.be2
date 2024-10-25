@@ -41,4 +41,4 @@ jq '[.[]|select(  .disabled != true )]' /tmp/supportingpublicationpoints.json > 
 
 
 
-cp /tmp/supportingpublicationpoints.json ${TARGET}/publication.json
+cp /tmp/supportingpublicationpoints.json ${TARGET}/report4/publication.json
