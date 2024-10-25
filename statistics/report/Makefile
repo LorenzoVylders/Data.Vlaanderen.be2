@@ -9,7 +9,7 @@ rootspecifications: publication.json
 	node /app/publicationpoints.js -p "#||#" -i $< -o navigation.json
 	node /app/publicationpoints.js -p "#||#" -i $< -o /tmp/rootpublicationpoints.json --rootsonly
 	jq '.[]' /tmp/rootpublicationpoints.json > /tmp/rootpublicationpoints.1.json
-	sed -i '/"//g' /tmp/rootpublicationpoints.1.json
+	sed -i 's/"//g' /tmp/rootpublicationpoints.1.json
 	cp /tmp/rootpublicationpoints.1.json $@
 
 ROOTSPECIFICATIONS=$(shell cat rootspecifications)
@@ -32,6 +32,16 @@ aggr.organisations: ${STATSPERSPECIFICATIONS}
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+.PHONY: root.organisations
+root.organisations: ${STATSPERSPECIFICATIONS}
+	echo "[]" > $@
+	for file in $^ ; \
+        do \
+                ./calc_support.sh $${file} $@ organisations ;\
+        done
+	cp $@ ${TARGETDIR}/$@
+
+
 .PHONY: aggr.authors
 aggr.authors: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
@@ -41,6 +51,16 @@ aggr.authors: ${STATSPERSPECIFICATIONS}
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+.PHONY: root.authors
+root.authors: ${STATSPERSPECIFICATIONS}
+	 echo "[]" > $@
+	 for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} $@ authors ;\
+		mv $@.0 $@;\
+	 done 
+	 cp $@ ${TARGETDIR}/$@
+
 .PHONY: aggr.editors
 aggr.editors: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
@@ -50,6 +70,16 @@ aggr.editors: ${STATSPERSPECIFICATIONS}
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+.PHONY: root.editors
+root.editors: ${STATSPERSPECIFICATIONS}
+	 echo "[]" > $@
+	 for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} $@ editors ;\
+		mv $@.0 $@;\
+	 done 
+	 cp $@ ${TARGETDIR}/$@
+
 .PHONY: aggr.contributors
 aggr.contributors: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
@@ -59,6 +89,17 @@ aggr.contributors: ${STATSPERSPECIFICATIONS}
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+.PHONY: root.contributors
+root.contributors: ${STATSPERSPECIFICATIONS}
+	 echo "[]" > $@
+	 for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} $@ contributors ;\
+		mv $@.0 $@;\
+	 done 
+	 cp $@ ${TARGETDIR}/$@
+
+
 .PHONY: aggr.class
 aggr.class: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
@@ -68,6 +109,16 @@ aggr.class: ${STATSPERSPECIFICATIONS}
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+.PHONY: root.class
+root.class: ${STATSPERSPECIFICATIONS}
+	 echo "[]" > $@
+	 for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} $@ classes ;\
+		mv $@.0 $@;\
+	 done 
+	 cp $@ ${TARGETDIR}/$@
+
 .PHONY: aggr.props
 aggr.props: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
@@ -77,6 +128,16 @@ aggr.props: ${STATSPERSPECIFICATIONS}
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+.PHONY: root.props
+root.props: ${STATSPERSPECIFICATIONS}
+	 echo "[]" > $@
+	 for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} $@ props ;\
+		mv $@.0 $@;\
+	 done 
+	 cp $@ ${TARGETDIR}/$@
+
 .PHONY: aggr.extclass
 aggr.extclass: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
@@ -86,6 +147,16 @@ aggr.extclass: ${STATSPERSPECIFICATIONS}
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+.PHONY: root.extclass
+root.extclass: ${STATSPERSPECIFICATIONS}
+	 echo "[]" > $@
+	 for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} $@ externalclasses ;\
+		mv $@.0 $@;\
+	 done 
+	 cp $@ ${TARGETDIR}/$@
+
 .PHONY: aggr.extprops
 aggr.extprops: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
@@ -95,6 +166,17 @@ aggr.extprops: ${STATSPERSPECIFICATIONS}
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+
+.PHONY: root.extprops
+root.extprops: ${STATSPERSPECIFICATIONS}
+	 echo "[]" > $@
+	 for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} $@ externalproperties ;\
+		mv $@.0 $@;\
+	 done 
+	 cp $@ ${TARGETDIR}/$@
+
 .PHONY: aggr.specstats
 aggr.specstats: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
@@ -105,9 +187,16 @@ aggr.specstats: ${STATSPERSPECIFICATIONS}
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+.PHONY: root.specstats
+root.specstats: aggr.specstats
+	cp aggr.specstats root.specstats
+	# XXX TODO create a version for only the root specifications, for now all specs are included in this one
 
 aggr.stat: aggr.organisations aggr.class aggr.props aggr.extclass aggr.extprops aggr.authors aggr.editors aggr.contributors aggr.specstats
 	./calc_aggr.sh aggr ${TARGETDIR}/$@
+
+root.stat: root.organisations root.class root.props root.extclass root.extprops root.authors root.editors root.contributors root.specstats
+	./calc_aggr.sh root ${TARGETDIR}/$@
 
 
 finalize:
