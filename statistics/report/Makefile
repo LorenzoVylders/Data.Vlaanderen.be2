@@ -115,6 +115,13 @@ root.class: ${STATSPERSPECIFICATIONS}
                 ./calc_support.sh $${file} $@ classes ;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+root.class.% : ${STATSPERSPECIFICATIONS}
+	 echo "[]" > $@
+	 for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} root.class classes true true ;\
+	 done 
+	 cp $@ ${TARGETDIR}/$@
 
 .PHONY: aggr.props
 aggr.props: ${STATSPERSPECIFICATIONS}
@@ -131,6 +138,13 @@ root.props: ${STATSPERSPECIFICATIONS}
 	 for file in $^ ; \
 		do \
                 ./calc_support.sh $${file} $@ properties ;\
+	 done 
+	 cp $@ ${TARGETDIR}/$@
+root.props.% : ${STATSPERSPECIFICATIONS}
+	 echo "[]" > $@
+	 for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} root.props properties true true;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 
@@ -191,8 +205,12 @@ root.specstats: aggr.specstats
 aggr.stat: aggr.organisations aggr.class aggr.props aggr.extclass aggr.extprops aggr.authors aggr.editors aggr.contributors aggr.specstats
 	./calc_aggr.sh aggr ${TARGETDIR}/$@
 
-root.stat: root.organisations root.class root.props root.extclass root.extprops root.authors root.editors root.contributors root.specstats
+rootnamed.stat: root.class.voc root.class.ap root.props.ap root.props.voc
+	touch rootnamed.stat
+
+root.stat: root.organisations root.class root.props root.extclass root.extprops root.authors root.editors root.contributors root.specstats rootnamed.stat
 	./calc_aggr.sh root ${TARGETDIR}/$@
+
 
 
 finalize:
