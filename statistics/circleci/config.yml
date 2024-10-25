@@ -17,12 +17,14 @@ jobs:
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
             pushd ${CIRCLEWKD}/report4
             make allstats
+            make rootspecifications
       - run:
           name: build the statistics
           command: |
             export CIRCLEWKD=$( eval echo "${CIRCLE_WORKING_DIRECTORY}" )
             pushd ${CIRCLEWKD}/report4
             make aggr.stat
+            make root.stat
       - run:
           name: clean up
           command: |

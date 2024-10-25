@@ -57,7 +57,6 @@ root.authors: ${STATSPERSPECIFICATIONS}
 	 for file in $^ ; \
 		do \
                 ./calc_support.sh $${file} $@ authors ;\
-		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 
@@ -76,7 +75,6 @@ root.editors: ${STATSPERSPECIFICATIONS}
 	 for file in $^ ; \
 		do \
                 ./calc_support.sh $${file} $@ editors ;\
-		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 
@@ -95,7 +93,6 @@ root.contributors: ${STATSPERSPECIFICATIONS}
 	 for file in $^ ; \
 		do \
                 ./calc_support.sh $${file} $@ contributors ;\
-		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 
@@ -115,7 +112,6 @@ root.class: ${STATSPERSPECIFICATIONS}
 	 for file in $^ ; \
 		do \
                 ./calc_support.sh $${file} $@ classes ;\
-		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 
@@ -134,7 +130,6 @@ root.props: ${STATSPERSPECIFICATIONS}
 	 for file in $^ ; \
 		do \
                 ./calc_support.sh $${file} $@ props ;\
-		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 
@@ -153,7 +148,6 @@ root.extclass: ${STATSPERSPECIFICATIONS}
 	 for file in $^ ; \
 		do \
                 ./calc_support.sh $${file} $@ externalclasses ;\
-		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 
@@ -173,7 +167,6 @@ root.extprops: ${STATSPERSPECIFICATIONS}
 	 for file in $^ ; \
 		do \
                 ./calc_support.sh $${file} $@ externalproperties ;\
-		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 
@@ -182,9 +175,11 @@ aggr.specstats: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
 	 for file in $^ ; \
 		do \
-		jq  'del(.values) ' "$${file}" > /tmp/spec ;\
-		jq -s '.[0] + [ .[1] ] ' $@ "/tmp/spec" >> $@.0 ;\
-		mv $@.0 $@;\
+		if [ -s $${file} ] ; then \
+			jq  'del(.values) ' "$${file}" > /tmp/spec ;\
+			jq -s '.[0] + [ .[1] ] ' $@ "/tmp/spec" >> $@.0 ;\
+			mv $@.0 $@;\
+		fi\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 .PHONY: root.specstats
