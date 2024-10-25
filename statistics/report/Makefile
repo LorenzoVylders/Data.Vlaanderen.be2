@@ -6,11 +6,12 @@ STATSPERSPECIFICATIONS=$(patsubst %.jsonld,${TARGETDIR}/%.stat,${ALLSPECIFICATIO
 CLEANSTATSPERSPECIFICATIONS=$(patsubst %.jsonld,${TARGETDIR}/%.stat.*,${ALLSPECIFICATIONS})
 
 rootspecifications: publication.json
-	node /app/publicationpoints.js -p "#||#" -i $< -o navigation.json
+	node /app/publicationpoints.js -p "#||#" -i $< -o ${TARGETDIR}/navigation.json
 	node /app/publicationpoints.js -p "#||#" -i $< -o /tmp/rootpublicationpoints.json --rootsonly
 	jq '.[]' /tmp/rootpublicationpoints.json > /tmp/rootpublicationpoints.1.json
 	sed -i 's/"//g' /tmp/rootpublicationpoints.1.json
 	cp /tmp/rootpublicationpoints.1.json $@
+	cp $@ ${TARGETDIR}/$@
 
 ROOTSPECIFICATIONS=$(shell cat rootspecifications)
 
@@ -129,7 +130,7 @@ root.props: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
 	 for file in $^ ; \
 		do \
-                ./calc_support.sh $${file} $@ props ;\
+                ./calc_support.sh $${file} $@ properties ;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 
