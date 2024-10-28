@@ -283,11 +283,11 @@
                                  </p>
                               </div>
                               {% endif %}
-                              {% if ( ( data.scopedDataTypes | length ) > 0 ) %}
+                              {% if ( ( data.dataTypes | length ) > 0 ) %}
                               <div class="region region--no-space-top">
                                  <p>
                                     In dit document worden de volgende datatypes toegelicht: <br/> |
-                                    {%- for dataType in data.scopedDataTypes %}
+                                    {%- for dataType in data.dataTypes %}
                                     <a href="#{{ dataType.applicationProfileLabel[language] | replace(' ', '') }}">
                                     {{ dataType.applicationProfileLabel[language] }}</a>
                                     |
@@ -406,10 +406,10 @@
                         </div>
                         {% endfor %}
                      </div>
-                     {% if data.scopedDataTypes %}
+                     {% if data.dataTypes %}
                      <div class="region region--no-space-top">
                         <h2 class="h2">Datatypes</h2>
-                        {% for dataType in data.scopedDataTypes %}
+                        {% for dataType in data.dataTypes %}
                         <div class="region region--no-space-top">
                            <h3 class="h3" id="{{ dataType.id }}">
                               <a href="{{ dataType.id }}" data-toggle="tooltip" data-content="{{ dataType.id }}" id="{{ dataType.applicationProfileLabel[language] | replace(' ', '') }}" data-placement="right">
@@ -579,7 +579,7 @@
                               {% endif %}
                               {% endfor %}
                               {% endfor %}
-                              {% for entity in data.scopedDataTypes %} 
+                              {% for entity in data.dataTypes %} 
                               {% if entity.scope == "https://data.vlaanderen.be/id/concept/scope/External"   %}
                               <tr>
                                  <td><a href="#{{ entity.applicationProfileLabel[language] | replace(' ', '') | urlencode }}">{{ entity.applicationProfileLabel[language] }}</a> </td>

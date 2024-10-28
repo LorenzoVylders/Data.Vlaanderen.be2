@@ -298,13 +298,13 @@
                         </p>
                         <br/>
                       </div>
-                      {% if ( ( data.inPackageMerged | length) > 0 ) %}
+                      {% if ( ( data.classes | length) > 0 ) %}
                         <div class="region region--no-space-top">
                           <h3 class="h3">Klassen</h3>
                           <div class="grid">
                             <p>
                               |
-                              {% for class in data.inPackageMerged %}
+                              {% for class in data.classes %}
                                 <a href="#{{ class.vocabularyLabel[language] }}" rel="class">{{ class.vocabularyLabel[language] }}</a>
                                 |
                               {% endfor %}
@@ -312,13 +312,13 @@
                           </div>
                         </div>
                       {% endif %}
-                      {% if ( ( data.inPackageProperties | length ) > 0 ) %}
+                      {% if ( ( data.properties | length ) > 0 ) %}
                         <div class="region region--no-space-top">
                           <h3 class="h3">Eigenschaften</h3>
                           <div class="grid">
                             <p>
                               |
-                              {% for prop in data.inPackageProperties %}
+                              {% for prop in data.properties %}
                                 <a href="#{{ prop.vocabularyLabel[language] }}" rel="property">{{ prop.vocabularyLabel[language] }}</a>
                                 |
                               {% endfor %}
@@ -347,11 +347,11 @@
                       <h2 class="h2" id="classes" aria-level="1" role="heading">
                         <span class="secno">4.
                         </span>Klassen</h2>
-                      {% if data.inPackageMerged %}
+                      {% if data.classes %}
                         <div class="region region--no-space-top">
                           <p>Dieser Abschnitt enthält eine formale Definition für jede Klasse.</p>
                         </div>
-                        {% for class in data.inPackageMerged %}
+                        {% for class in data.classes %}
                           <div class="region region--no-space-top">
                             <h3 class="h3" id="{{ class.vocabularyLabel[language] }}">Klasse
                               <em>{{ class.vocabularyLabel[language] }}</em>
@@ -425,11 +425,11 @@
                       <h2 class="h2" id="properties" aria-level="1" role="heading">
                         <span class="secno">5.
                         </span>Eigenschaften</h2>
-                      {% if data.inPackageProperties %}
+                      {% if data.properties %}
                         <div class="region region--no-space-top">
                           <p>In diesem Abschnitt wird eine formale Definition für jede Eigenschaft bereitgestellt.</p>
                         </div>
-                        {% for property in data.inPackageProperties %}
+                        {% for property in data.properties %}
                           <div class="region region--no-space-top">
                             <h3 class="h3" id="{{ property.vocabularyLabel[language] }}">Eigenschaft
                               <em>{{ property.vocabularyLabel[language] }}</em>
