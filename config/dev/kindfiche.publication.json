@@ -7,23 +7,23 @@
     "disabled": false,
     "filename": "config/kindfiche-ap.json",
     "navigation": {},
-    "shaclgenerator" : {
-	  "parameters": "--mode individual --constraint uniqueLanguages --constraint nodeKind  --constraint codelist --useUniqueURIs true --addConstraintMessages true --addRuleNumbers true"
-  },
-    "contextgenerator" : {
-	    "parameters" : "--scopedContext true"
+    "shaclgenerator": {
+      "parameters": "--mode individual --constraint uniqueLanguages --constraint nodeKind  --constraint codelist --useUniqueURIs true --addConstraintMessages true --addRuleNumbers true"
     },
-    "webuniversumgenerator" : {
-	    "parameters" : "--applyFiltering false"
+    "contextgenerator": {
+      "parameters": "--scopedContext true"
     },
-    "dummy": "021"
+    "webuniversumgenerator": {
+      "parameters": "--applyFiltering true"
+    },
+    "dummy": "022"
   },
   {
     "urlref": "/doc/applicatieprofiel/kindfiche",
     "seealso": "/doc/applicatieprofiel/kindfiche/ontwerpstandaard/2024-06-03",
     "disabled": false,
     "type": "ap",
-    "dummy": "018"
+    "dummy": "019"
   },
   {
     "urlref": "/doc/vocabularium/kindfiche/ontwerpstandaard/2024-06-03",
