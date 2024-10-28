@@ -1,12 +1,13 @@
+SHELL=/bin/bash
 TARGETDIR:=/tmp/workspace/stats
-
 
 ALLSPECIFICATIONS=$(shell find . -name *.jsonld  | grep all- )
 STATSPERSPECIFICATIONS=$(patsubst %.jsonld,${TARGETDIR}/%.stat,${ALLSPECIFICATIONS})
 CLEANSTATSPERSPECIFICATIONS=$(patsubst %.jsonld,${TARGETDIR}/%.stat.*,${ALLSPECIFICATIONS})
 
 rootspecifications: publication.json
-	node /app/publicationpoints.js -p "#||#" -i $< -o ${TARGETDIR}/navigation.json
+	node /app/publicationpoints.js -p "#||#" -i $< -o /tmp/navigation.json
+	jq . /tmp/navigation.json > ${TARGETDIR}/navigation.json
 	node /app/publicationpoints.js -p "#||#" -i $< -o /tmp/rootpublicationpoints.json --rootsonly
 	jq '.[]' /tmp/rootpublicationpoints.json > /tmp/rootpublicationpoints.1.json
 	sed -i 's/"//g' /tmp/rootpublicationpoints.1.json
@@ -115,12 +116,6 @@ root.class: ${STATSPERSPECIFICATIONS}
                 ./calc_support.sh $${file} $@ classes ;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
-root.class.voc root.class.ap: ${STATSPERSPECIFICATIONS}
-	 for file in $^ ; \
-		do \
-                ./calc_support.sh $${file} root.class classes true true ;\
-	 done 
-	 cp root.class.* ${TARGETDIR}
 
 .PHONY: aggr.props
 aggr.props: ${STATSPERSPECIFICATIONS}
@@ -139,14 +134,6 @@ root.props: ${STATSPERSPECIFICATIONS}
                 ./calc_support.sh $${file} $@ properties ;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
-root.props.voc root.props.ap: ${STATSPERSPECIFICATIONS}
-	 echo "[]" > root.props.voc
-	 echo "[]" > root.props.ap
-	 for file in $^ ; \
-		do \
-                ./calc_support.sh $${file} root.props properties true true;\
-	 done 
-	 cp root.props.* ${TARGETDIR}
 
 .PHONY: aggr.extclass
 aggr.extclass: ${STATSPERSPECIFICATIONS}
@@ -165,12 +152,6 @@ root.extclass: ${STATSPERSPECIFICATIONS}
                 ./calc_support.sh $${file} $@ externalclasses ;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
-root.extclass.%: ${STATSPERSPECIFICATIONS}
-	 for file in $^ ; \
-		do \
-                ./calc_support.sh $${file} root.extclass externalclasses true true;\
-	 done 
-	 cp root.extclass.* ${TARGETDIR}
 
 .PHONY: aggr.extprops
 aggr.extprops: ${STATSPERSPECIFICATIONS}
@@ -181,7 +162,6 @@ aggr.extprops: ${STATSPERSPECIFICATIONS}
 		mv $@.0 $@;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
-
 .PHONY: root.extprops
 root.extprops: ${STATSPERSPECIFICATIONS}
 	 echo "[]" > $@
@@ -190,12 +170,6 @@ root.extprops: ${STATSPERSPECIFICATIONS}
                 ./calc_support.sh $${file} $@ externalproperties ;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
-root.extprops.%: ${STATSPERSPECIFICATIONS}
-	 for file in $^ ; \
-		do \
-                ./calc_support.sh $${file} root.extprops externalproperties true true;\
-	 done 
-	 cp root.extprops.* ${TARGETDIR}
 
 .PHONY: aggr.specstats
 aggr.specstats: ${STATSPERSPECIFICATIONS}
@@ -210,9 +184,23 @@ aggr.specstats: ${STATSPERSPECIFICATIONS}
 	 done 
 	 cp $@ ${TARGETDIR}/$@
 .PHONY: root.specstats
-root.specstats: aggr.specstats
-	cp aggr.specstats root.specstats
-	# XXX TODO create a version for only the root specifications, for now all specs are included in this one
+root.specstats: ${STATSPERSPECIFICATIONS}
+         echo "[]" > $@
+         for file in $^ ; \
+                do \
+                if [ -s $${file} ] ; then \
+                        for root in ${ROOTSPECIFICATIONS} ; \
+                        do \
+                        if [[ "$${file}" =~ "$${root}" ]] ; then \
+                                jq  'del(.values) ' "$${file}" > /tmp/spec ;\
+                                jq -s '.[0] + [ .[1] ] ' $@ "/tmp/spec" >> $@.0 ;\
+                                mv $@.0 $@;\
+                                fi ; \
+                        done ; \
+                fi ; \
+         done 
+         cp $@ ${TARGETDIR}/$@
+
 
 aggr.stat: aggr.organisations aggr.class aggr.props aggr.extclass aggr.extprops aggr.authors aggr.editors aggr.contributors aggr.specstats
 	./calc_aggr.sh aggr ${TARGETDIR}/$@

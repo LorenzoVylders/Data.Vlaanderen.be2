@@ -25,6 +25,7 @@ jobs:
             pushd ${CIRCLEWKD}/report4
             make aggr.stat
             make root.stat
+            make csv.stat
       - run:
           name: clean up
           command: |
