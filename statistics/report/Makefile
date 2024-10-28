@@ -115,13 +115,12 @@ root.class: ${STATSPERSPECIFICATIONS}
                 ./calc_support.sh $${file} $@ classes ;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
-root.class.% : ${STATSPERSPECIFICATIONS}
-	 echo "[]" > $@
+root.class.voc root.class.ap: ${STATSPERSPECIFICATIONS}
 	 for file in $^ ; \
 		do \
                 ./calc_support.sh $${file} root.class classes true true ;\
 	 done 
-	 cp $@ ${TARGETDIR}/$@
+	 cp root.class.* ${TARGETDIR}
 
 .PHONY: aggr.props
 aggr.props: ${STATSPERSPECIFICATIONS}
@@ -140,13 +139,14 @@ root.props: ${STATSPERSPECIFICATIONS}
                 ./calc_support.sh $${file} $@ properties ;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
-root.props.% : ${STATSPERSPECIFICATIONS}
-	 echo "[]" > $@
+root.props.voc root.props.ap: ${STATSPERSPECIFICATIONS}
+	 echo "[]" > root.props.voc
+	 echo "[]" > root.props.ap
 	 for file in $^ ; \
 		do \
                 ./calc_support.sh $${file} root.props properties true true;\
 	 done 
-	 cp $@ ${TARGETDIR}/$@
+	 cp root.props.* ${TARGETDIR}
 
 .PHONY: aggr.extclass
 aggr.extclass: ${STATSPERSPECIFICATIONS}
@@ -165,6 +165,12 @@ root.extclass: ${STATSPERSPECIFICATIONS}
                 ./calc_support.sh $${file} $@ externalclasses ;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+root.extclass.%: ${STATSPERSPECIFICATIONS}
+	 for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} root.extclass externalclasses true true;\
+	 done 
+	 cp root.extclass.* ${TARGETDIR}
 
 .PHONY: aggr.extprops
 aggr.extprops: ${STATSPERSPECIFICATIONS}
@@ -184,6 +190,12 @@ root.extprops: ${STATSPERSPECIFICATIONS}
                 ./calc_support.sh $${file} $@ externalproperties ;\
 	 done 
 	 cp $@ ${TARGETDIR}/$@
+root.extprops.%: ${STATSPERSPECIFICATIONS}
+	 for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} root.extprops externalproperties true true;\
+	 done 
+	 cp root.extprops.* ${TARGETDIR}
 
 .PHONY: aggr.specstats
 aggr.specstats: ${STATSPERSPECIFICATIONS}
@@ -205,8 +217,39 @@ root.specstats: aggr.specstats
 aggr.stat: aggr.organisations aggr.class aggr.props aggr.extclass aggr.extprops aggr.authors aggr.editors aggr.contributors aggr.specstats
 	./calc_aggr.sh aggr ${TARGETDIR}/$@
 
-rootnamed.stat: root.class.voc root.class.ap root.props.ap root.props.voc
+
+%.voc.csv: %.voc
+	jq '.[] |= {"spec": .spec, "label" : .label[0]."@value", "assignedURI": .assignedURI } ' $^ > /tmp/$@
+	jq -r '(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv' /tmp/$@ > ${TARGETDIR}/$@
+%.ap.csv: %.ap
+	jq '.[] |= {"spec": .spec, "label" : .label[0]."@value", "assignedURI": .assignedURI } ' $^ > /tmp/$@
+	jq -r '(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv' /tmp/$@ > ${TARGETDIR}/$@
+
+ROOTS=root.classes root.properties root.externalclasses root.externalproperties
+ROOTSVOC=$(patsubst %, %.voc,${ROOTS})
+ROOTSAP=$(patsubst %, %.ap,${ROOTS})
+ROOTSNAMED=${ROOTSVOC}
+ROOTSNAMED+=${ROOTSAP}
+CSVNAMED=$(patsubst %,%.csv,${ROOTSNAMED})
+
+${ROOTSNAMED}: ${STATSPERSPECIFICATIONS}
+	for rrootfile in ${ROOTSNAMED} ; \
+		do \
+		echo "[]" > $${rrootfile} ; \
+	 done
+	baseroot=${$@%.*};
+	query=${baseroot##*.};
+	echo $${query}
+	for file in $^ ; \
+		do \
+                ./calc_support.sh $${file} $${baseroot} queries true true;\
+	 done 
+	cp $${baseroot}.* ${TARGETDIR}
+
+rootnamed.stat: ${ROOTSNAMED}
 	touch rootnamed.stat
+csv.stat: ${CSVNAMED}
+	touch csv.stat
 
 root.stat: root.organisations root.class root.props root.extclass root.extprops root.authors root.editors root.contributors root.specstats rootnamed.stat
 	./calc_aggr.sh root ${TARGETDIR}/$@
