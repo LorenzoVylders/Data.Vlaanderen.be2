@@ -185,8 +185,8 @@ aggr.specstats: ${STATSPERSPECIFICATIONS}
 	 cp $@ ${TARGETDIR}/$@
 .PHONY: root.specstats
 root.specstats: ${STATSPERSPECIFICATIONS}
-         echo "[]" > $@
-         for file in $^ ; \
+	echo "[]" > $@
+	for file in $^ ; \
                 do \
                 if [ -s $${file} ] ; then \
                         for root in ${ROOTSPECIFICATIONS} ; \
@@ -199,7 +199,7 @@ root.specstats: ${STATSPERSPECIFICATIONS}
                         done ; \
                 fi ; \
          done 
-         cp $@ ${TARGETDIR}/$@
+	cp $@ ${TARGETDIR}/$@
 
 
 aggr.stat: aggr.organisations aggr.class aggr.props aggr.extclass aggr.extprops aggr.authors aggr.editors aggr.contributors aggr.specstats
