@@ -220,10 +220,10 @@ aggr.stat: aggr.organisations aggr.class aggr.props aggr.extclass aggr.extprops 
 
 %.voc.csv: %.voc
 	jq '.[] |= {"spec": .spec, "label" : .label[0]."@value", "assignedURI": .assignedURI } ' $^ > /tmp/$@
-	jq -r '(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv' /tmp/$@ > ${TARGETDIR}/$@
+	jq -r '(map(keys) | add | unique) as $$cols | map(. as $$row | $$cols | map($$row[.])) as $$rows | $$cols, $$rows[] | @csv' /tmp/$@ > ${TARGETDIR}/$@
 %.ap.csv: %.ap
 	jq '.[] |= {"spec": .spec, "label" : .label[0]."@value", "assignedURI": .assignedURI } ' $^ > /tmp/$@
-	jq -r '(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv' /tmp/$@ > ${TARGETDIR}/$@
+	jq -r '(map(keys) | add | unique) as $$cols | map(. as $$row | $$cols | map($$row[.])) as $$rows | $$cols, $$rows[] | @csv' /tmp/$@ > ${TARGETDIR}/$@
 
 ROOTS=root.classes root.properties root.externalclasses root.externalproperties
 ROOTSVOC=$(patsubst %, %.voc,${ROOTS})
@@ -233,18 +233,18 @@ ROOTSNAMED+=${ROOTSAP}
 CSVNAMED=$(patsubst %,%.csv,${ROOTSNAMED})
 
 ${ROOTSNAMED}: ${STATSPERSPECIFICATIONS}
-	for rrootfile in ${ROOTSNAMED} ; \
-		do \
-		echo "[]" > $${rrootfile} ; \
-	 done
-	baseroot=${$@%.*};
-	query=${baseroot##*.};
-	echo $${query}
 	for file in $^ ; \
-		do \
-                ./calc_support.sh $${file} $${baseroot} queries true true;\
-	 done 
-	cp $${baseroot}.* ${TARGETDIR}
+                do \
+                ./calc_support2.sh $${file} $@ true true;\
+         done
+	for rrootfile in ${ROOTSNAMED} ; \
+                do \
+                if [ -f $${rrootfile} ] ; then \
+                cp $${rrootfile} ${TARGETDIR} ;\
+                fi ; \
+         done
+
+
 
 rootnamed.stat: ${ROOTSNAMED}
 	touch rootnamed.stat
@@ -268,7 +268,9 @@ print:
 
 clean: 
 	rm -rf ${STATSPERSPECIFICATIONS} 
+	rm -rf ${ROOTSNAMED} 
 	for file in "${CLEANSTATSPERSPECIFICATIONS}" ; \
 		do \
 		rm $${file} ;\
 	 done 
+	rm -rf csv.stat rootnamed.stat
