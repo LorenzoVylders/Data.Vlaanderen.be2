@@ -14,9 +14,9 @@
 	    "parameters" : "--scopedContext true"
     },
     "webuniversumgenerator" : {
-	    "parameters-old" : "--applyFiltering false "
+	    "parameters-old" : "--applyFiltering false"
     },
-    "dummy": "018"
+    "dummy": "019"
   },
   {
     "urlref": "/doc/applicatieprofiel/kindfiche",
