@@ -118,6 +118,7 @@ render_report_header() {
        echo "### Legende" > ${OVERVIEW}
        echo "" >> ${OVERVIEW}
        echo "<details>" >> ${OVERVIEW}
+       echo "" >> ${OVERVIEW}
        echo "| Term | Betekenis |" >> ${OVERVIEW}
        echo "| --- | --- |" >> ${OVERVIEW}
        declare -A terms
