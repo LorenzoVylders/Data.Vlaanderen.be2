@@ -14,7 +14,7 @@
       "parameters": "--scopedContext true"
     },
     "webuniversumgenerator": {
-      "parameters": "--applyFiltering true"
+      "parameters": "--applyFiltering false"
     },
     "dummy": "022"
   },
