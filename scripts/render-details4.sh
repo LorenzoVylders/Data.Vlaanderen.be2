@@ -115,8 +115,9 @@ render_report_header() {
     local OVERVIEW=$1
 
     if [ ! -f ${OVERVIEW} ] ; then
-       echo "Legende:" > ${OVERVIEW}
+       echo "### Legende" > ${OVERVIEW}
        echo "" >> ${OVERVIEW}
+       echo "<details>" >> ${OVERVIEW}
        echo "| Term | Betekenis |" >> ${OVERVIEW}
        echo "| --- | --- |" >> ${OVERVIEW}
        declare -A terms
@@ -141,6 +142,8 @@ render_report_header() {
        done
 
        # End of legende
+       echo "" >> ${OVERVIEW}
+       echo "</details>" >> ${OVERVIEW}
        echo "" >> ${OVERVIEW}
 
        echo "| Specification | tag | uml | stake | trns | aut  | mrg | web | meta | html | rspc| ctx | rdf | shcl |" >> ${OVERVIEW}
