@@ -6,7 +6,14 @@
     "name": "omgevingsvergunning",
     "filename": "config/omgevingsvergunning-voc.json",
     "navigation": {},
-    "dummy": "016"
+    "dummy": "017"
+  },
+  {
+    "urlref": "/ns/omgevingsvergunning",
+    "seealso": "/doc/vocabularium/omgevingsvergunning/kandidaatstandaard/2024-10-16",
+    "type": "voc",
+    "disabled": false,
+    "dummy": "001"
   },
   {
     "urlref": "/doc/applicatieprofiel/omgevingsvergunning/kandidaatstandaard/latestbert",
