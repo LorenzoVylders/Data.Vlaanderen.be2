@@ -63,7 +63,8 @@ extract_json() {
     local DIAGRAM=$( jq -r .[].diagram ${MAPPINGFILE} )
     local UMLFILE=$( jq -r .[].eap ${MAPPINGFILE} )
     local SPECTYPE=$( jq -r .[].type ${MAPPINGFILE} )
-    local STATUS=$( jq -r '.[].["publication-state"]' ${MAPPINGFILE} )
+    COMMAND='.[]."publication-state"'
+    local STATUS=$( jq -r ""${COMMAND}"" ${MAPPINGFILE} )
     local URLREF=$( jq -r .urlref .publication-point.json )
     local HOSTNAME=$( jq -r .hostname  ${CONFIGDIR}/config.json )
     local DOMAIN=$( jq -r .domain  ${CONFIGDIR}/config.json )
@@ -96,7 +97,7 @@ extract_json() {
     oslo-converter-ea --umlFile ${UMLFILE} --diagramName ${DIAGRAM} --outputFile ${OUTPUTFILE} \
                  --specificationType ${SPECTYPE} --versionId ${URLREF2} --baseUri https://${DOMAIN} \
                  --publicationEnvironment ${HOSTNAME2}/ \
-                 &> ${REPORTFILE}
+                 &>> ${REPORTFILE}
 
         if [ $? -gt 0 ] ; then
             echo "UML extraction failed"
@@ -104,7 +105,8 @@ extract_json() {
         fi
 	
     # perform postprocessing 
-    ./scripts/postprocess_intermediate.sh ${STATUS} ${DOMAIN} ${OUTPUTFILE}
+    echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
+    ${CIRCLEWKD}/scripts/postprocess_intermediate.sh ${STATUS} ${DOMAIN} ${OUTPUTFILE} &>>${REPORTFILE}
 
     # XXX use one export for reporting one for processing
 
