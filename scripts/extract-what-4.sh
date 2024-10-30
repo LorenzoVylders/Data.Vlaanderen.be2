@@ -106,7 +106,7 @@ extract_json() {
 	
     # perform postprocessing 
     echo "${REPORTLINEPREFIX}-------------------------------------" &>>${REPORTFILE}
-    ${CIRCLEWKD}/scripts/postprocess_intermediate.sh ${STATUS} ${DOMAIN} ${OUTPUTFILE} &>>${REPORTFILE}
+#    ${CIRCLEWKD}/scripts/postprocess_intermediate.sh ${STATUS} ${DOMAIN} ${OUTPUTFILE} &>>${REPORTFILE}
 
     # XXX use one export for reporting one for processing
 
