@@ -63,6 +63,7 @@ extract_json() {
     local DIAGRAM=$( jq -r .[].diagram ${MAPPINGFILE} )
     local UMLFILE=$( jq -r .[].eap ${MAPPINGFILE} )
     local SPECTYPE=$( jq -r .[].type ${MAPPINGFILE} )
+    local STATUS=$( jq -r '.[].["publication-state"]' ${MAPPINGFILE} )
     local URLREF=$( jq -r .urlref .publication-point.json )
     local HOSTNAME=$( jq -r .hostname  ${CONFIGDIR}/config.json )
     local DOMAIN=$( jq -r .domain  ${CONFIGDIR}/config.json )
@@ -101,6 +102,9 @@ extract_json() {
             echo "UML extraction failed"
             execution_strickness
         fi
+	
+    # perform postprocessing 
+    ./scripts/postprocess_intermediate.sh ${STATUS} ${DOMAIN} ${OUTPUTFILE}
 
     # XXX use one export for reporting one for processing
 
