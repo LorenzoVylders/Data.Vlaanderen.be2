@@ -537,12 +537,11 @@
                            gekozen om een term identifier (de URI) te gebruiken uit vocabularia die niet onder het beheer van 
                            Data.vlaanderen.be vallen. 
                         </p>
-			{% set regExp = r/.*{{ data.metadata.uridomain }}.*/g %}
-                        {% for ns in data.metadata.namespaces %} 
-			   {% if regExp.test(ns) %}
-			   {{ ns }}
-			   {% endif %}
+			<ul>
+                        {% for ns in data.metadata.inDomainNamespaces %} 
+			     <li><a href="{{ ns }}">{{ ns }}</a></li>
 			{% endfor %}
+			</ul>
                         <p>Deze vorm van hergebruik is het zich akkoord verklaren met de achterliggende definitie, labels en beperkingen 
                            geassocieerd met de URI in de context van dit applicatieprofiel. Dat betekent dat men de bovenstaande definities, labels en gebruiksnotas 
                            niet in tegenspraak zouden moeten zijn met deze van de URI.
