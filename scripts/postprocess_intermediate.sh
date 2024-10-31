@@ -13,7 +13,7 @@ FILE=$3
 
 if [ -f ${FILE} ] ; then
 
-	jq  --arg default ${DEFAULTSTATUS}  'walk( if type=="object" and has("assignedURI") and has("@id") then  try .status // . + {"status" : "\($default)"} else . end )' ${FILE} > /tmp/${FILE}.0
+jq  --arg default ${DEFAULTSTATUS}  'walk( if type=="object" and has("assignedURI") and has("@id") then  if has("status") then . else . + {"status" : "\($default)"} end else . end )' ${FILE} > /tmp/${FILE}.0
 jq  --arg namespace ${NAMESPACE} 'walk( if type=="object" and has("assignedURI") and has("scope") and .scope=="https://data.vlaanderen.be/id/concept/scope/External" then  if ( .assignedURI | test("\($namespace)";"i") ) then .scope="https://data.vlaanderen.be/id/concept/scope/inPublicationNamespace" else . end else . end )' /tmp/${FILE}.0 > /tmp/${FILE}.1
 
 cp /tmp/${FILE}.1 ${FILE}
