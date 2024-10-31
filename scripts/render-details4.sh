@@ -432,7 +432,10 @@ autotranslatefiles() {
     #
     if [ -f ${MEMORYLINE}/${TRANSLATIONFILE} ] ; then
 	echo "translation memory exists on ${MEMORYLINE}."
-        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${MEMORYLINE}/${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}-t-${PRIMELANGUAGE} -o ${INPUTTRANSLATIONFILE} -p "${REPORTLINEPREFIX}"; then
+        echo "${REPORTLINEPREFIX} update the translation file from the memory" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
+
+        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${MEMORYLINE}/${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}-t-${PRIMELANGUAGE} -o ${INPUTTRANSLATIONFILE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
@@ -453,6 +456,9 @@ autotranslatefiles() {
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "A translation file ${TRANSLATIONFILE} exists."
         echo "UPDATE the translation file: node /app/autotranslate.js -i ${INPUTTRANSLATIONFILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTFILE} -p ${REPORTLINEPREFIX}"
+        echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX} autotranslate the translation file for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
         if ! node /app/autotranslate.js -i ${INPUTTRANSLATIONFILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
@@ -471,6 +477,9 @@ autotranslatefiles() {
 	    echo "process $transi" 
 	    J2FILE=${transi}_${GOALLANGUAGE}.j2
 	    MD5SUMFILE=${transi}.j2.md5sum
+            echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
+            echo "${REPORTLINEPREFIX} autotranslate the J2 templates for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+            echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
             if [ -f ${MEMORYLINE}/${J2FILE} ] ; then
 		echo "translation memory contains ${J2FILE}"
 		if [ -f ${MEMORYLINE}/$MD5SUMFILE ] ; then
@@ -480,15 +489,30 @@ autotranslatefiles() {
 		       cp ${MEMORYLINE}/${J2FILE} ${TLINE}/autotranslation/${J2FILE}
 		   else 
 		     md5sum ${transi}.j2 > ${TLINE}/autotranslation/${MD5SUMFILE}
-	    	     node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
+	    	     if ! node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
+            		echo "RENDER-DETAILS: failed"
+            		execution_strickness
+        	     else
+            		echo "RENDER-DETAILS: J2 file succesfully updated"
+        	     fi
 		   fi
 		else
 		  md5sum ${transi}.j2 > ${TLINE}/autotranslation/${MD5SUMFILE}
-	    	  node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
+	    	  if ! node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
+            		echo "RENDER-DETAILS: failed"
+            		execution_strickness
+        	     else
+            		echo "RENDER-DETAILS: J2 file succesfully updated"
+        	   fi
 		fi
 	    else
 	      md5sum ${transi}.j2 > ${TLINE}/autotranslation/${MD5SUMFILE}
-	      node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}
+	      if ! node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
+            		echo "RENDER-DETAILS: failed"
+            		execution_strickness
+        	     else
+            		echo "RENDER-DETAILS: J2 file succesfully updated"
+               fi
 	    fi
     done
     popd
@@ -733,7 +757,6 @@ render_respec_html() { # SLINE TLINE JSON
     REPORTFILE=${RLINE}/generator-respec.report.md
     generator_parameters htmlgenerator ${JSONI}
 
-    echo "RENDER-DETAILS(language html): node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RLINE}"
 
     case $TYPE in
     ap)
@@ -883,7 +906,6 @@ render_context() { # SLINE TLINE JSON
     generator_parameters contextgenerator ${JSONI}
 
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
-        #        echo "RENDER-DETAILS(context): node /app/json-ld-generator.js -d -l label -i ${JSONI} -o ${TLINE}/context/${OUTFILELANGUAGE} "
         mkdir -p ${TLINE}/context
 
         echo "${REPORTLINEPREFIX}oslo-jsonld-context-generator for language ${GOALLANGUAGE}${REPORTLINENEWLINE}" &>>${REPORTFILE}
@@ -948,7 +970,6 @@ render_shacl_languageaware() {
 
 	SHAPEBASEURI="${HH}/${LL}/"
         DOCUMENTURL="${HH}/${LL}"
-        #        echo "RENDER-DETAILS(shacl-languageaware): node /app/shacl-generator.js -i ${MERGEDJSONLD} ${PARAMETERS} -d ${DOMAIN} -p ${DOMAIN} -o ${OUTFILE} -l ${GOALLANGUAGE}"
         mkdir -p ${TLINE}/shacl
         mkdir -p ${RLINE}/shacl
 
