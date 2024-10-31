@@ -590,6 +590,12 @@ render_rdf() { # SLINE TLINE JSON
             --language ${LANGUAGE} \
             &>>${REPORTFILE}
 
+        if [ $? -gt 0 ] ; then
+            echo "RENDER-DETAILS: failed"
+	    cat ${REPORTFILE}
+            execution_strickness
+        fi
+
         if [ ${PRIMELANGUAGE} == true ]; then
             cp ${OUTPUT} ${OUTPUTDIR}/${VOCNAME}.ttl
         fi
@@ -637,6 +643,12 @@ render_nunjunks_html() { # SLINE TLINE JSON
         --language ${LANGUAGE} \
 	--publicationEnvironment https://${URIDOMAIN} \
         &>>${INT_REPORTFILE}
+
+        if [ $? -gt 0 ] ; then
+            echo "RENDER-DETAILS: failed"
+	    cat ${INT_REPORTFILE}
+            execution_strickness
+        fi
 
     # step 2: create the html
 
@@ -697,19 +709,16 @@ render_nunjunks_html() { # SLINE TLINE JSON
         --language ${LANGUAGE} \
         &>>${REPORTFILE}
 
-    #	oslo-generator-html --input ./webuniversum-config.json --language nl --stakeholders ./stakeholders.json --metadata ./metadata.json --specificationName "OSLO-verkeersmetingen" --specificationType Vocabulary --templates ./templates --rootTemplate vrachtwagenParkeren-voc.njk
+        if [ $? -gt 0 ] ; then
+            echo "RENDER-DETAILS: failed"
+	    cat ${REPORTFILE}
+            execution_strickness
+        fi
 
-    #    if ! node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}; then
-    #        echo "RENDER-DETAILS(language html): rendering failed"
-    #   execution_strickness
-    #    else
     if [ ${PRIMELANGUAGE} == true ]; then
         cp ${OUTPUT} ${TLINE}/index.html
     fi
     echo "RENDER-DETAILS(language html): File was rendered in ${OUTPUT}"
-    #    fi
-
-    #    pretty_print_json ${RLINE}/html-nj_${LANGUAGE}.json
 }
 
 render_respec_html() { # SLINE TLINE JSON
@@ -785,18 +794,12 @@ render_respec_html() { # SLINE TLINE JSON
         --language ${LANGUAGE} \
         &>>${REPORTFILE}
 
-    #    if ! node /app/html-generator2.js -s ${TYPE} -i ${MERGEDJSONLD} -x ${RLINE}/html-nj_${LANGUAGE}.json -r /${DROOT} -t ${TEMPLATELANG} -d ${SLINE}/templates -o ${OUTPUT} -m ${LANGUAGE} -e ${RRLINE}; then
-    #        echo "RENDER-DETAILS(language html): rendering failed"
-    #   execution_strickness
-    #    else
-    #   There might be a parameter to make this a active, but for now respec is considered not as the main output
-    #   if [ ${PRIMELANGUAGE} == true ] ; then
-    #      cp ${OUTPUT} ${TLINE}/index.html
-    #   fi
-    #        echo "RENDER-DETAILS(language html): File was rendered in ${OUTPUT}"
-    #    fi
+        if [ $? -gt 0 ] ; then
+            echo "RENDER-DETAILS: failed"
+	    cat ${REPORTFILE}
+            execution_strickness
+        fi
 
-    #    pretty_print_json ${RLINE}/html-nj_${LANGUAGE}.json
 }
 
 link_html() { # SLINE TLINE JSON
@@ -916,13 +919,11 @@ render_context() { # SLINE TLINE JSON
             --output ${TLINE}/context/${OUTFILELANGUAGE} \
             &>>${REPORTFILE}
 
-        #        echo "RENDER-DETAILS(context-language-aware): node /app/json-ld-generator2.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/context/${OUTFILELANGUAGE} -m ${GOALLANGUAGE}"
-        #        if ! node /app/json-ld-generator2.js -d -l label -i ${MERGEDJSONLD} -o ${TLINE}/context/${OUTFILELANGUAGE} -m ${GOALLANGUAGE}; then
-        #            echo "RENDER-DETAILS(context-language-aware): See XXX for more details, Rendering failed"
-        #            execution_strickness
-        #        else
-        #            echo "RENDER-DETAILS(context-language-aware): Rendering successfull, File saved to  ${TLINE}/context/${OUTFILELANGUAGE}"
-        #        fi
+        if [ $? -gt 0 ] ; then
+            echo "RENDER-DETAILS: failed"
+	    cat ${REPORTFILE}
+            execution_strickness
+        fi
 
         prettyprint_jsonld ${TLINE}/context/${OUTFILELANGUAGE}
         if [ ${PRIMELANGUAGE} == true ]; then
@@ -983,12 +984,12 @@ render_shacl_languageaware() {
             --applicationProfileURL ${DOCUMENTURL} \
             &>>${REPORTFILE}
 
-        #        if ! node /app/shacl-generator2.js -i ${MERGEDJSONLD} ${PARAMETERS} -d ${DOMAIN} -p ${DOMAIN} -o ${OUTFILE} -l ${GOALLANGUAGE} 2>&1 | tee ${OUTREPORT}; then
-        #            echo "RENDER-DETAILS(shacl-languageaware): See ${OUTREPORT} for the details"
-        #            execution_strickness
-        #        else
-        #            echo "RENDER-DETAILS(shacl-languageaware): saved to ${OUTFILE}"
-        #        fi
+        if [ $? -gt 0 ] ; then
+            echo "RENDER-DETAILS: failed"
+	    cat ${REPORTFILE}
+            execution_strickness
+        fi
+
         prettyprint_jsonld ${OUTFILE}
         if [ ${PRIMELANGUAGE} == true ]; then
             cp ${OUTFILE} ${TLINE}/shacl/${FILENAME}-SHACL.jsonld
