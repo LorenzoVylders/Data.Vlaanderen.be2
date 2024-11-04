@@ -40,7 +40,7 @@
     "branchtag": "master-node-toolchain",
     "name": "ap-observaties-en-metingen",
     "filename": "config/OSLO-BodemEnOndergrond-AP-ObservatiesEnMetingen.json",
-    "dummy": "049",
+    "dummy": "050",
     "navigation": {
       "prev": "/doc/applicatieprofiel/observaties-en-metingen/kandidaatstandaard/2024-04-15"
     }
