@@ -71,19 +71,40 @@
           <div class="layout layout--wide">
             <div class="grid u-hr">
               <div class="col--9-12 col--1-1--s">
-                <h1 class="h1">{{ data.metadata.title }}</h1>
                 {% if data.metadata.autotranslate %}
                   <div class="disclaimer">
                     <p>Dieses Dokument ist eine Übersetzung von {{data.metadata.primaryLanguage}} ins Deutsche. </p>
                   </div>
                 {% endif %}
                 <div class="head" role="contentinfo" id="respecHeader">
-                  <h1 class="h1 title p-name" property="dcterms:title" id="title">{{ metadata.title }}</h1>
-                  {% if metadata.prefix %}
-                    <h2 class="h2" id="subtitle" property="bibo:subtitle">Spezifizierung von
-                      <em>{{ metadata.prefix }}</em>
-                    </h2>
-                  {% endif %}
+                  <h1 class="h1 title p-name" property="dcterms:title" id="title">{{ data.metadata.title }}</h1>
+                  <div class="head">
+                    <dl>
+                       <dt>Status</dt>
+                       <dd>
+                          <a href="{{ data.metadata.status }}">{{ data.metadata.statuslabel }}</a>
+                       </dd>
+                       <dt>Veröffentlicht am</dt>
+                       <dd>{{ data.metadata.issued }}</dd>
+                       <dt>Diese Version</dt>
+                       <dd>
+                          <a href="{{ data.metadata.navigation.self }}">{{ data.metadata.navigation.self }}</a>
+                       </dd>
+                       {% if data.metadata.navigation.next %}
+                       <dt>Nächste Version</dt>
+                       <dd>
+                          <a href="{{ data.metadata.navigation.next }}">{{ data.metadata.navigation.next }}</a>
+                       </dd>
+                       {% endif %}
+                       {% if data.metadata.navigation.prev %}
+                       <dt>Vorherige Version</dt>
+                       <dd>
+                          <a href="{{ data.metadata.navigation.prev }}">{{ data.metadata.navigation.prev }}</a>
+                       </dd>
+                       {% endif %}
+                    </dl>
+                 </div>
+        
                   <dl>
                     <dt>Autoren</dt>
                     {% set sortedAuthors = (data.stakeholders.authors | sort(attribute='lastName')) %}
@@ -149,6 +170,34 @@
                       </dd>
                     {% endfor %}
                   </dl>
+                  <div class="head" role="metainfo" id="metainfo">
+                    <dl>
+                       <dt>Quelldaten</dt>
+                       <dd>
+                          <a href="{{ data.metadata.repositoryurl }}">{{ data.metadata.repositoryurl }}</a>
+                       </dd>
+                       <dt>Changelog</dt>
+                       <dd>
+                          <a href="{{ data.metadata.changelogurl }}">{{ data.metadata.changelogurl }}</a>
+                       </dd>
+                       <dt>Kommentare und Feedback</dt>
+                       <dd>
+                          <a href="{{ data.metadata.feedbackurl }}">{{ data.metadata.feedbackurl }}</a>
+                       </dd>
+                       <dt>Normenregister</dt>
+                       <dd>
+                          <a href="{{ data.metadata.standaardregisterurl }}">{{ data.metadata.standaardregisterurl }}</a>
+                       </dd>
+                       {% if data.metadata.dependencies %}
+                       <dt>Abhängigkeiten</dt>
+                       <dd>
+                          {% for dep in metadata.dependencies %}
+                          <a href="{{ dep.packageurl }}">{{ dep.packagelabel }}</a>
+                          {% endfor %}
+                       </dd>
+                       {% endif %}
+                    </dl>
+                 </div>
                 </div>
               </div>
             </div>
@@ -235,12 +284,12 @@
                 {% endif %}
                 <div class="grid"></div>
                   <div class="col--9-12 col--1-1--s typography">
-                    {% if ( ( data.entities | length > 0)   ) %}
+                    {% if ( ( data.classes | length > 0)   ) %}
                       <div class="region region--no-space-top">
                         <p>In diesem Dokument wird die korrekte Verwendung der folgenden Entitäten erläutert: <br/> |
-                          {%- for entity in data.entities %}
-                            <a href="#{{ entity.applicationProfileLabel[language] }}">
-                              {{ entity.applicationProfileLabel[language] }}</a>
+                          {%- for entity in data.classes %}
+                          <a href="#{{ entity.applicationProfileLabel[language] | generateAnchorTag() }}">
+                            {{ entity.applicationProfileLabel[language] }}</a>
                             |
                           {%- endfor %}
                         </p>
@@ -251,8 +300,8 @@
                         <p>
                           In diesem Dokument werden die folgenden Datentypen erläutert: <br/> |
                           {%- for dataType in data.dataTypes %}
-                            <a href="#{{ dataType.applicationProfileLabel[language] | replace(' ', '') }}">
-                              {{ dataType.applicationProfileLabel[language] }}</a>
+                          <a href="#{{ dataType.applicationProfileLabel[language] | generateAnchorTag() }}">
+                            {{ dataType.applicationProfileLabel[language] }}</a>
                             |
                           {%- endfor %}
                         </p>
@@ -271,10 +320,10 @@
               <div class="region region--no-space-top">
                 <h2 class="h2">Entitäten</h2>
               </div>
-              {% for entity in data.entities %}
+              {% for entity in data.classes %}
                 <div class="region region--no-space-top">
                   <h3 class="h3" id="{{ entity.id }}">
-                    <a href="{{ entity.id }}" data-toggle="tooltip" data-content="{{ entity.id }}" id="{{ entity.applicationProfileLabel[language] }}" data-placement="right">
+                    <a href="{{ entity.id }}" data-toggle="tooltip" data-content="{{ entity.id }}" id="{{ entity.applicationProfileLabel[language] | generateAnchorTag() }}" data-placement="right">
                       {{ entity.applicationProfileLabel[language] }}</a>
                   </h3>
                   <div class="region region--no-space-top">
@@ -305,7 +354,7 @@
                           {% if ((entity.properties | length) > 0 ) %}
                             <dd>Die folgenden Eigenschaften sind für diese Entität definiert:
                               {%- for prop in entity['properties'] %}
-                                <a href="#{{ (entity.applicationProfileLabel[language] ~ ':' ~ prop.applicationProfileLabel[language]) | urlencode }}">{{ prop.applicationProfileLabel[language] }}</a>
+                              <a href="#{{ entity.applicationProfileLabel[language] | generateAnchorTag(prop.applicationProfileLabel[language]) }}">
                                 {% if not loop.last %},
                                 {% endif %}
                               {%- endfor %}.
@@ -330,8 +379,8 @@
                             </thead>
                             <tbody class="supertype">
                               {% for prop in entity['properties'] %}
-                                <tr id="{{ (entity.applicationProfileLabel[language] ~ ':' ~ prop.applicationProfileLabel[language]) | urlencode }}" typeof="rdfs:Property" resource="{{ prop.uri }}">
-                                  <td>
+                              <tr id="{{ entity.applicationProfileLabel[language] | generateAnchorTag(prop.applicationProfileLabel[language]) }}" typeof="rdfs:Property" resource="{{ prop.uri }}">
+                                <td>
                                     <code property="rdfs:label">
                                       <a href="{{ prop.id }}" data-toggle="tooltip" data-content="{{ prop.id }}" data-placement="right">
                                         {{ prop.applicationProfileLabel[language] }}</a>
@@ -377,7 +426,7 @@
                     {% for dataType in data.dataTypes %}
                       <div class="region region--no-space-top">
                         <h3 class="h3" id="{{ dataType.id }}">
-                          <a href="{{ dataType.id }}" data-toggle="tooltip" data-content="{{ dataType.id }}" id="{{ dataType.applicationProfileLabel[language] | replace(' ', '') }}" data-placement="right">
+                          <a href="{{ dataType.id }}" data-toggle="tooltip" data-content="{{ dataType.id }}" id="{{ dataType.applicationProfileLabel[language] | generateAnchorTag() }}" data-placement="right">
                             {{ dataType.applicationProfileLabel[language] }}</a>
                         </h3>
                         <div class="region region--no-space-top">
@@ -408,9 +457,8 @@
                                 {% if ((dataType.properties | length) > 0 ) %}
                                   <dd>Für diesen Datentyp sind die folgenden Eigenschaften definiert:
                                     {%- for prop in dataType['properties'] %}
-                                      <a href="#{{ (dataType.applicationProfileLabel[language] ~ ':' ~ prop.applicationProfileLabel[language]) | replace(' ', '')
-                                        |urlencode }}">{{ prop.applicationProfileLabel[language] }}</a>
-                                      {% if not loop.last %},
+                                    <a href="#{{ dataType.applicationProfileLabel[language] | generateAnchorTag(prop.applicationProfileLabel[language]) }}">{{ prop.applicationProfileLabel[language] }}</a>
+                                    {% if not loop.last %},
                                       {% endif %}
                                     {%- endfor %}.
                                   </dd>
@@ -434,8 +482,8 @@
                                   </thead>
                                   <tbody class="supertype">
                                     {% for prop in dataType['properties'] %}
-                                      <tr id="{{ (dataType.applicationProfileLabel[language] ~ ':' ~ prop.applicationProfileLabel[language]) | replace(' ', '') | urlencode }}" typeof="rdfs:Property" resource="{{ prop.uri }}">
-                                        <td>
+                                    <tr id="{{ dataType.applicationProfileLabel[language] | generateAnchorTag(prop.applicationProfileLabel[language]) }}" typeof="rdfs:Property" resource="{{ prop.uri }}">
+                                      <td>
                                           <code property="rdfs:label">
                                             <a href="{{ prop.id }}" data-toggle="tooltip" data-content="{{ prop.id }}" data-placement="right">
                                               {{ prop.applicationProfileLabel[language] }}</a>
@@ -495,6 +543,96 @@
                           </p>
                         {% endblock %}
                       </div>
+                      <div class="region region--no-space-top" id="mappingext">
+                        <h2 class="h2" aria-level="1" role="heading" id="h2_sotd">verwendete (externe) Terminologie</h2>
+                        <p>Dieser Abschnitt bietet einen Überblick darüber, wie die Vokabularterminologie in diesem Anwendungsprofil verwendet wurde.
+                        </p>
+                        <p>
+                          Dieses Anwendungsprofil basiert auf Begriffen aus diesen selbstverwalteten Vokabularien:                        <ul>
+                           {% for ns in data.metadata.inDomainNamespaces %}
+                           <li>
+                              <a href="{{ ns }}">{{ ns }}</a>
+                           </li>
+                           {% endfor %}
+                        </ul>
+                        </p>
+                        <p>Für Vokabularbegriffe außerhalb des Namensraums nimmt {{ data.metadata.uridomain }} die Form einer Zuordnung an: for
+                          Die in diesem Abschnitt aufgeführten Begriffe wurden so ausgewählt, dass sie eine Begriffskennung (die URI) aus Vokabularien verwenden, die dies nicht sind
+                          fallen unter die Leitung von Data.vlaanderen.be.
+                          </p>
+                          <p>Diese Form der Wiederverwendung bedeutet die Zustimmung zu den zugrunde liegenden Definitionen, Bezeichnungen und Einschränkungen
+                          mit dem URI im Kontext dieses Anwendungsprofils verknüpft. Das bedeutet, dass man die oben genannten Definitionen und Bezeichnungen verwenden muss
+                          und Nutzungshinweise sollten denen der URI nicht widersprechen.
+                          </p>
+                          <p>Diese Zuordnung ist jedoch eine für dieses Anwendungsprofil gültige Auswahl. Aber es ist ein starker Hinweis darauf
+                          Mapping kann auch in anderen, verwandten Bereichen angewendet werden. Eine Änderung der Zuordnung ist keine semantische Änderung
+                          des Anwendungsprofils, kann jedoch erhebliche Auswirkungen auf die Implementierung haben. Mit der Zuordnung unten
+                          Die Auswirkungen können klar und eindeutig beschrieben werden.
+                          </p>
+                          <p>Beachten Sie, dass die Notwendigkeit einer Mapping-Änderung oft auch semantische Anpassungen mit sich bringt
+                          bringt. Daher ist es sinnvoll, Änderungen in das normale Änderungsmanagement der Norm einzubeziehen.
+                          </p>
+                        <table class="definition">
+                           <thead>
+                              <tr>
+                                 <th>Begriff</th>
+                                 <th>URI</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for entity in data.classes %}
+                              {% if entity.scope == "https://data.vlaanderen.be/id/concept/scope/External" %}
+                              <tr>
+                                 <td>
+                                    <a href="#{{ entity.applicationProfileLabel[language] | generateAnchorTag() }}">{{ entity.applicationProfileLabel[language] }}</a>
+                                 </td>
+                                 <td>
+                                    <b>
+                                    <code>{{ entity.id }}</code>
+                                    </b>
+                                 </td>
+                              </tr>
+                              {% endif %}
+                              {% for prop in entity.properties %}
+                              {% if prop.scope == "https://data.vlaanderen.be/id/concept/scope/External" %}
+                              <tr>
+                                 <td>
+                                    <a href="#{{ entity.applicationProfileLabel[language] | generateAnchorTag(prop.applicationProfileLabel[language]) }}">{{ entity.applicationProfileLabel[language] }}.{{ prop.applicationProfileLabel[language] }}</a>
+                                 </td>
+                                 <td>
+                                    <code>{{ prop.id }}</code>
+                                 </td>
+                              </tr>
+                              {% endif %}
+                              {% endfor %}
+                              {% endfor %}
+                              {% for entity in data.dataTypes %}
+                              {% if entity.scope == "https://data.vlaanderen.be/id/concept/scope/External" %}
+                              <tr>
+                                 <td>
+                                    <a href="#{{ entity.applicationProfileLabel[language] | generateAnchorTag() }}">{{ entity.applicationProfileLabel[language] }}</a>
+                                 </td>
+                                 <td>
+                                    <code>{{ entity.id }}</code>
+                                 </td>
+                              </tr>
+                              {% endif %}
+                              {% for prop in entity.properties %}
+                              {% if prop.scope == "https://data.vlaanderen.be/id/concept/scope/External" %}
+                              <tr>
+                                 <td>
+                                    <a href="#{{ entity.applicationProfileLabel[language] | generateAnchorTag(prop.applicationProfileLabel[language]) }}">{{ entity.applicationProfileLabel[language] }}.{{ prop.applicationProfileLabel[language] }}</a>
+                                 </td>
+                                 <td>
+                                    <code>{{ prop.id }}</code>
+                                 </td>
+                              </tr>
+                              {% endif %}
+                              {% endfor %}
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
                     </div>
                     <div class="col--3-12 col--12-12--s col--4-12--m push--1-12 push--reset--m" id="sideNav">
                       <nav class="side-navigation js-sticky region" id="sideNav">
@@ -525,6 +663,9 @@
                               <li class="side-navigation__item">
                                 <a href="#shacl">SHACL-Vorlage</a>
                               </li>
+                              <li class="side-navigation__item">
+                                <a href="#mappingext">Externe Terminologie</a>
+                             </li>
                             </ul>
                           </div>
                         </div>
