@@ -234,10 +234,10 @@
                 {% endif %}
                 <div class="grid">
                   <div class="col--9-12 col--1-1--s typography">
-                    {% if ( ( data.entities | length > 0)   ) %}
+                    {% if ( ( data.classes | length > 0)   ) %}
                       <div class="region region--no-space-top">
                         <p>This document describes the usage of the following entities for a correct usage of the Implementation Model:  <br/> |
-                          {%- for entity in data.entities %}
+                          {%- for entity in data.classes %}
                             <a href="#{{ entity.applicationProfileLabel[language] }}">
                               {{ entity.applicationProfileLabel[language] }}</a>
                             |
@@ -245,11 +245,11 @@
                         </p>
                       </div>
                     {% endif %}
-                    {% if ( ( data.scopedDataTypes | length ) > 0 ) %}
+                    {% if ( ( data.dataTypes | length ) > 0 ) %}
                       <div class="region region--no-space-top">
                         <p>
                           This document describes the usage of the following datatypes for a correct usage of the Implementation Model:<br/> |
-                          {%- for dataType in data.scopedDataTypes %}
+                          {%- for dataType in data.dataTypes %}
                             <a href="#{{ dataType.applicationProfileLabel[language] | replace(' ', '') }}">
                               {{ dataType.applicationProfileLabel[language] }}</a>
                             |
@@ -270,7 +270,7 @@
               <div class="region region--no-space-top">
                 <h2 class="h2">Entities</h2>
               </div>
-              {% for entity in data.entities %}
+              {% for entity in data.classes %}
                 <div class="region region--no-space-top">
                   <h3 class="h3" id="{{ entity.id }}">
                     <a href="{{ entity.id }}" data-toggle="tooltip" data-content="{{ entity.id }}" id="{{ entity.applicationProfileLabel[language] }}" data-placement="right">
@@ -369,11 +369,11 @@
                       {% endif %}
                     </div>
                   {% endfor %}
-                  {% if data.scopedDataTypes %}
+                  {% if data.dataTypes %}
                     <div class="region region--no-space-top">
                       <h2 class="h2">Datatypes</h2>
                     </div>
-                    {% for dataType in data.scopedDataTypes %}
+                    {% for dataType in data.dataTypes %}
                       <div class="region region--no-space-top">
                         <h3 class="h3" id="{{ dataType.id }}">
                           <a href="{{ dataType.id }}" data-toggle="tooltip" data-content="{{ dataType.id }}" id="{{ dataType.applicationProfileLabel[language] | replace(' ', '') }}" data-placement="right">
