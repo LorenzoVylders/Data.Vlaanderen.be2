@@ -8,7 +8,7 @@
     "navigation": {
       "next": "/doc/applicatieprofiel/ruimtelijke-bereiken/ontwerpstandaard/2024-04-15"
     },
-    "dummy": "01"
+    "dummy": "02"
   },
   {
     "urlref": "/doc/applicatieprofiel/ruimtelijke-bereiken/ontwerpstandaard/2024-04-15",
@@ -20,7 +20,7 @@
       "prev": "/doc/applicatieprofiel/ruimtelijke-bereiken/ontwerpstandaard/2021-08-01",
       "next": "/doc/applicatieprofiel/ruimtelijke-bereiken/kandidaatstandaard/2024-10-01"
     },
-    "dummy": "20"
+    "dummy": "21"
   },
   {
     "urlref": "/doc/applicatieprofiel/ruimtelijke-bereiken/kandidaatstandaard/2024-10-01",
@@ -31,13 +31,13 @@
     "navigation": {
       "prev": "/doc/applicatieprofiel/ruimtelijke-bereiken/ontwerpstandaard/2021-08-01"
     },
-    "dummy": "24"
+    "dummy": "25"
   },
   {
     "urlref": "/doc/applicatieprofiel/ruimtelijke-bereiken/",
     "seealso": "/doc/applicatieprofiel/ruimtelijke-bereiken/ontwerpstandaard/2024-10-01",
     "type": "ap",
-    "dummy": "20"
+    "dummy": "21"
   },
 
   {
@@ -46,7 +46,7 @@
     "branchtag": "2a132952cd6d15f11d254d86ca3ed2d9a4315727",
     "name": "ruimtelijke-bereiken",
     "filename": "config/OSLO-BodemEnOndergrond-VOC-RuimtelijkeBereiken.json",
-    "dummy": "01",
+    "dummy": "02",
     "navigation": {
       "next": "/doc/vocabularium/ruimtelijke-bereiken/ontwerpstandaard/2024-04-15"
     }
@@ -57,7 +57,7 @@
     "branchtag": "be0ade9648a84311a713969427136e7d593f2ebf",
     "name": "ruimtelijke-bereiken",
     "filename": "config/OSLO-BodemEnOndergrond-VOC-RuimtelijkeBereiken.json",
-    "dummy": "20",
+    "dummy": "21",
     "navigation": {
       "next": "/doc/vocabularium/ruimtelijke-bereiken/kandidaatstandaard/2024-10-01",
       "prev": "/doc/vocabularium/ruimtelijke-bereiken/ontwerpstandaard/2021-08-01"
@@ -69,7 +69,7 @@
     "branchtag": "master-node-toolchain",
     "name": "ruimtelijke-bereiken",
     "filename": "config/OSLO-BodemEnOndergrond-VOC-RuimtelijkeBereiken.json",
-    "dummy": "23",
+    "dummy": "24",
     "navigation": {
       "prev": "/doc/vocabularium/ruimtelijke-bereiken/ontwerpstandaard/2024-04-15"
     }
@@ -78,6 +78,6 @@
     "urlref": "/ns/ruimtelijke-bereiken",
     "seealso": "/doc/vocabularium/ruimtelijke-bereiken/ontwerpstandaard/2024-10-01",
     "type": "voc",
-    "dummy": "20"
+    "dummy": "21"
   }
 ]
