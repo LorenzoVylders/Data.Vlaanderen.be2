@@ -612,6 +612,9 @@ render_nunjunks_html() { # SLINE TLINE JSON
     local LANGUAGE=$7
     local PRIMELANGUAGE=${8-false}
 
+    COMMAND=$(echo '.type')
+    TYPE=$(jq -r "${COMMAND}" ${JSONI})
+
     case $TYPE in
     ap)
         SPECTYPE="ApplicationProfile"
@@ -668,9 +671,6 @@ render_nunjunks_html() { # SLINE TLINE JSON
     # step 2: create the html
 
     generator_parameters htmlgenerator ${JSONI}
-
-    COMMAND=$(echo '.type')
-    TYPE=$(jq -r "${COMMAND}" ${JSONI})
 
     # precendence order: Theme repository > publication repository > tool repository
     # the tool installed templates are located at /usr/local/lib/node_modules/@oslo-flanders/html-generator/lib/templates
