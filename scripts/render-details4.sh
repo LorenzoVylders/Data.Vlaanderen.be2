@@ -87,42 +87,41 @@ generate_for_language() {
 
 }
 
-
 check_tool_output_for_non_emptiness() {
-	local REPORT=$1
+    local REPORT=$1
 
-	sed  "/${REPORTLINEPREFIX}/d" $REPORT > /tmp/out
-	# if the report is empty then sun (no issues)
-	# if the report contains indications of errors (word Error, error) then thunderstorm
-	# otherwise cloud
-	SUN="&#9728;" 
-	CLOUD="&#9729;" 
-	THUNDERSTORM="&#9736;" 
+    sed "/${REPORTLINEPREFIX}/d" $REPORT >/tmp/out
+    # if the report is empty then sun (no issues)
+    # if the report contains indications of errors (word Error, error) then thunderstorm
+    # otherwise cloud
+    SUN="&#9728;"
+    CLOUD="&#9729;"
+    THUNDERSTORM="&#9736;"
 
-	if [ -s /tmp/out ] ; then
-		E=$( grep -c rror /tmp/out )
-		if [ $E -eq 0  ] ; then
-			REPORTSTATE=${CLOUD}
-		else
-			REPORTSTATE=${THUNDERSTORM}
-		fi
-	else
-		REPORTSTATE=${SUN}
-	fi	
+    if [ -s /tmp/out ]; then
+        E=$(grep -c rror /tmp/out)
+        if [ $E -eq 0 ]; then
+            REPORTSTATE=${CLOUD}
+        else
+            REPORTSTATE=${THUNDERSTORM}
+        fi
+    else
+        REPORTSTATE=${SUN}
+    fi
 }
 
 render_report_header() {
     local OVERVIEW=$1
 
-    if [ ! -f ${OVERVIEW} ] ; then
-       echo "### Legende" > ${OVERVIEW}
-       echo "" >> ${OVERVIEW}
-       echo "<details>" >> ${OVERVIEW}
-       echo "" >> ${OVERVIEW}
-       echo "| Term | Betekenis |" >> ${OVERVIEW}
-       echo "| --- | --- |" >> ${OVERVIEW}
-       declare -A terms
-       terms=(
+    if [ ! -f ${OVERVIEW} ]; then
+        echo "### Legende" >${OVERVIEW}
+        echo "" >>${OVERVIEW}
+        echo "<details>" >>${OVERVIEW}
+        echo "" >>${OVERVIEW}
+        echo "| Term | Betekenis |" >>${OVERVIEW}
+        echo "| --- | --- |" >>${OVERVIEW}
+        declare -A terms
+        terms=(
             ["tag"]="Branchtag check"
             ["uml"]="Extraction of the data out of the UML"
             ["stake"]="Validate and convert the stakeholders"
@@ -136,19 +135,19 @@ render_report_header() {
             ["ctx"]="JSON-LD Context file generation"
             ["rdf"]="RDF file generation"
             ["shcl"]="SHACL file generation"
-       )
+        )
 
-       for term in "${!terms[@]}"; do
-           echo "| $term | ${terms[$term]} |" >> ${OVERVIEW}
-       done
+        for term in "${!terms[@]}"; do
+            echo "| $term | ${terms[$term]} |" >>${OVERVIEW}
+        done
 
-       # End of legende
-       echo "" >> ${OVERVIEW}
-       echo "</details>" >> ${OVERVIEW}
-       echo "" >> ${OVERVIEW}
+        # End of legende
+        echo "" >>${OVERVIEW}
+        echo "</details>" >>${OVERVIEW}
+        echo "" >>${OVERVIEW}
 
-       echo "| Specification | tag | uml | stake | trns | aut  | mrg | web | meta | html | rspc| ctx | rdf | shcl |" >> ${OVERVIEW}
-       echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >> ${OVERVIEW}
+        echo "| Specification | tag | uml | stake | trns | aut  | mrg | web | meta | html | rspc| ctx | rdf | shcl |" >>${OVERVIEW}
+        echo "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |" >>${OVERVIEW}
 
     fi
 }
@@ -165,42 +164,42 @@ render_report_line() {
     render_report_header ${EXECUTIONVIEW}
     local FIRSTPARTLINE=$(echo $LINE | cut -d'/' -f2-3)
     local SECONDPARTLINE=$(echo $LINE | cut -d'/' -f4-)
-    echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/${LINE}) " >> ${EXECUTIONVIEW}
+    echo -n "| [${FIRSTPARTLINE}/ ${SECONDPARTLINE}](/report4/${LINE}) " >>${EXECUTIONVIEW}
 
     REPORTS="branchtag oslo-converter-ea oslo-stakeholders-converter translate autotranslate merge generator-webuniversum-json metadata generator-html generator-respec generator-jsonld-context generator-rdf generator-shacl"
 
-    for REPORTFILE in ${REPORTS} ; do
-	    if [ -f ${RLINE}/${REPORTFILE}.report.md ] ; then 
-	      check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}.report.md
-	      echo -n "| [${REPORTSTATE}](/report4/${LINE}/${REPORTFILE}.report.md)" >> ${EXECUTIONVIEW}
-	    else 
-	      echo -n "| " >> ${EXECUTIONVIEW}
-	    fi
+    for REPORTFILE in ${REPORTS}; do
+        if [ -f ${RLINE}/${REPORTFILE}.report.md ]; then
+            check_tool_output_for_non_emptiness ${RLINE}/${REPORTFILE}.report.md
+            echo -n "| [${REPORTSTATE}](/report4/${LINE}/${REPORTFILE}.report.md)" >>${EXECUTIONVIEW}
+        else
+            echo -n "| " >>${EXECUTIONVIEW}
+        fi
     done
 
-    echo  "|" >> ${EXECUTIONVIEW}
+    echo "|" >>${EXECUTIONVIEW}
 
     # Merge old and new overview
     if ! node /app/merge-overviewreport.js -p ${OLD_GLOBAL_OVERVIEW} -c ${EXECUTIONVIEW} -o ${GLOBAL_OVERVIEW}; then
-            echo "RENDER-DETAILS: failed"
-            execution_strickness
-        else
-            echo "RENDER-DETAILS: overview merged succesfully"
-            pretty_print_json ${OUTPUTTRANSLATIONFILE}
-        fi
+        echo "RENDER-DETAILS: failed"
+        execution_strickness
+    else
+        echo "RENDER-DETAILS: overview merged succesfully"
+        pretty_print_json ${OUTPUTTRANSLATIONFILE}
+    fi
 
-    for REPORTFILE in ${REPORTS} ; do
-	    if [ -f ${RLINE}/${REPORTFILE}.report.md ] ; then 
-                LINK=$(basename $JSONI)
-		node /app/report_lines_links.js -i ${JSONI} -o /tmp/reportlines
-		REF=$(basename ${JSONI})
-		sed  -E "s|(urn:.*) = (.*)|s \1 [\1](${REF}#L\2) g|g "  /tmp/reportlines > /tmp/markdown_report_lines
-		cat /tmp/markdown_report_lines | while read line; do
-  			sed -i -E "$line" ${RLINE}/${REPORTFILE}.report.md
-		done
-		#markdown friendly
-		sed -i "s/$/\n/" ${RLINE}/${REPORTFILE}.report.md
-            fi
+    for REPORTFILE in ${REPORTS}; do
+        if [ -f ${RLINE}/${REPORTFILE}.report.md ]; then
+            LINK=$(basename $JSONI)
+            node /app/report_lines_links.js -i ${JSONI} -o /tmp/reportlines
+            REF=$(basename ${JSONI})
+            sed -E "s|(urn:.*) = (.*)|s \1 [\1](${REF}#L\2) g|g " /tmp/reportlines >/tmp/markdown_report_lines
+            cat /tmp/markdown_report_lines | while read line; do
+                sed -i -E "$line" ${RLINE}/${REPORTFILE}.report.md
+            done
+            #markdown friendly
+            sed -i "s/$/\n/" ${RLINE}/${REPORTFILE}.report.md
+        fi
     done
 }
 
@@ -243,7 +242,6 @@ consolidate_reporting() {
     fi
 }
 
-
 render_merged_files() {
     echo "Merge the translation file for language $2 with the source $3"
     local PRIMELANGUAGE=$1
@@ -266,25 +264,24 @@ render_merged_files() {
 
     # secure the case that the translation file is not mentioned
     if [ "${USEAUTOTRANSLATION}" == "" ] || [ "${USEAUTOTRANSLATION}" == "null" ]; then
-    	INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
-    else 
-	    if [ "${USEAUTOTRANSLATION}" == true ] ; then
-    		AUTOTRANSLATE=$(jq -r .toolchain.autotranslate ${CONFIGDIR}/config.json)
-    		if [ ${AUTOTRANSLATE} == true ]; then
-        		INPUTTRANSLATIONFILE=${TLINE}/autotranslation/${TRANSLATIONFILE}
-    		else
-        		INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
-		fi
-	    else
-    		INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
-	    fi
+        INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
+    else
+        if [ "${USEAUTOTRANSLATION}" == true ]; then
+            AUTOTRANSLATE=$(jq -r .toolchain.autotranslate ${CONFIGDIR}/config.json)
+            if [ ${AUTOTRANSLATE} == true ]; then
+                INPUTTRANSLATIONFILE=${TLINE}/autotranslation/${TRANSLATIONFILE}
+            else
+                INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
+            fi
+        else
+            INPUTTRANSLATIONFILE=${TLINE}/translation/${TRANSLATIONFILE}
+        fi
     fi
-
 
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "A translation file ${TRANSLATIONFILE} exists."
-	# This should be revisited with autotranslation persistence at the right moment
-	sed -i -e "s/${GOALLANGUAGE}-t-${PRIMELANGUAGE}/${GOALLANGUAGE}/g" ${INPUTTRANSLATIONFILE}
+        # This should be revisited with autotranslation persistence at the right moment
+        sed -i -e "s/${GOALLANGUAGE}-t-${PRIMELANGUAGE}/${GOALLANGUAGE}/g" ${INPUTTRANSLATIONFILE}
     fi
 
     mkdir -p ${RLINE}/merged
@@ -299,7 +296,7 @@ render_merged_files() {
         if [ -f "${INPUTTRANSLATIONFILE}" ]; then
             echo "${INPUTTRANSLATIONFILE} exists, the files will be merged."
             echo "RENDER-DETAILS(mergefile): node /app/translation-json-update.js -i ${JSONI} -f ${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE} -p ${REPORTLINEPREFIX}"
-            if ! node /app/translation-json-update.js -i ${JSONI} -f ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
+            if ! node /app/translation-json-update.js -i ${JSONI} -f ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${MERGEDFILE} -p "${REPORTLINEPREFIX}" &>>${REPORTFILE}; then
                 echo "RENDER-DETAILS: failed"
                 execution_strickness
             else
@@ -330,13 +327,13 @@ render_metadata() {
     echo "${REPORTLINEPREFIX}metadata for language ${GOALLANGUAGE} ${REPORTLINENEWLINE}" &>>${REPORTFILE}
     echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${REPORTFILE}
 
-        if ! node /app/html-metadata-generator.js -i ${JSONI} -g ${PRIMELANGUAGE} -m ${GOALLANGUAGE} -h ${HOSTNAME} -r /${DROOT} -u ${URIDOMAIN} -o ${METAOUTPUT} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
-            echo "RENDER-DETAILS: failed"
-            execution_strickness
-        else
-            echo "RENDER-DETAILS: metadata file succesfully updated"
-            pretty_print_json ${METAOUTPUT}
-        fi
+    if ! node /app/html-metadata-generator.js -i ${JSONI} -g ${PRIMELANGUAGE} -m ${GOALLANGUAGE} -h ${HOSTNAME} -r /${DROOT} -u ${URIDOMAIN} -o ${METAOUTPUT} -p "${REPORTLINEPREFIX}" &>>${REPORTFILE}; then
+        echo "RENDER-DETAILS: failed"
+        execution_strickness
+    else
+        echo "RENDER-DETAILS: metadata file succesfully updated"
+        pretty_print_json ${METAOUTPUT}
+    fi
 
 }
 
@@ -358,7 +355,7 @@ render_translationfiles() {
     # secure the case that the translation file is not mentioned
     if [ "${LANGUAGEINTHEMA}" == "" ] || [ "${LANGUAGEINTHEMA}" == "null" ]; then
         TRANSLATIONFILE=${GOALOUTPUTFILENAME}
-    else 
+    else
         TRANSLATIONFILE=${GOALOUTPUTFILENAME}
     fi
 
@@ -373,7 +370,7 @@ render_translationfiles() {
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "A translation file ${TRANSLATIONFILE} exists."
         echo "UPDATE the translation file: node /app/translation-json-generator.js -i ${FILE} -f ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTFILE} -p ${REPORTLINEPREFIX}"
-        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
+        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${INPUTTRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE} -p "${REPORTLINEPREFIX}" &>>${REPORTFILE}; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
@@ -383,7 +380,7 @@ render_translationfiles() {
     else
         echo "NO translation file ${TRANSLATIONFILE} exists"
         echo "CREATE a translation file: node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE} -p ${REPORTLINEPREFIX}"
-        if ! node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
+        if ! node /app/translation-json-generator.js -i ${JSONI} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE} -p "${REPORTLINEPREFIX}" &>>${REPORTFILE}; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
@@ -392,7 +389,6 @@ render_translationfiles() {
         fi
     fi
 }
-
 
 autotranslatefiles() {
     echo "autotranslate for primelanguage $1, goallanguage $2 and file $3 in the directory $4"
@@ -413,7 +409,7 @@ autotranslatefiles() {
     # secure the case that the translation file is not mentioned
     if [ "${LANGUAGEINTHEMA}" == "" ] || [ "${LANGUAGEINTHEMA}" == "null" ]; then
         TRANSLATIONFILE=${GOALOUTPUTFILENAME}
-    else 
+    else
         TRANSLATIONFILE=${GOALOUTPUTFILENAME}
     fi
 
@@ -430,12 +426,12 @@ autotranslatefiles() {
     # XXX maybe also implement md5sum for the json file
     #
     #
-    if [ -f ${MEMORYLINE}/${TRANSLATIONFILE} ] ; then
-	echo "translation memory exists on ${MEMORYLINE}."
+    if [ -f ${MEMORYLINE}/${TRANSLATIONFILE} ]; then
+        echo "translation memory exists on ${MEMORYLINE}."
         echo "${REPORTLINEPREFIX} update the translation file from the memory" &>>${REPORTFILE}
         echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
 
-        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${MEMORYLINE}/${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}-t-${PRIMELANGUAGE} -o ${INPUTTRANSLATIONFILE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
+        if ! node /app/translation-json-generator.js -i ${JSONI} -t ${MEMORYLINE}/${TRANSLATIONFILE} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE}-t-${PRIMELANGUAGE} -o ${INPUTTRANSLATIONFILE} -p "${REPORTLINEPREFIX}" &>>${REPORTFILE}; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
@@ -443,14 +439,14 @@ autotranslatefiles() {
             pretty_print_json ${OUTPUTTRANSLATIONFILE}
         fi
     else
-	echo "use translation template as input for auto translation"
-	cp ${TLINE}/translation/${TRANSLATIONFILE} ${INPUTTRANSLATIONFILE}
+        echo "use translation template as input for auto translation"
+        cp ${TLINE}/translation/${TRANSLATIONFILE} ${INPUTTRANSLATIONFILE}
     fi
 
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
         echo "A translation file ${TRANSLATIONFILE} exists."
-	    # This should be revisited with autotranslation persistence at the right moment
-	    sed -i -e "s/${GOALLANGUAGE}-t-${PRIMELANGUAGE}/${GOALLANGUAGE}/g" ${INPUTTRANSLATIONFILE}
+        # This should be revisited with autotranslation persistence at the right moment
+        sed -i -e "s/${GOALLANGUAGE}-t-${PRIMELANGUAGE}/${GOALLANGUAGE}/g" ${INPUTTRANSLATIONFILE}
     fi
 
     if [ -f "${INPUTTRANSLATIONFILE}" ]; then
@@ -459,7 +455,7 @@ autotranslatefiles() {
         echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
         echo "${REPORTLINEPREFIX} autotranslate the translation file for language ${GOALLANGUAGE}" &>>${REPORTFILE}
         echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
-        if ! node /app/autotranslate.js -i ${INPUTTRANSLATIONFILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
+        if ! node /app/autotranslate.js -i ${INPUTTRANSLATIONFILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -o ${OUTPUTTRANSLATIONFILE} -p "${REPORTLINEPREFIX}" &>>${REPORTFILE}; then
             echo "RENDER-DETAILS: failed"
             execution_strickness
         else
@@ -470,56 +466,56 @@ autotranslatefiles() {
 
     # autotranslate the descriptions in the local templates
     # md5sum of the original file provides insight if a new autotranslation is needed.
-    # 
+    #
     pushd ${SLINE}/templates
-    FILESTOPROCESS=$(find . -name "*.j2" -exec basename {} .j2 \; )
-    for transi in ${FILESTOPROCESS} ; do 
-	    echo "process $transi" 
-	    J2FILE=${transi}_${GOALLANGUAGE}.j2
-	    MD5SUMFILE=${transi}.j2.md5sum
-            echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
-            echo "${REPORTLINEPREFIX} autotranslate the J2 templates for language ${GOALLANGUAGE}" &>>${REPORTFILE}
-            echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
-            if [ -f ${MEMORYLINE}/${J2FILE} ] ; then
-		echo "translation memory contains ${J2FILE}"
-		if [ -f ${MEMORYLINE}/$MD5SUMFILE ] ; then
-		   CURSUM=$( md5sum ${transi}.j2 )
-		   MEMSUM=$( cat ${MEMORYLINE}/${MD5SUMFILE} )
-		   if [ "${CURSUM}" = "${MEMSUM}" ] ; then
-		       cp ${MEMORYLINE}/${J2FILE} ${TLINE}/autotranslation/${J2FILE}
-		   else 
-		     md5sum ${transi}.j2 > ${TLINE}/autotranslation/${MD5SUMFILE}
-	    	     if ! node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
-            		echo "RENDER-DETAILS: failed"
-            		execution_strickness
-        	     else
-            		echo "RENDER-DETAILS: J2 file succesfully updated"
-        	     fi
-		   fi
-		else
-		  md5sum ${transi}.j2 > ${TLINE}/autotranslation/${MD5SUMFILE}
-	    	  if ! node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
-            		echo "RENDER-DETAILS: failed"
-            		execution_strickness
-        	     else
-            		echo "RENDER-DETAILS: J2 file succesfully updated"
-        	   fi
-		fi
-	    else
-	      md5sum ${transi}.j2 > ${TLINE}/autotranslation/${MD5SUMFILE}
-	      if ! node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -p "${REPORTLINEPREFIX}" &>> ${REPORTFILE} ; then
-            		echo "RENDER-DETAILS: failed"
-            		execution_strickness
-        	     else
-            		echo "RENDER-DETAILS: J2 file succesfully updated"
-               fi
-	    fi
+    FILESTOPROCESS=$(find . -name "*.j2" -exec basename {} .j2 \;)
+    for transi in ${FILESTOPROCESS}; do
+        echo "process $transi"
+        J2FILE=${transi}_${GOALLANGUAGE}.j2
+        MD5SUMFILE=${transi}.j2.md5sum
+        echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX} autotranslate the J2 templates for language ${GOALLANGUAGE}" &>>${REPORTFILE}
+        echo "${REPORTLINEPREFIX}" &>>${REPORTFILE}
+        if [ -f ${MEMORYLINE}/${J2FILE} ]; then
+            echo "translation memory contains ${J2FILE}"
+            if [ -f ${MEMORYLINE}/$MD5SUMFILE ]; then
+                CURSUM=$(md5sum ${transi}.j2)
+                MEMSUM=$(cat ${MEMORYLINE}/${MD5SUMFILE})
+                if [ "${CURSUM}" = "${MEMSUM}" ]; then
+                    cp ${MEMORYLINE}/${J2FILE} ${TLINE}/autotranslation/${J2FILE}
+                else
+                    md5sum ${transi}.j2 >${TLINE}/autotranslation/${MD5SUMFILE}
+                    if ! node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -p "${REPORTLINEPREFIX}" &>>${REPORTFILE}; then
+                        echo "RENDER-DETAILS: failed"
+                        execution_strickness
+                    else
+                        echo "RENDER-DETAILS: J2 file succesfully updated"
+                    fi
+                fi
+            else
+                md5sum ${transi}.j2 >${TLINE}/autotranslation/${MD5SUMFILE}
+                if ! node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -p "${REPORTLINEPREFIX}" &>>${REPORTFILE}; then
+                    echo "RENDER-DETAILS: failed"
+                    execution_strickness
+                else
+                    echo "RENDER-DETAILS: J2 file succesfully updated"
+                fi
+            fi
+        else
+            md5sum ${transi}.j2 >${TLINE}/autotranslation/${MD5SUMFILE}
+            if ! node /app/autotranslateJ2.js -i ${transi}.j2 -o ${TLINE}/autotranslation/${J2FILE} -s ${AZURETRANLATIONKEY} -m ${PRIMELANGUAGE} -g ${GOALLANGUAGE} -p "${REPORTLINEPREFIX}" &>>${REPORTFILE}; then
+                echo "RENDER-DETAILS: failed"
+                execution_strickness
+            else
+                echo "RENDER-DETAILS: J2 file succesfully updated"
+            fi
+        fi
     done
     popd
 
     # copy the translation files to the auto translation repository for reuse in the future
     mkdir -p ${MEMORYLINE}
-    cp -r ${TLINE}/autotranslation/*  ${MEMORYLINE}
+    cp -r ${TLINE}/autotranslation/* ${MEMORYLINE}
 }
 
 render_rdf() { # SLINE TLINE JSON
@@ -590,9 +586,9 @@ render_rdf() { # SLINE TLINE JSON
             --language ${LANGUAGE} \
             &>>${REPORTFILE}
 
-        if [ $? -gt 0 ] ; then
+        if [ $? -gt 0 ]; then
             echo "RENDER-DETAILS: failed"
-	    cat ${REPORTFILE}
+            cat ${REPORTFILE}
             execution_strickness
         fi
 
@@ -616,6 +612,24 @@ render_nunjunks_html() { # SLINE TLINE JSON
     local LANGUAGE=$7
     local PRIMELANGUAGE=${8-false}
 
+    case $TYPE in
+    ap)
+        SPECTYPE="ApplicationProfile"
+        ;;
+    voc)
+        SPECTYPE="Vocabulary"
+        ;;
+    oj)
+        SPECTYPE="ApplicationProfile"
+        ;;
+    *)
+        echo "ERROR: ${SPECTYPE} not recognized"
+        SPECTYPE="ApplicationProfile"
+        ;;
+    esac
+
+    echo "Creating a webuniversum config for a ${TYPE}"
+
     FILENAME=$(jq -r ".name" ${JSONI})
     MERGEDFILENAME=merged_${FILENAME}_${LANGUAGE}.jsonld
     MERGEDFILE=${RRLINE}/merged/${MERGEDFILENAME} # XXX This should be the source of the translation merged files
@@ -634,22 +648,6 @@ render_nunjunks_html() { # SLINE TLINE JSON
     INT_REPORTFILE=${RLINE}/generator-webuniversum-json.report.md
 
     generator_parameters webuniversumgenerator ${JSONI}
-    
-    case $TYPE in
-    ap)
-        SPECTYPE="ApplicationProfile"
-        ;;
-    voc)
-        SPECTYPE="Vocabulary"
-        ;;
-    oj)
-        SPECTYPE="ApplicationProfile"
-        ;;
-    *)
-        echo "ERROR: ${SPECTYPE} not recognized"
-        SPECTYPE="ApplicationProfile"
-        ;;
-    esac
 
     echo "${REPORTLINEPREFIX}oslo-webuniversum-json-generator for language ${LANGUAGE}${REPORTLINENEWLINE}" &>>${INT_REPORTFILE}
     echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${INT_REPORTFILE}
@@ -658,14 +656,14 @@ render_nunjunks_html() { # SLINE TLINE JSON
         --output ${INT_OUTPUT} \
         --specificationType ${SPECTYPE} \
         --language ${LANGUAGE} \
-	--publicationEnvironment https://${URIDOMAIN} \
+        --publicationEnvironment https://${URIDOMAIN} \
         &>>${INT_REPORTFILE}
 
-        if [ $? -gt 0 ] ; then
-            echo "RENDER-DETAILS: failed"
-	    cat ${INT_REPORTFILE}
-            execution_strickness
-        fi
+    if [ $? -gt 0 ]; then
+        echo "RENDER-DETAILS: failed"
+        cat ${INT_REPORTFILE}
+        execution_strickness
+    fi
 
     # step 2: create the html
 
@@ -692,21 +690,6 @@ render_nunjunks_html() { # SLINE TLINE JSON
     TITLELANG=$(jq -r "${COMMANDTITLELANG}" ${JSONI})
 
     REPORTFILE=${RLINE}/generator-html.report.md
-    case $TYPE in
-    ap)
-        SPECTYPE="ApplicationProfile"
-        ;;
-    voc)
-        SPECTYPE="Vocabulary"
-        ;;
-    oj)
-        SPECTYPE="ApplicationProfile"
-        ;;
-    *)
-        echo "ERROR: ${SPECTYPE} not recognized"
-        SPECTYPE="ApplicationProfile"
-        ;;
-    esac
 
     METADATA=${RRLINE}/html/meta_${FILENAME}_${LANGUAGE}.json
     STAKEHOLDERS=${RRLINE}/stakeholders.json
@@ -726,11 +709,11 @@ render_nunjunks_html() { # SLINE TLINE JSON
         --language ${LANGUAGE} \
         &>>${REPORTFILE}
 
-        if [ $? -gt 0 ] ; then
-            echo "RENDER-DETAILS: failed"
-	    cat ${REPORTFILE}
-            execution_strickness
-        fi
+    if [ $? -gt 0 ]; then
+        echo "RENDER-DETAILS: failed"
+        cat ${REPORTFILE}
+        execution_strickness
+    fi
 
     if [ ${PRIMELANGUAGE} == true ]; then
         cp ${OUTPUT} ${TLINE}/index.html
@@ -783,7 +766,6 @@ render_respec_html() { # SLINE TLINE JSON
     REPORTFILE=${RLINE}/generator-respec.report.md
     generator_parameters htmlgenerator ${JSONI}
 
-
     case $TYPE in
     ap)
         SPECTYPE="ApplicationProfile"
@@ -811,11 +793,11 @@ render_respec_html() { # SLINE TLINE JSON
         --language ${LANGUAGE} \
         &>>${REPORTFILE}
 
-        if [ $? -gt 0 ] ; then
-            echo "RENDER-DETAILS: failed"
-	    cat ${REPORTFILE}
-            execution_strickness
-        fi
+    if [ $? -gt 0 ]; then
+        echo "RENDER-DETAILS: failed"
+        cat ${REPORTFILE}
+        execution_strickness
+    fi
 
 }
 
@@ -936,9 +918,9 @@ render_context() { # SLINE TLINE JSON
             --output ${TLINE}/context/${OUTFILELANGUAGE} \
             &>>${REPORTFILE}
 
-        if [ $? -gt 0 ] ; then
+        if [ $? -gt 0 ]; then
             echo "RENDER-DETAILS: failed"
-	    cat ${REPORTFILE}
+            cat ${REPORTFILE}
             execution_strickness
         fi
 
@@ -982,11 +964,11 @@ render_shacl_languageaware() {
     generator_parameters shaclgenerator ${JSONI}
 
     if [ ${TYPE} == "ap" ] || [ ${TYPE} == "oj" ]; then
-	
-        HH=$(echo ${HOSTNAME} | sed -e "s|/$||g" )
-	LL=$(echo ${LINE} | sed -e "s|^/||g" )
 
-	SHAPEBASEURI="${HH}/${LL}/"
+        HH=$(echo ${HOSTNAME} | sed -e "s|/$||g")
+        LL=$(echo ${LINE} | sed -e "s|^/||g")
+
+        SHAPEBASEURI="${HH}/${LL}/"
         DOCUMENTURL="${HH}/${LL}"
         mkdir -p ${TLINE}/shacl
         mkdir -p ${RLINE}/shacl
@@ -1001,9 +983,9 @@ render_shacl_languageaware() {
             --applicationProfileURL ${DOCUMENTURL} \
             &>>${REPORTFILE}
 
-        if [ $? -gt 0 ] ; then
+        if [ $? -gt 0 ]; then
             echo "RENDER-DETAILS: failed"
-	    cat ${REPORTFILE}
+            cat ${REPORTFILE}
             execution_strickness
         fi
 
@@ -1084,8 +1066,8 @@ cat ${CHECKOUTFILE} | while read line; do
             html)
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/html/${line}
-		mkdir -p ${TLINE}
-		mkdir -p ${RLINE}
+                mkdir -p ${TLINE}
+                mkdir -p ${RLINE}
                 render_nunjunks_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}
@@ -1097,8 +1079,8 @@ cat ${CHECKOUTFILE} | while read line; do
             respec)
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/respec/${line}
-		mkdir -p ${TLINE}
-		mkdir -p ${RLINE}
+                mkdir -p ${TLINE}
+                mkdir -p ${RLINE}
                 render_respec_html $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}
@@ -1108,12 +1090,12 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             rdf)
-		   # the source for the shacl generator is solely the intermediate json
+                # the source for the shacl generator is solely the intermediate json
                 SLINE=${TARGETDIR}/report4/${line}
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/rdf/${line}
-		mkdir -p ${TLINE}
-		mkdir -p ${RLINE}
+                mkdir -p ${TLINE}
+                mkdir -p ${RLINE}
                 render_rdf $SLINE $TLINE $i $RLINE ${line} ${TARGETDIR}/report4/${line} ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}
@@ -1123,12 +1105,12 @@ cat ${CHECKOUTFILE} | while read line; do
                 done
                 ;;
             shacl)
-		   # the source for the shacl generator is solely the intermediate json
+                # the source for the shacl generator is solely the intermediate json
                 SLINE=${TARGETDIR}/report4/${line}
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/shacl/${line}
-		mkdir -p ${TLINE}
-		mkdir -p ${RLINE}
+                mkdir -p ${TLINE}
+                mkdir -p ${RLINE}
                 render_shacl_languageaware $SLINE $TLINE $i $RLINE ${line} ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}
@@ -1137,17 +1119,17 @@ cat ${CHECKOUTFILE} | while read line; do
                     fi
                 done
                 NAMESPEC=FIRST_PART=$(echo "$MY_PATH" | cut -d'/' -f3)
-                #node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report.md -o ${RLINE}/generator-shacl.report.md -l https://github.com/Informatievlaanderen/data.vlaanderen.be2-generated/blob/dev4.0/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld -a ${TARGETDIR}/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld 
-#                node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report.md -o ${RLINE}/generator-shacl.report.md -l $i -a $i 
-#                move this in the report handling
+                #node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report.md -o ${RLINE}/generator-shacl.report.md -l https://github.com/Informatievlaanderen/data.vlaanderen.be2-generated/blob/dev4.0/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld -a ${TARGETDIR}/report4/doc/${line}/all-${NAMESPEC}-ap.jsonld
+                #                node /app/update-shacl-report.js -i ${RLINE}/generator-shacl.report.md -o ${RLINE}/generator-shacl.report.md -l $i -a $i
+                #                move this in the report handling
                 ;;
             context)
-		   # the source for the context generator is solely the intermediate json
+                # the source for the context generator is solely the intermediate json
                 SLINE=${TARGETDIR}/report4/${line}
                 TLINE=${TARGETDIR}/target/${line}
                 RLINE=${TARGETDIR}/report4/context/${line}
-		mkdir -p ${TLINE}
-		mkdir -p ${RLINE}
+                mkdir -p ${TLINE}
+                mkdir -p ${RLINE}
                 render_context $SLINE $TLINE $i $RLINE ${PRIMELANGUAGE} true
                 for g in ${GOALLANGUAGE}; do
                     generate_for_language ${g} ${i}
@@ -1179,11 +1161,11 @@ cat ${CHECKOUTFILE} | while read line; do
                 ;;
             autotranslate)
                 AUTOTRANSLATE=$(jq -r .toolchain.autotranslate ${CONFIGDIR}/config.json)
-    		if [ ${AUTOTRANSLATE} == true ]; then
-                for g in ${GOALLANGUAGE}; do
-                    autotranslatefiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE} ${AUTOTRANSLATIONDIR}/${line}
-                done
-		fi
+                if [ ${AUTOTRANSLATE} == true ]; then
+                    for g in ${GOALLANGUAGE}; do
+                        autotranslatefiles ${PRIMELANGUAGE} ${g} $i ${SLINE} ${TLINE} ${AUTOTRANSLATIONDIR}/${line}
+                    done
+                fi
                 ;;
             merge)
                 render_merged_files ${PRIMELANGUAGE} ${PRIMELANGUAGE} $i ${SLINE} ${TLINE} ${RLINE}
