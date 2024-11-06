@@ -334,20 +334,6 @@
                               </div>
                            </div>
                            {% endif %}
-                           {% if ( ( data.externalProperties | length ) > 0 ) %}
-                           <div class="region region--no-space-top">
-                              <h3 class="h3">Externe Terminologie</h3>
-                              <div class="grid">
-                                 <p>
-                                    |
-                                    {% for prop in data.externalProperties %}
-                                    <a href="#{{ prop.vocabularyLabel[language] }}" rel="property">{{ prop.vocabularyLabel[language] }}</a>
-                                    |
-                                    {% endfor %}
-                                 </p>
-                              </div>
-                           </div>
-                           {% endif %}
                         </section>
                      </div>
                      <div class="region region--no-space-top">
@@ -529,52 +515,19 @@
                         </section>
                      </div>
                      <div class="region region--no-space-top">
-                        <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="external">
+                        <section typeof="bibo:Chapter" resources="#ref" rel="bibo:Chapter" id="external">
                            <h2 class="h2" id="externals" aria-level="1" role="heading">
-                              <span class="secno">6.
-                              </span>Externe Terminologie
+                           <span class="secno">6.
+                           </span>Externe Terminologie
                            </h2>
-                           <div class="region region--no-space-top">
-                              <p>Dieser Abschnitt bietet einen Überblick über die Terminologie aus anderen Vokabularen, die für dieses Domänenmodell
-                                 relevant sind, sowie deren Bezeichnungen und Definitionen in englischer Sprache.
-                              </p>
-                           </div>
-                           {% if data.externalProperties %}
-                           {% for external in data.externalProperties %}
-                           <div class="region region--no-space-top">
-                              <h3 class="h4" id="{{ external.vocabularyLabel[language] }}">
-                                 <em>{{ external.vocabularyLabel[language] }}</em>
-                              </h3>
-                              <table class="definition">
-                                 <tbody>
-                                    <tr>
-                                       <th>URI</th>
-                                       <td>
-                                          <code>{{ external.id }}</code>
-                                       </td>
-                                    </tr>
-                                    {% if external.vocabularyDefinition[language] %}
-                                    <tr>
-                                       <th>Definition</th>
-                                       <td>{{ external.vocabularyDefinition[language] }}</td>
-                                    </tr>
-                                    {% endif %}
-                                    {% if external.vocabularyUsageNote[language] %}
-                                    <tr>
-                                       <th>Verwendung</th>
-                                       <td>{{ external.vocabularyUsageNote[language] }}</td>
-                                    </tr>
-                                    {% endif %}
-                                 </tbody>
-                              </table>
-                           </div>
-                           {% endfor %}
-                           {% else %}
-                           <div class="region region--no-space-top">
-                              <p>In diesem Vokabular wurden keine externen Begriffe wiederverwendet.</p>
-                           </div>
-                           {% endif %}
-                        </section>
+                           Ab 2025 werden Fremdbegriffe nicht mehr als nicht-normative Zuordnung in Vokabeln aufgenommen
+                           data.vlaanderen.be.
+                           <p/> Stattdessen wurde jedem Anwendungsprofil eine Tabelle hinzugefügt, die zeigt, welche externen URIs verwendet werden.
+                           Das vereinfacht die Zielsetzung dieses Dokuments. Nämlich die Auflistung und Verwaltung definierter Begriffe
+                           in diesem Namensraum.
+                           <p/> Um eine Harmonisierung der Verwendung externer Terminologie zu erreichen, wird eine allgemeine Zuordnung vorgenommen
+                           veröffentlicht.
+                           </section>
                      </div>
                   </div>
                   <div class="col--3-12 col--12-12--s col--4-12--m push--1-12 push--reset--m" id="sideNav">
