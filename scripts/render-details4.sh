@@ -634,12 +634,29 @@ render_nunjunks_html() { # SLINE TLINE JSON
     INT_REPORTFILE=${RLINE}/generator-webuniversum-json.report.md
 
     generator_parameters webuniversumgenerator ${JSONI}
+    
+    case $TYPE in
+    ap)
+        SPECTYPE="ApplicationProfile"
+        ;;
+    voc)
+        SPECTYPE="Vocabulary"
+        ;;
+    oj)
+        SPECTYPE="ApplicationProfile"
+        ;;
+    *)
+        echo "ERROR: ${SPECTYPE} not recognized"
+        SPECTYPE="ApplicationProfile"
+        ;;
+    esac
 
     echo "${REPORTLINEPREFIX}oslo-webuniversum-json-generator for language ${LANGUAGE}${REPORTLINENEWLINE}" &>>${INT_REPORTFILE}
     echo "${REPORTLINEPREFIX}-------------------------------------${REPORTLINENEWLINE}" &>>${INT_REPORTFILE}
     oslo-webuniversum-json-generator ${PARAMETERS} \
         --input ${MERGEDFILE} \
         --output ${INT_OUTPUT} \
+        --specificationType ${SPECTYPE} \
         --language ${LANGUAGE} \
 	--publicationEnvironment https://${URIDOMAIN} \
         &>>${INT_REPORTFILE}
