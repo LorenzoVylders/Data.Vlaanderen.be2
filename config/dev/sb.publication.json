@@ -37,7 +37,7 @@
   {
     "urlref": "/doc/applicatieprofiel/sensoren-en-bemonstering/kandidaatstandaard/2024-10-01",
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
-    "branchtag": "master-node-toolchain",
+    "branchtag": "master",
     "name": "ap-sensoren-en-bemonstering",
     "filename": "config/OSLO-BodemEnOndergrond-AP-SensorenEnBemonstering.json",
     "dummy": "047",
@@ -90,7 +90,7 @@
   {
     "urlref": "/doc/vocabularium/sensoren-en-bemonstering/kandidaatstandaard/2024-10-01",
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
-    "branchtag": "master-node-toolchain",
+    "branchtag": "master",
     "name": "sensoren-en-bemonstering",
     "filename": "config/OSLO-BodemEnOndergrond-VOC-SensorenEnBemonstering.json",
     "dummy": "048",

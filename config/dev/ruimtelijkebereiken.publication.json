@@ -25,7 +25,7 @@
   {
     "urlref": "/doc/applicatieprofiel/ruimtelijke-bereiken/kandidaatstandaard/2024-10-01",
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
-    "branchtag": "master-node-toolchain",
+    "branchtag": "master",
     "name": "ap-ruimtelijke-bereiken",
     "filename": "config/OSLO-BodemEnOndergrond-AP-RuimtelijkeBereiken.json",
     "navigation": {
@@ -66,7 +66,7 @@
   {
     "urlref": "/doc/vocabularium/ruimtelijke-bereiken/kandidaatstandaard/2024-10-01",
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
-    "branchtag": "master-node-toolchain",
+    "branchtag": "master",
     "name": "ruimtelijke-bereiken",
     "filename": "config/OSLO-BodemEnOndergrond-VOC-RuimtelijkeBereiken.json",
     "dummy": "30",
