@@ -93,7 +93,7 @@
     "branchtag": "master-node-toolchain",
     "name": "sensoren-en-bemonstering",
     "filename": "config/OSLO-BodemEnOndergrond-VOC-SensorenEnBemonstering.json",
-    "dummy": "047",
+    "dummy": "048",
     "navigation": {
       "prev": "/doc/vocabularium/sensoren-en-bemonstering/kandidaatstandaard/2024-04-15"
     }
