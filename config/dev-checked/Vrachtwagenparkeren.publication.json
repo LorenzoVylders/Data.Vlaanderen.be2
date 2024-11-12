@@ -1,34 +1,52 @@
 [
   {
     "urlref": "/doc/applicatieprofiel/vrachtwagenparkeren/ontwerpstandaard/2023-11-30",
-    "repository": "https://github.com/Informatievlaanderen/OSLOthema-vrachtwagenParkeren",
+    "repository": "https://github.com/informatievlaanderen/OSLOthema-vrachtwagenParkeren",
     "branchtag": "master-node-toolchain",
     "name": "vrachtwagenParkeren-ap",
     "filename": "config/vrachtwagenParkeren-ap.json",
     "disabled": false,
-    "dummy": "027"
+    "dummy": "03"
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/vrachtwagenparkeren/ontwerpstandaard/test",
+    "repository": "https://github.com/bertvannuffelen/OSLOthema-vrachtwagenParkeren",
+    "branchtag": "main",
+    "name": "vrachtwagenParkeren-ap",
+    "filename": "config/vrachtwagenParkeren-ap.json",
+    "disabled": false,
+    "dummy": "04"
   },
   {
     "urlref": "/doc/applicatieprofiel/vrachtwagenparkeren",
-    "seealso": "/doc/applicatieprofiel/vrachtwagenparkeren/2023-11-30",
+    "seealso": "/doc/applicatieprofiel/vrachtwagenparkeren/ontwerpstandaard/2023-11-30",
     "type": "ap",
     "disabled": false,
-    "dummy": "026"
+    "dummy": "025"
   }, 
  {
     "urlref": "/doc/vocabularium/vrachtwagenparkeren/ontwerpstandaard/2023-11-30",
-    "repository": "https://github.com/Informatievlaanderen/OSLOthema-vrachtwagenParkeren",
-    "branchtag": "master-node-toolchain",
+    "repository": "https://github.com/informatievlaanderen/OSLOthema-vrachtwagenParkeren",
+    "branchtag": "kristof-master-node-toolchain",
     "name": "Vrachtwagenparkeren",
     "filename": "config/Vrachtwagenparkeren-voc.json",
     "disabled": false,
-    "dummy": "020"
+    "dummy": "023"
+  },
+ {
+    "urlref": "/doc/vocabularium/vrachtwagenparkeren/ontwerpstandaard/test",
+    "repository": "https://github.com/bertvannuffelen/OSLOthema-vrachtwagenParkeren",
+    "branchtag": "main",
+    "name": "Vrachtwagenparkeren",
+    "filename": "config/Vrachtwagenparkeren-voc.json",
+    "disabled": false,
+    "dummy": "022"
   },
   {
     "urlref": "/ns/vrachtwagenparkeren",
     "seealso": "/doc/vocabularium/vrachtwagenparkeren/ontwerpstandaard/2023-11-30",
     "type": "voc",
     "disabled": false,
-    "dummy": "020"
+    "dummy": "022"
   }
 ]

@@ -7,14 +7,23 @@
     "disabled": false,
     "filename": "config/kindfiche-ap.json",
     "navigation": {},
-    "dummy": "011"
+    "shaclgenerator": {
+      "parameters": "--mode individual --constraint uniqueLanguages --constraint nodeKind  --constraint codelist --useUniqueURIs true --addConstraintMessages true --addRuleNumbers true"
+    },
+    "contextgenerator": {
+      "parameters": "--scopedContext true"
+    },
+    "webuniversumgenerator": {
+      "parameters": "--applyFiltering false"
+    },
+    "dummy": "022"
   },
   {
     "urlref": "/doc/applicatieprofiel/kindfiche",
     "seealso": "/doc/applicatieprofiel/kindfiche/ontwerpstandaard/2024-06-03",
     "disabled": false,
     "type": "ap",
-    "dummy": "011"
+    "dummy": "019"
   },
   {
     "urlref": "/doc/vocabularium/kindfiche/ontwerpstandaard/2024-06-03",
@@ -23,12 +32,12 @@
     "name": "kindfiche-voc",
     "filename": "config/kindfiche-voc.json",
     "navigation": {},
-    "dummy": "014"
+    "dummy": "016"
   },
   {
     "urlref": "/ns/kindfiche",
     "seealso": "/doc/vocabularium/kindfiche/ontwerpstandaard/2024-06-03",
     "type": "voc",
-    "dummy": "014"
+    "dummy": "016"
   }
 ]
