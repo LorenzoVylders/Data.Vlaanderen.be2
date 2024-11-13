@@ -11,17 +11,10 @@
     "gitEmail": "toolchain@data.vlaanderen.be",
     "gitUser": "toolchain"
   },
-  "translationrepository": {
-    "organisation": "informatievlaanderen",
-    "repository": "data.vlaanderen.be2-generated",
-    "private": false,
-    "gitEmail": "toolchain@data.vlaanderen.be",
-    "gitUser": "toolchain"
-  },
   "toolchainversion": "4.0",
   "toolchain": {
-    "strickness": "strict",
-    "version": 3,
+    "strickness": "lazy",
+    "version": 4,
     "triggerall": true,
     "autotranslate": false
   },
