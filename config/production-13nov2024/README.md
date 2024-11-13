@@ -30,3 +30,5 @@ Afspraken:
 
 
 
+TODO
+- sommige publicatiepunten zitten nog in een grote lijst en zijn niet opgesplitst volgens thema. Laten we dit ook opsplitsen.
