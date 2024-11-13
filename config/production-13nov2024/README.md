@@ -23,4 +23,10 @@ Aandachtspunten:
    Focus dus op de laatste (de gepubliceerde versie) om deze door de tooling te krijgen.
 
 
+Afspraken:
+- zorg voor een duidelijke startpunt in de themarepository 
+- documenteer je wijzigingen in de CHANGELOG
+- maak voor semantische wijzigingen een issue in de themarepository aan met label "toolchain4"
+
+
 
