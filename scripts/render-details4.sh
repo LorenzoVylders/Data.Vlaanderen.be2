@@ -988,6 +988,13 @@ render_shacl_languageaware() {
             cat ${REPORTFILE}
             execution_strickness
         fi
+	if [ -f ${OUTFILE} ] ; then
+		echo "RENDER-DETAILs: success"
+	else
+            echo "RENDER-DETAILS: failed"
+            cat ${REPORTFILE}
+            execution_strickness
+        fi
 
         prettyprint_jsonld ${OUTFILE}
         if [ ${PRIMELANGUAGE} == true ]; then
