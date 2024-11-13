@@ -20,7 +20,7 @@
   },
   "toolchainversion": "4.0",
   "toolchain": {
-    "strickness": "lazy",
+    "strickness": "strict",
     "version": 3,
     "triggerall": true,
     "autotranslate": false
