@@ -1,0 +1,64 @@
+[
+  {
+    "urlref": "/doc/applicatieprofiel/ruimtelijke-indicatoren/ontwerpstandaard/2024-01-22",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-slimRuimtelijkPlannen",
+    "branchtag": "ontwerp-2024-01-22-001",
+    "name": "ruimtelijke-indicatoren-ap",
+    "filename": "config/ruimtelijke-indicatoren-ap.json",
+    "navigation": {
+      "next": "/doc/applicatieprofiel/ruimtelijke-indicatoren/kandidaatstandaard/2024-03-21"
+    },
+    "disabled": false,
+    "dummy": "015"
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/ruimtelijke-indicatoren/kandidaatstandaard/2024-03-21",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-slimRuimtelijkPlannen",
+    "branchtag": "kandidaat-2024-03-21-001",
+    "name": "ruimtelijke-indicatoren-ap",
+    "filename": "config/ruimtelijke-indicatoren-ap.json",
+    "navigation": {
+      "prev": "/doc/applicatieprofiel/ruimtelijke-indicatoren/ontwerpstandaard/2024-01-22"
+    },
+    "disabled": false,
+    "dummy": "003"
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/ruimtelijke-indicatoren",
+    "seealso": "/doc/applicatieprofiel/ruimtelijke-indicatoren/kandidaatstandaard/2024-03-21",
+    "type": "ap",
+    "disabled": false,
+    "dummy": "016"
+  },
+  {
+    "urlref": "/doc/vocabularium/ruimtelijke-indicatoren/ontwerpstandaard/2024-01-22",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-slimRuimtelijkPlannen",
+    "branchtag": "ontwerp-2024-01-22-001",
+    "name": "ruimtelijke-indicatoren",
+    "filename": "config/ruimtelijke-indicatoren-voc.json",
+    "navigation": {
+      "next": "/doc/vocabularium/ruimtelijke-indicatoren/kandidaatstandaard/2024-03-21"
+    },
+    "disabled": false,
+    "dummy": "016"
+  },
+  {
+    "urlref": "/doc/vocabularium/ruimtelijke-indicatoren/kandidaatstandaard/2024-03-21",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-slimRuimtelijkPlannen",
+    "branchtag": "kandidaat-2024-03-21-001",
+    "name": "ruimtelijke-indicatoren",
+    "filename": "config/ruimtelijke-indicatoren-voc.json",
+    "disabled": false,
+    "navigation": {
+      "prev": "/doc/vocabularium/ruimtelijke-indicatoren/ontwerpstandaard/2024-01-22"
+    },
+    "dummy": "003"
+  },
+  {
+    "urlref": "/ns/ruimtelijke-indicatoren",
+    "seealso": "/doc/vocabularium/ruimtelijke-indicatoren/kandidaatstandaard/2024-03-21",
+    "type": "voc",
+    "disabled": false,
+    "dummy": "017"
+  }
+]

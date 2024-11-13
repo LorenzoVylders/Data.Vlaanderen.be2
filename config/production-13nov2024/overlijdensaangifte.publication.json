@@ -1,0 +1,67 @@
+[
+  {
+    "urlref": "/doc/applicatieprofiel/overlijdensaangifte/kandidaatstandaard/2024-10-23",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-overlijdensaangifte",
+    "branchtag": "DAO-0.2.0",
+    "name": "overlijdensaangifte",
+    "filename": "config/overlijdensaangifte-ap.json",
+    "navigation": {},
+    "disabled": false,
+    "dummy": "027"
+  },
+  {
+    "urlref": "/doc/applicatieprofiel/overlijdensaangifte",
+    "seealso": "/doc/applicatieprofiel/overlijdensaangifte/kandidaatstandaard/2024-10-23",
+    "type": "ap",
+    "disabled": false,
+    "dummy": "027"
+  },
+  {
+    "urlref": "/doc/vocabularium/overlijdensaangifte/kandidaatstandaard/2024-10-23",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-overlijdensaangifte",
+    "branchtag": "DAO-0.2.0",
+    "name": "overlijdensaangifte",
+    "filename": "config/overlijdensaangifte-voc.json",
+    "navigation": {},
+    "disabled": false,
+    "dummy": "027"
+  },
+  {
+    "urlref": "/doc/vocabularium/overlijdensaangifte",
+    "seealso": "/doc/vocabularium/overlijdensaangifte/kandidaatstandaard/2024-10-23",
+    "type": "voc",
+    "disabled": false,
+    "dummy": "027"
+  },
+  {
+    "urlref": "/ns/overlijdensaangifte",
+    "seealso": "/doc/vocabularium/overlijdensaangifte/kandidaatstandaard/2024-10-23",
+    "type": "voc",
+    "disabled": false,
+    "dummy": "027"
+  },
+  {
+    "urlref": "/doc/vocabularium/gezondheidstoestand/kandidaatstandaard/2024-10-23",
+    "repository": "https://github.com/Informatievlaanderen/OSLOthema-overlijdensaangifte",
+    "branchtag": "DAO-0.2.0",
+    "name": "gezondheidstoestand",
+    "filename": "config/gezondheidstoestand-voc.json",
+    "navigation": {},
+    "disabled": false,
+    "dummy": "027"
+  },
+  {
+    "urlref": "/doc/vocabularium/gezondheidstoestand",
+    "seealso": "/doc/vocabularium/gezondheidstoestand/kandidaatstandaard/2024-10-23",
+    "type": "voc",
+    "disabled": false,
+    "dummy": "027"
+  },
+  {
+    "urlref": "/ns/gezondheidstoestand",
+    "seealso": "/doc/vocabularium/gezondheidstoestand/kandidaatstandaard/2024-10-23",
+    "type": "voc",
+    "disabled": false,
+    "dummy": "027"
+  }
+]
