@@ -1,6 +1,6 @@
 {
   "primeLanguage": "nl",
-  "otherLanguages": ["en","fr","de"],
+  "otherLanguages": [],
   "hostname": "https://data.dev-vlaanderen.be",
   "domain": "data.vlaanderen.be",
   "publicationpoints": ["dev"],
@@ -20,7 +20,7 @@
   },
   "toolchainversion": "4.0",
   "toolchain": {
-    "strickness": "strict",
+    "strickness": "lazy",
     "version": 3,
     "triggerall": true,
     "autotranslate": false
