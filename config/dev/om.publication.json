@@ -37,7 +37,7 @@
   {
     "urlref": "/doc/applicatieprofiel/observaties-en-metingen/kandidaatstandaard/2024-10-01",
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
-    "branchtag": "master",
+    "branchtag": "540bbe8a82f08de339cb9c6e4f72b3ee100eab4f",
     "name": "ap-observaties-en-metingen",
     "filename": "config/OSLO-BodemEnOndergrond-AP-ObservatiesEnMetingen.json",
     "dummy": "053",
@@ -91,7 +91,7 @@
   {
     "urlref": "/doc/vocabularium/observaties-en-metingen/kandidaatstandaard/2024-10-01",
     "repository": "https://github.com/Informatievlaanderen/OSLOthema-bodemEnOndergrond",
-    "branchtag": "master",
+    "branchtag": "540bbe8a82f08de339cb9c6e4f72b3ee100eab4f",
     "name": "observaties-en-metingen",
     "filename": "config/OSLO-BodemEnOndergrond-VOC-ObservatiesEnMetingen.json",
     "dummy": "055",
