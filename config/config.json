@@ -15,7 +15,7 @@
   "toolchain": {
     "strickness": "lazy",
     "version": 4,
-    "triggerall": true,
+    "triggerall": false,
     "autotranslate": false
   },
   "shaclgenerator" : {
